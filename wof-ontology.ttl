@@ -7,7 +7,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
-
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix dbo: <http://dbpedia.org/ontology/>.
 
 wof:
     a owl:Ontology ;
@@ -17,6 +18,16 @@ wof:
     rdfs:comment """
     The DBpedia Wall of Fame (WoF) SHACLOntology allows to attribute contributions to the DBpedia movement to individual DBpedians, i.e. give credit for their merit in a machine readable format (RDF). A SHACLOntology is a mix between SHACL validation rules and OWL classes.
     """@en .
+
+
+dbo:DBpedian 
+	a sh:NodeShape ;
+	sh:targetClass foaf:Person ;
+	sh:property [
+		sh:path rdf:type ;
+		sh:value dbo:DBpedian  ;
+	] . 
+	
 
 
 
