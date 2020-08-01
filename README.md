@@ -1,1 +1,17 @@
-# wall-of-fame
+# DBpedia Wall of Fame
+A SHACLOntology and several tools to attribute contributions to the DBpedia movement to individual DBpedians, i.e. give credit for their merit in a machine readable format (RDF).  
+
+## License
+Creative Commons BY 4.0 International
+All contributions to this repo will be considered as freely given to DBpedia and published under CC-BY-SA
+
+# How to join
+* Databus Account with link to FOAF profile
+* FOAF Profile needs to validate correctly
+
+
+# Technical components in this repo
+
+## FOAF/WebId Crawler 
+
+## DBpedia WoF Ontology

@@ -1,0 +1,23 @@
+# TODO 
+@prefix wof: <http://todo.com/#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+
+wof:
+    a owl:Ontology ;
+    rdfs:label "DBpedia Wall of Fame (WoF) SHACLOntology"@en ;
+    dcterms:title "DBpedia Wall of Fame (Wof) SHACLOntology"@en ;
+    dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;		
+    rdfs:comment """
+    The DBpedia Wall of Fame (WoF) SHACLOntology allows to attribute contributions to the DBpedia movement to individual DBpedians, i.e. give credit for their merit in a machine readable format (RDF). A SHACLOntology is a mix between SHACL validation rules and OWL classes.
+    """@en .
+
+
+
+   
