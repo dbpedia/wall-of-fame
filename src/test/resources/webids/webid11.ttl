@@ -1,0 +1,16 @@
+<https://kevinhaller.dev/id> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://kevinhaller.dev/id> <http://xmlns.com/foaf/0.1/maker> <https://kevinhaller.dev/id#me> .
+<https://kevinhaller.dev/id> <http://xmlns.com/foaf/0.1/primaryTopic> <https://kevinhaller.dev/id#me> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Generated 2020" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "C29AF078F71FB63E0CC65CDF2486D61BD1A60A470F02B3F76F74808C2C2DAC16CA1354C6452B21185073013FA12A20CCB6D4A7431B9DBF9C195DA536ECD3B28504736AFA485E8E6345A82A24736676EBE2A04C6964E364917350D5939D6764E19DF09BA6F579F707C03E03140E3E33B38DC051640E1B768FE7957746A79D19865317C2404B8C8400C835BD5D9FF5D5700BE514D4697EBCF673A066662352E1C8530EF297F85C5E70CF3D08E4CACEA8E20A296EFFE5ADA416428B893F0C17B747B28617904108F942095209184C3996EFF38128279FE0319C85DEA2687AC4A1B1F4C374817577DBB3C33B63E05C21E1B956DCCECCD709F0C2A44CA46D26389BC1"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://kevinhaller.dev/id#me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://kevinhaller.dev/id#me> <http://xmlns.com/foaf/0.1/name> "Kevin Haller" .
+<https://kevinhaller.dev/id#me> <http://xmlns.com/foaf/0.1/givenName> "Kevin" .
+<https://kevinhaller.dev/id#me> <http://xmlns.com/foaf/0.1/familyName> "Haller" .
+<https://kevinhaller.dev/id#me> <http://xmlns.com/foaf/0.1/mbox> <mailto:kevin.haller@outofbits.com> .
+<https://kevinhaller.dev/id#me> <http://xmlns.com/foaf/0.1/mbox> <mailto:kevin.haller@tuwien.ac.at> .
+<https://kevinhaller.dev/id#me> <http://xmlns.com/foaf/0.1/homepage> "https://kevinhaller.dev"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<https://kevinhaller.dev/id#me> <http://xmlns.com/foaf/0.1/workplaceHomepage> "http://semsys.ifs.tuwien.ac.at/"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<https://kevinhaller.dev/id#me> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

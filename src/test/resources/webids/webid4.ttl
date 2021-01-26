@@ -1,0 +1,10 @@
+<https://www.tetras-libre.fr/id/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://www.tetras-libre.fr/id/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://www.tetras-libre.fr/id/webid.ttl#daxid> .
+<https://www.tetras-libre.fr/id/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://www.tetras-libre.fr/id/webid.ttl#daxid> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "otus" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "B63067CE26228947871DAFFDC40A3BDF9487581476529FCD71B10EBDCB2860E68A50DB3E04E64387597D85826E3E80D8F8FC6E3113538BE0A7A4483F24F9CAF65464DA446BCBFAD3FFC0820D1EA346F6A5EC197C9927248909F19BE3300CAFCE124D0A1E118B56E8FD8A3DA8DFCBDF4CB1CCDCBBEE906DDD2480FD23128CD198CE388FFAB89C7C5B247775CEB2728BF650DC88B4F9BAE91E426B4D2F3B5419FBD0F36C70E0C747FBF9C03C4D5E4879AD04822FF4CBEEDD5662163D6010995A270BCF6B758E85EBAA1543FB739D521167A76F83000C77F6AB45136CDC471C6B6F567830737C88D270F13F9149E0ADB50507246DB27BAA0EF69138F4047ADE0CF1"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://www.tetras-libre.fr/id/webid.ttl#daxid> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://www.tetras-libre.fr/id/webid.ttl#daxid> <http://xmlns.com/foaf/0.1/name> "David Rouquet" .
+<https://www.tetras-libre.fr/id/webid.ttl#daxid> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

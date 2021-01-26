@@ -1,0 +1,10 @@
+<https://nheist.github.io/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://nheist.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://nheist.github.io/webid.ttl#this> .
+<https://nheist.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://nheist.github.io/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Key nheist" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "bbf3dbb3a1a0ec0b40224d6632652b533d49cf29f6dab36fb96cfce8fa3479256c78ecfbff449c55e00fc59802bc4b6573e8077acba039d2a127400ea6ff3bf3281c21ab5e8be741dbfe3ae8d350eecc1f6b37b4858cb652fb029e574071e6a28ea3f7cc6e5c98a3a40c4a9eb6c2ed793a6cbd45a0e74b7fc7fbb5c26afc534ff27905d323f5ca3fed2ec662bf903ebca7772d13f8c920e23d571915d5789b7490587a87555c1c4678f78c2de1f6e0031d758d65137fe42cb80059c63e5c7940eb0cf41bb008202235b168213f8f5b72245c9dcf1f3eea2fd08ba28039e8abc5748967e042fe7499c9a9814a45cec950591fdb5174ae106c54ec85a2a7c97511"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://nheist.github.io/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://nheist.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "Nicolas Heist" .
+<https://nheist.github.io/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

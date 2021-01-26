@@ -1,0 +1,16 @@
+<https://holycrab13.github.io/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://holycrab13.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://holycrab13.github.io/webid.ttl#this> .
+<https://holycrab13.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://holycrab13.github.io/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "made on 23 November 2011 on my laptop" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "978CD245ADD11F018D321D2A96D5E78BFC2DE540FC2BDFF1A1E46EF3C015A5855155D962DCC538E7BD2927825B2B6FD1048DDE7DC2B2ACDBB9602D87EAA03461A5AEA48DE59709DE9097070146BA8AA3D436780FEA7F328DD3C8DF0D7B359E38B9C2EC37EE2DAD309CDC878FF2CE4DDA48D683C122894D2D892069C77C72FFF977C10BFCE614E243E5B4C919DE6DE5E0D26BFAE9E15385A420E31CDD527388B31B7AA4CAB3B4753F00F7BB58AC4472D5D129B325A539EC02DF5C660311030C452BE05DBB2AF52C0B2D6CBC3843EF0DD87BBCF558F546C82045FDD5D27B1CC1E5C3FC4327391D8727A8E422F45E0F10562A908863A0A93AA3D613B5ADA1A3F29B"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#integer> .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "extraction server" .
+_:genid2 <http://www.w3.org/ns/auth/cert#modulus> "C65A227E835DE41C59644545C437646F1F3CBD0EE9695144209089ABB0EA228BE1D7CCBB905F409BD8A9B0F946A5AEB6B1D3E565A6F471A10BB8A1014C4E934CB6C2F9D2D4FB9C7FB4757FA9F831F75F72F1E74E09A64C4BFD49E4C402B25E8255C5BCDB3341F9FD0F5E0260EAF3AA3E7EA8A9663E9CCCCAADA363E8E5072DBDBA432CA273E5C933D38185E1740DF9ACD8C606CD56C485F434F98B1445D845E72AC5D43358358D150CAF4906A2B9093A8403312A81EB368EEDC35D048220EE9E11F6E2E039E7DA1AF3C5E58AE54B7AAFCD16FF808FDF1EFF05599D1156CAF73449DDD7F10324235C4C5065F8D38D2DE45191AC2A2B67E14E2EC2880805D7C153"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid2 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<https://holycrab13.github.io/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://holycrab13.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "Jan Forberg" .
+<https://holycrab13.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/img> "https://holycrab13.github.io/me.png" .
+<https://holycrab13.github.io/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .
+<https://holycrab13.github.io/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid2 .

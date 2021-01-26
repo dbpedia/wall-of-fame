@@ -1,0 +1,10 @@
+<https://kyleiwaniec.github.io/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://kyleiwaniec.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://kyleiwaniec.github.io/webid.ttl#this> .
+<https://kyleiwaniec.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://kyleiwaniec.github.io/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Sept2020" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "C8E62DA89F535D925EA6E7467869C929EE1BD853D6A600B7D24A624F2DC7DC04A1CF185A50CB4FD2C0A132591C4F36EB80AEA744A86E85833AE6D09DDB4A7952552AC9F9DE168FDB71CDA198607C84ADB1054491D67CD591DEFF3D068632571CD13E39091C305BA4BD28D5B09DF3A3A53C8BCB726921863C1FC9B24B6A38E96D05C8D9342DDEBFE9E4502EE7209813FA0D8856AF6AF19F5125DC00A817C251742AF4F884432171BE6375668767DB1736CCB3454F36E3A4A48A4EF476ED0D9D29699303EEA19CDCDFA0DA5B582C07ECF317BA9984D3F4558A70F50CBF3751E88298C604D0EBC22B02DD6E745DC3F0D9C4CB44644771CA4F7851DC1DD666A4C46B"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://kyleiwaniec.github.io/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://kyleiwaniec.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "Kyle Hamilton" .
+<https://kyleiwaniec.github.io/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

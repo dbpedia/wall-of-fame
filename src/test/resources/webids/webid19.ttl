@@ -1,0 +1,11 @@
+<https://mdw.dojchinovski.mk/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://mdw.dojchinovski.mk/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://mdw.dojchinovski.mk/webid.ttl#this> .
+<https://mdw.dojchinovski.mk/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://mdw.dojchinovski.mk/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Public key for Milan Dojchinovski generated on March 10th, 2020." .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "c45849571b11235d8d753b9e838ec637a4b9a5c0ae635a3c4c4977f31fc6c5db62384e1e113a0928f8c3ca92f28d28d9e1ab777d55b1d1c5d450d71abb1a4efeecc3d51e94495f259cecd4c8d9f18ac901ee8943325549f78d8dfc9b1b5b7bce3a03e020f63b0a6efdb59b992d16397103fc91c5bba4691bf09d1c2afe92d8a6e37bb5adbc3332c6ee7f681352f02eda9d220a858f3834071e554109500867f0ac96c2b7540b8b51a440ddd1696f443cff9594958c74bd5d60fce56be002df6ed9eb17c3b82e2b66847d5c85acbda82777b29f65f418a041cb516098a5972ab7ad7ae9acd19b0a33efe263cd84da283a0830818ebecd9f9d23f8bba4fa3e6211"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<https://mdw.dojchinovski.mk/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://mdw.dojchinovski.mk/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "Milan Dojchinovski" .
+<https://mdw.dojchinovski.mk/webid.ttl#this> <http://xmlns.com/foaf/0.1/img> <http://www.dojchinovski.mk/public/img/portrait.jpg> .
+<https://mdw.dojchinovski.mk/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

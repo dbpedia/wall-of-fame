@@ -1,0 +1,10 @@
+<https://ar.plural.net/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://ar.plural.net/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://ar.plural.net/webid.ttl#this> .
+<https://ar.plural.net/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://ar.plural.net/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "clerval classic" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "BE8D78C2B4E4FDBB0CDA57976A48DD1151176AF1277F7D33B93904157E7C7DDFFAA48A7A0D35984E5F773BCBD9121AB16A11EC53BD08F66247104C8A25905828909D17EDE59417239D4345B272B79003BB7CA56AFD576504F08BCAA6684D52860A5592F816BE0ECC37DE64B78EFEFC2D1CE19ECCD540A0B5ED37049F292957AB55423C50AA1DFE2EA8988949061493B7FE68CCFFBE87A2DEB81441A09689616ACFCA5697DF754E8A151D659DA7C16A25BF64E74FB94AB19F813FC77E6166D7CD464590F5827B71910E232B4A6825401ACCA0B1623043B9F95312C7FEFC7BDFEEF13035C43EABFDC065FB0FC646B7BACEDF7996C66FAFB4EFE1C34CD669C9A901"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://ar.plural.net/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://ar.plural.net/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "Armando Ramos" .
+<https://ar.plural.net/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

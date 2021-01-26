@@ -1,0 +1,3 @@
+<https://akirsche.github.io/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://akirsche.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://akirsche.github.io/webid.ttl#this> .
+<https://akirsche.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://akirsche.github.io/webid2.ttl#this> .

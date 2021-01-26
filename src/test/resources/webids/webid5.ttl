@@ -1,0 +1,31 @@
+<https://webid.dbpedia.org/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://webid.dbpedia.org/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://webid.dbpedia.org/webid.ttl#this> .
+<https://webid.dbpedia.org/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://webid.dbpedia.org/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Private key for signing the Generic releases" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "C47F780AF71809E4110D94106179411930D62E2BD414A2863EFEDBEADBDFFB9ABB80F5494FDA6954550FDB4D472C70303BBE93480AD2897590BDC12698E42E27205AD59966177A4F8FB332E72A246D06FF52E3A632E57D006FC9B1569FBD2A66D79D3C82FCF3D05097EB05FBEE3EB2A322278B3916488F0EDFDF6EDDD121C275C83C3B197CFB759DBE2A37ABC982DBB3C880C6964C43ACBE749405055C4FBB337402B0845DD1D7D094311ECEA26C824E8354DE675742F0C3BDEB6AFD4E3C151F566B2AFCE651DDF6B94783942467C220FA8E569BDCE70ED69B7416A30294421E8DCBDF2E3EC7AD465460E8EB2BAFBC2BE32AA5769B92C808B04920DA172FF9E9"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://webid.dbpedia.org/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Organization> .
+<https://webid.dbpedia.org/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Organisation> .
+<https://webid.dbpedia.org/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "DBpedia Association" .
+<https://webid.dbpedia.org/webid.ttl#this> <http://xmlns.com/foaf/0.1/img> <https://webid.dbpedia.org/img/dbpedia.png> .
+<https://webid.dbpedia.org/webid.ttl#this> <http://xmlns.com/foaf/0.1/based_near> "Leipzig" .
+<https://webid.dbpedia.org/webid.ttl#this> <http://xmlns.com/foaf/0.1/homepage> <https://wiki.dbpedia.org> .
+<https://webid.dbpedia.org/webid.ttl#this> <http://xmlns.com/foaf/0.1/status> "Welcome to the DBpedia Databus!" .
+<https://webid.dbpedia.org/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Dutch National Knowledge Graph" .
+_:genid2 <http://www.w3.org/ns/auth/cert#modulus> "BA1649494A809A4E3133137AFDB4CBB020B7225F1342AA4B8ABB6690111BB9FC041904E9A3408543FC3BC3E8B35D2B3E910F122EB9F9E36B52AEAAE8EABDFFD29D65D8B71104DDAC7B0141770FE9887E19C51C6FBA4069DA909EA2A19F327F0EB1E1F25FC0CD896FF858F571B3B9A4459B5D547DC2063F3575771ADF62F26B98A549D9296853C00799E1BA828B40833AA684ED25683C927831B2E68455306155BEF582682B8A1EB71603C33E2C41C52B0A61D3DD7B5E0494F09DF499248C2386F7BEDA84D6AA6A64BC749A4F237C4BC3109A9A0C0FDE0675078776D7B6F081EC9ECD514C00054D1DF1CD449B2BFE20905052A35E0EE9E9C8AB209F56EBF5FD61"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid2 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://webid.dbpedia.org/webid.ttl#dnkg> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Agent> .
+<https://webid.dbpedia.org/webid.ttl#dnkg> <http://xmlns.com/foaf/0.1/name> "Dutch National Knowledge Graph" .
+<https://webid.dbpedia.org/webid.ttl#dnkg> <http://xmlns.com/foaf/0.1/status> "Data of the Dutch National Knowledge Graph" .
+<https://webid.dbpedia.org/webid.ttl#dnkg> <http://www.w3.org/ns/auth/cert#key> _:genid2 .
+_:genid3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Test account spread in the KILT team" .
+_:genid3 <http://www.w3.org/ns/auth/cert#modulus> "AC202BAC9D56F8CC3A68497B4CDD6E6C2ECEF9BCA7E834D3C57EEAC752BCABCFAD2CD48E6A040117ADF2936BDDC0719408C5D5F662E81145B112A2E5C1062B8E2D0469A659B23515B61D0C2B3B21F2D47430568C3B4B7DAE8D3DE87AFC8C3B13F5CFAB7509D76DFAC399532FE381020F5AF6189E769D9B3387B2388800A8BC3F4DDD40A70D7C8D7911559643C45A3317AAEE8AE8E7E720B0D28E1628118C62DC64711483AAA8A87174B24D037DA392779119A7674FDB1934A325CEDBE64FC3CBEF06928683A0A749C7230D3CA7CD0BDD7CB4EB21733F28F9E319EF6F68B58DA16FBC3A09661EC4F048CB106675E5C9F6EA4BCC66200C179F0EACD1621200BC61"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid3 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://webid.dbpedia.org/webid.ttl#test> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Agent> .
+<https://webid.dbpedia.org/webid.ttl#test> <http://xmlns.com/foaf/0.1/name> "Databus test account" .
+<https://webid.dbpedia.org/webid.ttl#test> <http://xmlns.com/foaf/0.1/img> <https://webid.dbpedia.org/img/dbpedia.png> .
+<https://webid.dbpedia.org/webid.ttl#test> <http://www.w3.org/ns/auth/cert#key> _:genid3 .

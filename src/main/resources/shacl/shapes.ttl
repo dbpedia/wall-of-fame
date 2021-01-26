@@ -1,0 +1,123 @@
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix ex: <http://example.com/ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+
+
+<#WebIdShape> a sh:NodeShape ;
+	sh:targetClass foaf:PersonalProfileDocument ;
+	sh:property <#maker> ;
+	sh:property <#primaryTopic> .
+
+<#PersonShape> a sh:NodeShape ;
+	sh:targetClass foaf:Person ;
+	sh:property <#name> ;
+	sh:property <#key> ;
+	sh:property <#img> ;
+	sh:property <#gender> ;
+	sh:property <#geekcode> ;
+	sh:property <#firstname> ;
+	sh:property <#dbpedia-support-info> .
+    
+<#KeyShape> a sh:NodeShape ;
+	sh:targetClass cert:RSAPublicKey ;
+	sh:property <#label> ;
+	sh:property <#cert-modulus> ;
+	sh:property <#cert-exponent> .
+
+#===WebIdShapeProperties===#
+<#maker> a sh:PropertyShape ;
+	sh:severity sh:Violation ;
+	sh:message "Required property foaf:maker MUST occur once."@en ;
+	sh:path foaf:maker;
+	sh:minCount 1 ;
+	sh:maxCount 1.
+    
+<#primaryTopic> a sh:PropertyShape;
+	sh:severity sh:Violation ;
+	sh:message "Required property foaf:primaryTopic MUST occur once."@en ;
+	sh:path foaf:primaryTopic  ;
+	sh:minCount 1 ;
+	sh:maxCount 1.
+#===WebIdShapeProperties===#
+
+#===PersonShapeProperties===#
+<#name> a sh:PropertyShape ;
+	sh:path foaf:name ;
+	sh:minCount 1 ;
+	sh:maxCount 1 ;
+	sh:severity sh:Violation ;
+	sh:message "Required property foaf:name MUST occur once."@en .
+
+<#key> a sh:PropertyShape ;
+	sh:path cert:key ;
+	sh:minCount 1 ;
+	sh:severity sh:Violation ;
+	sh:message "Required property cert:key MUST occur at least once."@en .
+
+<#gender> a sh:PropertyShape ;
+	sh:path foaf:gender ;
+	sh:minCount 1 ;
+	sh:maxCount 1 ;
+	sh:severity sh:Info ;
+	sh:message "Optional property foaf:gender is missing."@en .
+	
+<#img> a sh:PropertyShape ;
+	sh:path foaf:img ;
+	sh:minCount 1 ;
+	sh:maxCount 1 ;
+	sh:severity sh:Info ;
+	sh:message "Optional property foaf:img is missing."@en .
+
+<#firstname> a sh:PropertyShape ;
+	sh:path foaf:firstname ;
+	sh:minCount 1 ;
+	sh:maxCount 1 ;
+	sh:severity sh:Info ;
+	sh:message "Optional property foaf:firstname is missing."@en .
+	
+<#geekcode> a sh:PropertyShape ;
+			sh:path foaf:geekcode ;
+			sh:minCount 1 ;
+			sh:maxCount 1 ;
+			sh:severity sh:Info ;
+			sh:message "Optional property foaf:geekcode is missing."@en .
+
+<#dbpedia-support-info>
+	sh:path rdf:type ;
+	sh:hasValue dbo:DBpedian ;
+	sh:severity sh:Info ;
+	sh:message
+		"Show your support to DBpedia by adding '<#me> a dbo:DBpedian' to your WebID/FOAF. If you do, we will add you to our website."@en .
+#===PersonShapeProperties===#
+
+
+#===KeyShapeProperties===#
+<#label> a sh:PropertyShape ;
+	sh:path rdf:label ;
+	sh:minCount 1 ;
+	sh:severity sh:Violation ;
+	sh:message "Required property rdf:label MUST occur once at least."@en .
+
+<#cert-modulus> a sh:PropertyShape ;
+	sh:path cert:modulus ;
+	sh:minCount 1 ;
+	sh:maxCount 1;
+	sh:dataType xsd:hexBinary ;
+	sh:severity sh:Violation ;
+	sh:message "Required property cert:modulus MUST occur once."@en .
+
+<#cert-exponent> a sh:PropertyShape ;
+	sh:path cert:modulus ;
+	sh:minCount 1 ;
+	sh:maxCount 1;
+	sh:dataType xsd:nonNegativeInteger ;
+	sh:severity sh:Violation ;
+	sh:message "Required property cert:exponent MUST occur once."@en .
+#===KeyShapeProperties===#

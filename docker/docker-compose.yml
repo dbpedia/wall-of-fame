@@ -1,0 +1,22 @@
+version: '3.5'
+
+services:
+  db:
+    image: tenforce/virtuoso
+    ports:
+      - 8895:8890
+      - 1111:1111
+    networks:
+      - wof
+    depends_on:
+      - app
+  app:
+    image: docker.io/library/walloffame:0.1-SNAPSHOT
+    ports:
+      - 8080:8080
+    networks:
+      - wof
+
+networks:
+  wof:
+    driver: bridge

@@ -1,0 +1,19 @@
+<https://vehnem.github.io/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://vehnem.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://vehnem.github.io/webid.ttl#this> .
+<https://vehnem.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://vehnem.github.io/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Github Vehnem" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "B3937DA0048A89E5E2E3E74124EE3F5721E409B65EEB2FDC1CEB92FF7AF2EBAA5E3A7C21397BE4E40F76E654D56E29BEB73CA398E3B5E561BC66E010FE38D4134381A162435E6F532C5312913CDA36234E2F77954A02AEE8A09A7A99BC267B17425EB9DFA04D3EC330EE05A93CC91CBAA4AF79CBB222E42F3C3FBE9C3BC6DBCEDDF40840EF4B7DFDF2E8F072E06040149057E794B118BD619D663852CBE892FA3686373008FFD9D6AC02BEF2A688CBA856F6B56643E4CCF02C86D1301FC4F5E6D07BD9A966031DDAFBC2EA6E31F6B7B00A516ABB106854EBD1ACC8633788D2470364EA6A492996F37DA7F7825FBBA0C5B9E2058DBA2DE6CDEB6C1E1399F1C1CB"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://vehnem.github.io/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Agent> .
+<https://vehnem.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "MARVIN" .
+<https://vehnem.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/img> <https://raw.githubusercontent.com/Vehnem/vehnem.github.io/master/marvin.png> .
+<https://vehnem.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/status> "Image adopted from https://www.flickr.com/photos/u2canreed/2555740379" .
+<https://vehnem.github.io/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "My Person" .
+_:genid2 <http://www.w3.org/ns/auth/cert#modulus> "EB2DCEE3BAD46816EBCE4BA6F781922D52BB04C47370C6B3E380DC07C19F4C786645E8BC1AA087D91D8D9A37E524ADA54627DF40F6F04F71A25DB1F9AD4FA1E711754529767B21ADD4E85A099E03623CEFDC05C1BE0CB6A6B33D318CF56F5A22707080D4C056625665512BC6755F92FB7A922FF238C343E74577A8A7205BEB250BD3321DE666AE32C411408E9ED0A8347384770FD56F5468FDE73A32A877978065C6FE48A6A5A71C6F93B461D16EB50DB3C96E025001EECAC88FC73A881856F36FD8FA036AB77EBA86602A9B0A7CC2310519848C7F285CDD03DFA0B2C8EA84D91D58169E226168AF7DED4B8996384E7EA0ABC958950D9B2FAA79249BEE1076FB"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid2 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://vehnem.github.io/webid.ttl#me> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://vehnem.github.io/webid.ttl#me> <http://xmlns.com/foaf/0.1/name> "Marvin Hofer" .
+<https://vehnem.github.io/webid.ttl#me> <http://www.w3.org/ns/auth/cert#key> _:genid2 .

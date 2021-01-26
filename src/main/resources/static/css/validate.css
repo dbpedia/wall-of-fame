@@ -1,0 +1,68 @@
+textarea {
+    width: 100%;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box; /* Opera/IE 8+ */
+}
+
+.collapsible {
+    color: #fff;
+    background-color: #007bff;
+    /*color: #eee;*/
+    cursor: pointer;
+    padding: 1em;
+    width: 700px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    border-radius: 4px;
+}
+
+.violations {
+    background-color: #DC143C;
+    padding: 1em;
+    border-radius: 4px;
+}
+
+.warnings {
+    background-color: #FFA500;
+    padding: 1em;
+    border-radius: 4px;
+}
+
+.shaclResult {
+    padding: 1em;
+    border-radius: 4px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.collapsible:hover {
+    background-color: #DCDCDC;
+    color: black;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+    padding: 1em;
+    display: block;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    width: auto;
+    border-radius: 4px;
+}
+
+.collapsible:after {
+    content: '\02795';
+    /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: white;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2796";
+    /* Unicode character for "minus" sign (-) */
+}

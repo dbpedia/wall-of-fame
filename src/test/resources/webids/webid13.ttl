@@ -1,0 +1,10 @@
+<https://jj-author.github.io/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://jj-author.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://jj-author.github.io/webid.ttl#this> .
+<https://jj-author.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://jj-author.github.io/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "jj-author databus webid" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "C2F310FF53A0DDCE2FB0CADF458F90D9892EB29C629AC5A30C9A5C3045C13633133B7FF91A4615B8F0AB7E3C02C37C9D44CA09D7680A5A0980C8BBAA729985893C685F63182A8C94E0238EFD1D989A5673DFD3385B253DD9BD6A2F7AB819F2E11E92FB1D028E11948DB06A9A1EB905312BB4A1B2F73BA38A0A4105C27D7F84E5822CC1EFF78A37D0AFC25A0DB93779FD9C2CA1090A7BD2AF553FADDE3023DD83BF8DD9EBD3498370AE3F2E763015FA1E2F0ABE3C0966FFE6F9B82BFED95980211D73159350736EBDEAEF8CDD41B4DB366C5CF333BB8B1BB61EA2237A193D16F8966DA6493B65DF56540BD500E80747653ED68A9AE4BA19CD31ED2C85DB21E963"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://jj-author.github.io/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://jj-author.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "JJ-Author" .
+<https://jj-author.github.io/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

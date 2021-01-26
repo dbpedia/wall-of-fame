@@ -1,0 +1,18 @@
+server:
+  port: 20088
+virtuoso:
+  url: "jdbc:virtuoso://localhost:1111/charset=UTF-8/log_enable=2"
+#  url: "jdbc:virtuoso://db:1111/charset=UTF-8/log_enable=2"
+  usr: "dba"
+  psw: "dba"
+  graph: "http://webids/"
+exhibit:
+  file: "./tmp/webids.js"
+#databus:
+#  file: "./databus/uniformedWebIds/"
+
+#spring:
+#  main:
+#    web-application-type: none
+
+

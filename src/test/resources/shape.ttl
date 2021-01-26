@@ -1,0 +1,71 @@
+prefix sh: <http://www.w3.org/ns/shacl#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix shsh: <http://www.w3.org/ns/shacl-shacl#> 
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix cert: <http://www.w3.org/ns/auth/cert#>
+prefix : <http://example.org/>
+
+foaf:PersonalProfileDocument a sh:NodeShape, rdfs:Class ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue  <http://xmlns.com/foaf/0.1/PersonalProfileDocument> ;
+        sh:maxCount 1;
+    ] ;
+    sh:property [
+        sh:path foaf:maker ;
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:node :WebId;
+    ] ;
+    sh:property [
+        sh:path foaf:primaryTopic ;
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:node :WebId;
+    ] .
+
+:WebId a sh:NodeShape, rdfs:Class ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue foaf:Person ;
+        sh:maxCount 1;
+    ] ;
+    sh:property [
+        sh:path foaf:name ;
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path cert:key;
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:node :Key ;
+    ] .
+
+:Key a sh:NodeShape, rdfs:Class ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue cert:RSAPublicKey ;
+        sh:maxCount 1;
+    ] ;
+    sh:property [
+        sh:path rdf:label ;
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path cert:modulus ;
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:datatype xsd:hexBinary ;
+    ] ;
+    sh:property [
+        sh:path cert:exponent ;
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:datatype xsd:nonNegativeInteger ;
+    ] .

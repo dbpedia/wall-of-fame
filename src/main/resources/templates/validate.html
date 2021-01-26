@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Validation Form</title>
+
+    <link rel='stylesheet' type='text/css' th:href="@{css/bootstrap.min.css}"/>
+    <script th:src="@{js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{css/validate.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{css/yate.css}"/>
+
+
+</head>
+
+<body>
+<!--/*@thymesVar id="result" type="org.dbpedia.walloffame.spring.model.Result"*/-->
+<!--/*@thymesVar id="webid" type="org.dbpedia.walloffame.spring.model.WebId"*/-->
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+
+        <a class="navbar-brand" href="/">
+            <img th:src="@{images/DBpediaLogo.svg}"/>
+        </a>
+
+        <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"
+                data-target="#navbarResponsive" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/walloffame">Wall of Fame</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/validate">WebId Validator</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="https://github.com/Eisenbahnplatte/WallOfFame/blob/master/src/main/resources/shacl/shapes.ttl">Shacl
+                        File</a>
+                </li>
+                <li class="nav-item">
+                    <script language="JavaScript">
+                        document.write('<a class="nav-link" href="' + window.location.protocol + '//' + window.location.hostname + ':8895/sparql/' + '" >Sparql Endpoint</a> ');
+                    </script>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+</nav>
+
+<br>
+
+<div class="container-fluid" style="padding: 0 100px 100px;">
+
+    <div class="row">
+        <div class="col-sm">
+            You can either paste the URL of your WebId into here:
+            <br/>
+
+            <form method="post" name="URLForm" th:action="@{/fetchAndValidate}" th:object="${webid}" onsubmit="return validateURL()">
+
+                <button class="btn btn-primary" type="submit" style="float: right; width: 200px">Fetch and Validate</button>
+                <div style="overflow: hidden; padding-right: .5em;">
+                <input class="form-control" type="text" th:field="*{url}" id="webidURL" name="webidURL" style="width: 100%;">
+                </div>
+
+                <div id="url_ok" class="alert alert-danger" style="display: none">
+                    URL should contain HTTPS
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="col-sm">
+            Or you can paste the content of your WebId here:
+            <br/>
+            <form method="post" th:action="@{/validate}" th:object="${webid}">
+                <textarea class="form-control" id="webid" th:field="*{turtle}" style="height: 20px"></textarea>
+                <br>
+                <button class="btn btn-primary" type="submit">Validate</button>
+            </form>
+        </div>
+        <div class="col-sm">
+            Your Webid:
+            <div class="card" style="width: 24rem;">
+                <img alt="Card image cap" class="card-img-top" th:src="${webid.img}">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <td th:text="${webid.name}"></td>
+                    </h5>
+                    <p class="card-text">
+                        Name:
+                    <td th:text="${webid.firstName}"></td>
+                    <br>
+                    Gender:
+                    <td th:text="${webid.gender}"></td>
+                    <br>
+                    Geekcode:
+                    <td th:text="${webid.geekCode}"></td>
+                    </p>
+                    <a class="btn btn-primary" th:href="${webid.maker}">Go to WebId</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div id="result" th:if="${result.getResult() != null or not #arrays.isEmpty(result.getViolations())}">
+        <!--        <button id="shortResult" class="collapsible" type="button">-->
+        <!--            <strong>Result</strong>-->
+        <!--            <ul>-->
+        <!--                <li th:if="${not #arrays.isEmpty(result.getViolations())}">-->
+        <!--                    Violations occurred in your WebId.-->
+        <!--                    <br>-->
+        <!--                    <small>-->
+        <!--                        <div th:inline="text">-->
+        <!--                            Conflicting nodes: [[${#arrays.length(result.getViolations())}]]-->
+        <!--                        </div>-->
+        <!--                    </small>-->
+        <!--                </li>-->
+        <!--                <li th:if="${not #arrays.isEmpty(result.getInfos())}">-->
+        <!--                    Warnings occurred in your WebId.-->
+        <!--                    <br>-->
+        <!--                    <small>-->
+        <!--                        <div th:inline="text">-->
+        <!--                            Conflicting nodes: [[${#arrays.length(result.getInfos())}]]-->
+        <!--                        </div>-->
+        <!--                    </small>-->
+        <!--                </li>-->
+        <!--                <li th:if="${#arrays.isEmpty(result.getInfos()) and #arrays.isEmpty(result.getViolations())}">-->
+        <!--                    Your WebId is perfect!-->
+        <!--                </li>-->
+        <!--            </ul>-->
+        <!--        </button>-->
+
+        <div class="content">
+
+            <!--            <h3> Validation Result: </h3>-->
+
+            <div id="violations" class="violations" th:if="${not #arrays.isEmpty(result.getViolations())}">
+                <strong> Violations: </strong>
+                <br>
+                <ul th:each="violation : ${result.getViolations()}">
+                    <li>
+                        <p th:inline="text">
+                            Conflicting Node: [[${violation._1()}]]
+                            <br>
+                            Message: <b th:text="${violation._2()}">&nbsp;</b>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="warnings" class="warnings" th:if="${not #arrays.isEmpty(result.getInfos())}">
+                <strong> Warnings: </strong>
+                <br>
+                <ul th:each="warning : ${result.getInfos()}">
+                    <li>
+                        <p th:inline="text">
+                            Conflicting Node: [[${warning._1()}]]
+                            <br>
+                            Message:
+                            <img th:if="${warning._2().contains('dbo:DBpedian')}"
+                                 src="https://wiki.dbpedia.org/sites/default/files/favicon-32x32.png"/>
+                            <b th:text="${warning._2()}">&nbsp;</b>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="shaclResult" class="shaclResult" th:if="${result.getResult() != null}">
+                <strong>Full Shacl Result: </strong>
+                <div class="form-control" id="fineGrainedResult" style="white-space: pre-wrap"
+                     th:text="${result.result()}"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script th:src="@{js/validate.js}"></script>
+
+<!--Yate Turtle Syntax Highlighting-->
+<script th:src="@{js/yate.bundled.js}"></script>
+<script type="text/javascript">
+    // var yate = YATE(document.getElementById("showcase"));
+    var yate = YATE.fromTextArea(document.getElementById('webid'));
+</script>
+<!--Yate Turtle Syntax Highlighting-->
+
+
+<!--<script th:inline="javascript">-->
+<!--    /*<![CDATA[*/-->
+<!--    var violations = /*[[${result.getViolations()}]]*/ 'default';-->
+<!--    var warnings = /*[[${result.getInfos()}]]*/ 'default';-->
+<!--    var elements = document.getElementsByClassName('collapsible');-->
+
+<!--    if (violations.length !== 0) {-->
+<!--        for (var i in elements) {-->
+<!--            if (elements.hasOwnProperty(i)) {-->
+<!--                elements[i].className += ' violations';-->
+<!--            }-->
+<!--        }-->
+<!--    } else {-->
+<!--        if (warnings.length !== 0) {-->
+<!--            for (var k in elements) {-->
+<!--                if (elements.hasOwnProperty(k)) {-->
+<!--                    elements[k].className += ' warnings';-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    }-->
+<!--    /*]]>*/-->
+<!--</script>-->
+
+
+</body>
+
+</html>

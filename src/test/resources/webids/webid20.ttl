@@ -1,0 +1,10 @@
+<https://manonthegithub.github.io/GSoC-2020/dbpedia/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://manonthegithub.github.io/GSoC-2020/dbpedia/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://manonthegithub.github.io/GSoC-2020/dbpedia/webid.ttl#this> .
+<https://manonthegithub.github.io/GSoC-2020/dbpedia/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://manonthegithub.github.io/GSoC-2020/dbpedia/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "test webid GSoC" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "bb501ab0179951b2ac9bdac463d835a82f17a02c2c42e3d79fcbc5c4864703d670b6341df0272ebfb7c4af7ad9bc6139915094a74af84b5c1fd13c9b62059db2d9f614f404926ba353114cd004f1f66859f732e42b78f51042a1d3e590cf8d8778e128736236f38a2be00fa27aaa77a8895884424e28225c82c6050c238b75d98e23b8d412d61240a589809938a026e8596e466073233586904d23ab4c2fb747db2e6812594a21146e78b0aa07adafd6d1df47033189afd70328227cf9f77a76be3caf47f370d5b15eb6390d30f77555ecad76b2f305ad475123d286c1268772666047c4ee0a2cfff6ec0326770abb7cda26b59dda9c9ee694c43449a23d7511"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://manonthegithub.github.io/GSoC-2020/dbpedia/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://manonthegithub.github.io/GSoC-2020/dbpedia/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "Kirill Yankov (test)" .
+<https://manonthegithub.github.io/GSoC-2020/dbpedia/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

@@ -1,0 +1,10 @@
+<https://angeloperr.github.io/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://angeloperr.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://angeloperr.github.io/webid.ttl#this> .
+<https://angeloperr.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://angeloperr.github.io/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Generated on Laptop on 30 June 2020" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "eec7686a323732e9c77427be31aebf780eb74efedad56afd8cbc7cf420e999ba6f004abe76a92373e9337df3f6adad6c6ad3f70a0c136fdebc5f356600bf3d64c1606b48480a66ba7ca1f5a3fdada85d102ecb5c2623f509282cfe79bb1c7b1fa28fe85875626aa2783cac0a087b0dd7c925ca86228896038fd89dbcb8f65d11db0583a7477e51fd427fcdea8825e05b9c84511e7c3f8daf16913957301e48f9b5ff5fdd5861ab45011c39f46c40d62161f7f1affcaba30d28c7d82eb3d04f9066a63bbf72f204f1b314cdc62e0d1129ff3cadc17b49bcf26defc98d5565c08cef87d08cc9a16ea891a767532263c95e56d9e21b1cbc7a92684ac640e8c84c7d"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://angeloperr.github.io/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://angeloperr.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "YOUR_NAME" .
+<https://angeloperr.github.io/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

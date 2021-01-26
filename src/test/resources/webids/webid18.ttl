@@ -1,0 +1,10 @@
+<https://lsiciliani.github.io/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://lsiciliani.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://lsiciliani.github.io/webid.ttl#this> .
+<https://lsiciliani.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://lsiciliani.github.io/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Generated on laptop 280820" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "C571945839FAC9587CCA397659B2C5106AADAE540F61818E691D33275BEE99D532387CCDB3D1734F64205977CA08F12F6ED4AEF774B7EAE1AD26CB16C6ECDAAEC4E862EDAFB82A8AA7EBD8CF19F0723793E89933648247452F6697D80359018CA3CA50D880B805D9CB0681AB86D48D136BDE57057A4B342323F866C8BB46334D2B62BD40F73480A224065A86DC6B70C5944BC8B9E592E63C1F61EBF843A14ED651758E8A043B18DF7FA3841BC3DABBAD65086E519921915A27DB588824968F35EB4B1ED0FB267EEC94ED9E539C1814640DD3C8071E4D0FA3BB73A8B6D72D2EB1F4FB40D06F701026B0484FE180390F387FEEB79FC1C365EAEB09D8D564ED454F"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://lsiciliani.github.io/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://lsiciliani.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "Lucia Siciliani" .
+<https://lsiciliani.github.io/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

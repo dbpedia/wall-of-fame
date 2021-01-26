@@ -1,0 +1,11 @@
+<https://dbpedia.github.io/accounts/shared-webids/dnkg.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://dbpedia.github.io/accounts/shared-webids/dnkg.ttl> <http://xmlns.com/foaf/0.1/maker> <https://dbpedia.github.io/accounts/shared-webids/dnkg.ttl#this> .
+<https://dbpedia.github.io/accounts/shared-webids/dnkg.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://dbpedia.github.io/accounts/shared-webids/dnkg.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "Dutch National Knowledge Graph" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "C75E77EEF27063C6332517048D097FCDDE312DB1E5C173A71B9540ADB99D100D667E6F0A7EBABE2552793ED401E184C16473C51F1BC3FDB1C48CF72C1A4B6BA9B7A37131C12CE66BB28CD10C3DCE5804EC2D231AE459B614D8BD530E686E7B931519514570E02ECB82ABA6897C34DF6BDFC3F75F6FBF03DFF1271B7D6B6251B6E598E4904119C9C2282270F06D3EB8D8AF3F838E94503CF48C8A3F83DC3E0A76E9C2F2B07F8F3E54CCAE11441806A0D641116E02CF1642EE1D9624CE28115A827A3FD4FAC9C57EB07F60257CE49111E517573624FFD60FCBF99DB3C295881809FB19D70CCB68352F240600390159AEF4A667F597E7A1D4616DBEA2269A821255"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://dbpedia.github.io/accounts/shared-webids/dnkg.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Agent> .
+<https://dbpedia.github.io/accounts/shared-webids/dnkg.ttl#this> <http://xmlns.com/foaf/0.1/name> "Dutch National Knowledge Graph" .
+<https://dbpedia.github.io/accounts/shared-webids/dnkg.ttl#this> <http://xmlns.com/foaf/0.1/status> "Data of the Dutch National Knowledge Graph" .
+<https://dbpedia.github.io/accounts/shared-webids/dnkg.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

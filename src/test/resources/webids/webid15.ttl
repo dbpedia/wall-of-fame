@@ -1,0 +1,10 @@
+<https://kurzum.github.io/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://kurzum.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://kurzum.github.io/webid.ttl#this> .
+<https://kurzum.github.io/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://kurzum.github.io/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "databus key" .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "DB1FC0FF99133B709F13C9448A9928D0B696E187FC18942FC76E1EB2E7D84AF63880744121EB466F9B25B6D4EE503BB1F7A7AC2F52E0CC836B056F180118A1E7C9B4C05ACC9069666E047D1A2DF993061021F35E558711E34E5CAAD05B27AC5395E3E0435D7253809622A4472751D126E41D1B01FE3BC8D29005F235878CD44A93FB463F3CE4C41ED2E118AA875707885BA880962CBB4A1458D8DC856C548A74CD268E03C38AADB88BF51DBC045DA7FD8D1F397C0566B5622E617C7C1B4C8F0DD1E63995DB0CB08C914EFFE04CB9C84C047ECA57C9C98E3AC821A1CEF9FA90DD3D93ED063050A647AF1D76B19517AFBD39A71443F6F70F77A864A3EF4C1084FB"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://kurzum.github.io/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://kurzum.github.io/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "Sebastian Hellmann" .
+<https://kurzum.github.io/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

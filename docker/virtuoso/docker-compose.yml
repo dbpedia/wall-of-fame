@@ -1,0 +1,8 @@
+version: '3.5'
+
+services:
+  db:
+    image: tenforce/virtuoso
+    ports:
+      - 8895:8890
+      - 1111:1111

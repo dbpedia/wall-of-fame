@@ -1,0 +1,10 @@
+<https://kf4git.github.io/WebIdRep/webid.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/PersonalProfileDocument> .
+<https://kf4git.github.io/WebIdRep/webid.ttl> <http://xmlns.com/foaf/0.1/maker> <https://kf4git.github.io/WebIdRep/webid.ttl#this> .
+<https://kf4git.github.io/WebIdRep/webid.ttl> <http://xmlns.com/foaf/0.1/primaryTopic> <https://kf4git.github.io/WebIdRep/webid.ttl#this> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/cert#RSAPublicKey> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> "made due to the DBpedia Stack tutorial , on July 1st, 2020 " .
+_:genid1 <http://www.w3.org/ns/auth/cert#modulus> "E6AE2E4B525795D07B2B8B99BB970E9A3A1A936E2B26C56EF7F011C284DE6F60A67B823C65130BA8A92813B8F5DD33F5938F93DE3697C35A5F49A00F5BC9962F447BDFCE5BBA9FDD8FF29CA7881DCF51636A07B46C3ECADB1391CFB2C410046A4D8BB328120DF5BAC60302A1B61238D564D32654CF074DED9C5F5A08A19B68AC00631D49F5D1815BAD2E9291216458A3178609BF075CC291D0CD41D2D5ACA5D4FF50CD7C401A48C357575EFA156196D5B4126D4432CD6C79A214A97CF2E8562B0077DD6B1B19E5B61AC17D06C356680BE616926962F1590B9A51544CCE94B82A3270881C24F068370C6AC5A65DF471B49C06B97B4F232E1D4A015FF1CB4BCB6F"^^<http://www.w3.org/2001/XMLSchema#hexBinary> .
+_:genid1 <http://www.w3.org/ns/auth/cert#exponent> "65537"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<https://kf4git.github.io/WebIdRep/webid.ttl#this> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<https://kf4git.github.io/WebIdRep/webid.ttl#this> <http://xmlns.com/foaf/0.1/name> "Karen Fuchs" .
+<https://kf4git.github.io/WebIdRep/webid.ttl#this> <http://www.w3.org/ns/auth/cert#key> _:genid1 .

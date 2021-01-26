@@ -1,4 +1,11 @@
 target/
+tmp/
+.idea
+.project
+.settings
+.settings/*
+*.iml
+*logback.xml
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
