@@ -25,8 +25,13 @@ All contributions to this repo will be considered as freely given to DBpedia and
 
 Run webapp (accessible at port 20088, per default):
 
-1. Start Virtuoso: `docker-compose -f docker/virtuoso/docker-compose.yml up`
-2. Start Application (in new Terminal window): `mvn spring-boot:run`
+1. Start Virtuoso: 
+
+```docker-compose -f docker/virtuoso/docker-compose.yml up```
+
+2. Start Application (in new Terminal window): 
+
+```mvn spring-boot:run```
 
 --------------------------------
 
