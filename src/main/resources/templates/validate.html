@@ -3,11 +3,12 @@
 <head>
     <title>Validation Form</title>
 
-    <link rel='stylesheet' type='text/css' th:href="@{css/bootstrap.min.css}"/>
-    <script th:src="@{js/bootstrap.min.js}"></script>
+<!--    <link rel='stylesheet' type='text/css' th:href="@{css/bootstrap.min.css}"/>-->
+<!--    <script th:src="@{js/bootstrap.min.js}"></script>-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" th:href="@{css/validate.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{css/yate.css}"/>
-
 
 </head>
 
@@ -96,7 +97,7 @@
             </form>
         </div>
         <div class="col-sm">
-            Your Webid:
+            Your WebId:
             <div class="card" style="width: 24rem;">
                 <img alt="Card image cap" class="card-img-top" th:src="${webid.img}">
                 <div class="card-body">
@@ -197,7 +198,8 @@
 <script th:src="@{js/validate.js}"></script>
 
 <!--Yate Turtle Syntax Highlighting-->
-<script th:src="@{js/yate.bundled.js}"></script>
+<!--<script th:src="@{js/yate.bundled.js}"></script>-->
+<script src="https://perfectkb.github.io/yate/dist/yate.bundled.min.js"></script>
 <script type="text/javascript">
     // var yate = YATE(document.getElementById("showcase"));
     var yate = YATE.fromTextArea(document.getElementById('webid'));
@@ -228,7 +230,6 @@
 <!--    }-->
 <!--    /*]]>*/-->
 <!--</script>-->
-
 
 </body>
 
