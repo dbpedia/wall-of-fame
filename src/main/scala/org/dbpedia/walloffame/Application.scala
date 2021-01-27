@@ -1,11 +1,17 @@
 package org.dbpedia.walloffame
 
 import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.{EnableAutoConfiguration, SpringBootApplication}
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
+import org.springframework.context.annotation.{ComponentScan, Configuration, FilterType}
 
-@SpringBootApplication
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan(
+  basePackages = Array("org.dbpedia.walloffame"),
+  excludeFilters = Array(new ComponentScan.Filter(`type` = FilterType.REGEX, pattern = Array("org.dbpedia.walloffame.DatabusApplication", "org.dbpedia.walloffame.InitRunnerDatabus")))
+)
 class Application extends SpringBootServletInitializer{
   @Override
   protected override def configure(application:SpringApplicationBuilder):SpringApplicationBuilder ={

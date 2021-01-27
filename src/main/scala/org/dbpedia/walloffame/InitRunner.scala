@@ -25,13 +25,15 @@ class InitRunner extends CommandLineRunner {
 
     //delete all webId graphs from Session before!
     var wait = true
+    var time = 0
     while (wait) {
       try {
         VirtuosoHandler.getAllGraphs(config.virtuoso).foreach(graph => VirtuosoHandler.clearGraph(config.virtuoso, graph))
         wait = false
       } catch {
         case e: Exception =>
-          println("waiting for vos to start up")
+          time +=1
+          println(s"Waiting since $time seconds for Virtuoso to start up.")
           Thread.sleep(1000)
       }
     }

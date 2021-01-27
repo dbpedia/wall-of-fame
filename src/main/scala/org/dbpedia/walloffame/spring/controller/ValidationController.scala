@@ -1,27 +1,21 @@
 package org.dbpedia.walloffame.spring.controller
 
-import better.files.File
 import org.apache.commons.io.IOUtils
 import org.apache.jena.atlas.web.HttpException
-import org.apache.jena.rdf.model.{Model, ModelFactory, RDFWriter}
+import org.apache.jena.rdf.model.{Model, ModelFactory}
 import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException, RiotNotFoundException}
 import org.dbpedia.walloffame.Config
-import org.dbpedia.walloffame.convert.ModelToJSONConverter
 import org.dbpedia.walloffame.spring.model.{Result, WebId}
 import org.dbpedia.walloffame.uniform.WebIdUniformer
-import org.dbpedia.walloffame.utils.Util
 import org.dbpedia.walloffame.validation.WebIdValidator
-import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.stereotype.Controller
-import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping, RequestParam}
+import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping}
 import org.springframework.web.servlet.ModelAndView
 
 import java.io
 import java.io.{ByteArrayOutputStream, FileInputStream, IOException}
-import java.net.{MalformedURLException, SocketTimeoutException, URL, UnknownHostException}
+import java.net.{MalformedURLException, SocketTimeoutException, UnknownHostException}
 import javax.servlet.http.HttpServletResponse
-import javax.validation.Valid
 
 @Controller
 class ValidationController(config: Config) {
@@ -132,16 +126,6 @@ class ValidationController(config: Config) {
       case riotNotFoundException: RiotNotFoundException => handleException(new ModelAndView("validate"), webId, riotNotFoundException.toString)
     }
 
-    //      val turtle = Util.get(new URL(webId.url.trim))
-    //      if (turtle.isDefined) {
-    //        webId.setTurtle(turtle.get)
-    //        validateStr(webId)
-    //      }
-    //      else {
-    //        val result = new Result
-    //        result.setResult("The URL you entered is not correct")
-    //        new ModelAndView("validate", "result", result)
-    //      }
   }
 
 
