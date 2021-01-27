@@ -25,24 +25,22 @@ All contributions to this repo will be considered as freely given to DBpedia and
 
 Run webapp (accessible at port 20088, per default):
 
-1. Start Virtuoso 
+1. Start Virtuoso
 
-   
-    docker-compose -f docker/virtuoso/docker-compose.yml up
+```docker-compose -f docker/virtuoso/docker-compose.yml up```
 
 2. Start Application (in new Terminal window):
 
-
-    mvn spring-boot:run
+```mvn spring-boot:run```
 
 --------------------------------
 
 Push WebIds of Wall of Fame to DBpedia Databus:
 
-    mvn spring-boot:run -Dstart-class=org.dbpedia.walloffame.DatabusApplication -Dspring-boot.run.arguments=databus/uniformedWebIds/$(date +%y-%m-%d) && cd databus/uniformedWebIds/ && mvn versions:set -DnewVersion=$(date +%y-%m-%d) && mvn prepare-package && mvn databus:package-export && mvn databus:deploy
+```mvn spring-boot:run -Dstart-class=org.dbpedia.walloffame.DatabusApplication -Dspring-boot.run.arguments=databus/uniformedWebIds/$(date +%y-%m-%d) && cd databus/uniformedWebIds/ && mvn versions:set -DnewVersion=$(date +%y-%m-%d) && mvn prepare-package && mvn databus:package-export && mvn databus:deploy```
 
 --------------------------------
 
-Virtuoso and App in one docker (not working yet):
+Virtuoso and App in one command (not working yet):
 
-    mvn spring-boot:build-image && cd docker && sudo docker-compose up
+```mvn spring-boot:build-image && docker-compose -f docker/docker-compose.yml up```
