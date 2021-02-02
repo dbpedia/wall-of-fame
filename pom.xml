@@ -20,7 +20,7 @@
         <java.version>1.8</java.version>
         <scala.version>2.11.12</scala.version>
         <jena.version>3.14.0</jena.version>
-        <main-class>org.dbpedia.walloffame.Application</main-class>
+<!--        <start-class>org.dbpedia.walloffame.Application</start-class>-->
     </properties>
 
     <dependencies>
@@ -130,23 +130,24 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-configuration-processor</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>default</id>
-                        <configuration>
-                            <mainClass>${main-class}</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
+<!--                <configuration>-->
+<!--                    <excludes>-->
+<!--                        <exclude>-->
+<!--                            <groupId>org.springframework.boot</groupId>-->
+<!--                            <artifactId>spring-boot-configuration-processor</artifactId>-->
+<!--                        </exclude>-->
+<!--                    </excludes>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>default</id>-->
+<!--                        <configuration>-->
+<!--                            <mainClass>org.dbpedia.walloffame.Application</mainClass>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
             </plugin>
+
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>

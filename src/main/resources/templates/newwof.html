@@ -1,18 +1,451 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>DBpedia's Wall of Fame</title>
     <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
-    <link href='http://www.simile-widgets.org/styles/common.css' rel='stylesheet' type='text/css'/>
-    <link href="/webids.js" rel="exhibit/data" type="application/json"/>
 
-    <script src="http://api.simile-widgets.org/exhibit/current/exhibit-api.js"></script>
-    <link href="http://api.simile-widgets.org/exhibit/current/extensions/time/time-extension.js" rel="exhibit-extension"
-          type="text/javascript"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"></script>
 
-    <link rel='stylesheet' th:href="@{css/styles.css}" type='text/css'/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.css">
+    <link rel="stylesheet" href="https://material.angularjs.org/1.2.2/docs.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+    <script src="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.js"></script>
+
 </head>
+
 <body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+
+        <a class="navbar-brand" href="/">
+            <img th:src="@{images/DBpediaLogo.svg}"/>
+        </a>
+
+        <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"
+                data-target="#navbarResponsive" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/walloffame">Wall of Fame</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/validate">WebId Validator</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="https://github.com/dbpedia/wall-of-fame/blob/master/src/main/resources/shacl/shapes.ttl">Shacl
+                        File</a>
+                </li>
+                <li class="nav-item">
+                    <script language="JavaScript">
+                        document.write('<a class="nav-link" href="' + window.location.protocol + '//' + window.location.hostname + ':8895/sparql/' + '" >Sparql Endpoint</a> ');
+                    </script>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+</nav>
+<!-- Navigation -->
+
+
+<div class="container-fluid" style="padding: 0 100px 100px;">
+
+    <!-- DESCRIPTION TEXT -->
+    <table id="header">
+        <tr style="vertical-align:middle">
+            <td>
+                <p>
+                    Welcome to DBpedia's Wall of Fame. Here you can have a look at all Users registered on the DBpedia
+                    Databus. <br>
+                    Additionally, you can validate and publish your own WebId here. <br><br>
+                    For further information about WebIds check <a href="https://github.com/dbpedia/webid"
+                                                                  target="_blank">DBpedia's
+                    WebId Repository</a> and the
+                    <a href="https://forum.dbpedia.org/" target="_blank">DBpedia Forum</a>.
+                </p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- SELECT GENDER -->
+    <!--    <div>-->
+    <!--        <form class="form-horizontal">-->
+    <!--            <div class="form-group">-->
+    <!--                <div class="col-md-3"><label><i class="fa fa-question-circle fa-fw"></i>District List</label></div>-->
+    <!--                <div class="col-md-4">-->
+    <!--                    <select class="form-control" ng-model="selectedDist" ng-options="district.name for district in districts">-->
+    <!--                        <option value="">Select</option>-->
+    <!--                    </select>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <div class="form-group">-->
+    <!--                <div class="col-md-3"><label><i class="fa fa-question-circle fa-fw"></i> Thana List</label></div>-->
+    <!--                <div class="col-md-4">-->
+    <!--                    <select class="form-control" ng-model="selectedThana" ng-options="thana.name for thana in thanas | filter: filterExpression">-->
+    <!--                        <option value="">Select</option>-->
+    <!--                    </select>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </form>-->
+    <!--    </div>-->
+
+<!--    <div ng-app="wofApp" ng-controller="webIdController">-->
+<!--        <select name="cboCountry" ng-model="selectedGender">-->
+<!--            <option ng:repeat="webid in webids" value="{{webid.gender}}">{{webid.gender}}</option>-->
+<!--        </select>-->
+<!--        <span>Selected Gender id is {{selectedGender}}</span>-->
+
+<!--    </div>-->
+
+<!--
+    <div class="column side is-3">
+
+
+        <facets-view node="artifactNode" resource-type="artifact" on-change="onFacetSettingsChanged()"
+                     class="ng-isolate-scope">
+            <div class="file-browser">
+
+                <div ng-repeat="facet in $ctrl.viewModel"
+                     ng-if="!$ctrl.isLoading &amp;&amp; facet.visibleFacetSettings.length > 0" class="ng-scope">
+                    <h1 class="title is-6 ng-binding">Version</h1>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox is-override"
+                                 ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--Latest Version" name="check--Latest Version"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-not-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--Latest Version" class="ng-binding">Latest Version</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--2020.09.30-220000" name="check--2020.09.30-220000"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--2020.09.30-220000" class="ng-binding">2020.09.30-220000</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--2020.10.08-220000" name="check--2020.10.08-220000"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--2020.10.08-220000" class="ng-binding">2020.10.08-220000</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--2020.11.21-220000" name="check--2020.11.21-220000"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--2020.11.21-220000" class="ng-binding">2020.11.21-220000</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--2021.01.22-220000" name="check--2021.01.22-220000"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--2021.01.22-220000" class="ng-binding">2021.01.22-220000</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--2020.09.28-220000" name="check--2020.09.28-220000"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--2020.09.28-220000" class="ng-binding">2020.09.28-220000</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--2021.01.12-220000" name="check--2021.01.12-220000"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--2021.01.12-220000" class="ng-binding">2021.01.12-220000</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-if="!$ctrl.readonly" class="add-filter ng-scope">
+                        <div class="control has-icons-left">
+                            <input id="version-filter" type="text" placeholder="More Versions..."
+                                   class="input is-transparent ng-pristine ng-untouched ng-valid ng-empty"
+                                   ng-model="facet.autofill.input" ng-keyup="$ctrl.complete(facet)"
+                                   ng-focus="$ctrl.complete(facet)">
+                            <span class="icon is-left">
+          <i class="fa fa-search"></i>
+        </span>
+                        </div>
+                    </div>
+                </div>
+                <div ng-repeat="facet in $ctrl.viewModel"
+                     ng-if="!$ctrl.isLoading &amp;&amp; facet.visibleFacetSettings.length > 0" class="ng-scope">
+                    <h1 class="title is-6 ng-binding">Compression</h1>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--None" name="check--None"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--None" class="ng-binding">None</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-if="!$ctrl.readonly" class="add-filter ng-scope">
+                        <div class="control has-icons-left">
+                            <input id="version-filter" type="text" placeholder="More Compressions..."
+                                   class="input is-transparent ng-pristine ng-untouched ng-valid ng-empty"
+                                   ng-model="facet.autofill.input" ng-keyup="$ctrl.complete(facet)"
+                                   ng-focus="$ctrl.complete(facet)">
+                            <span class="icon is-left">
+          <i class="fa fa-search"></i>
+        </span>
+                        </div>
+                    </div>
+                </div>
+                <div ng-repeat="facet in $ctrl.viewModel"
+                     ng-if="!$ctrl.isLoading &amp;&amp; facet.visibleFacetSettings.length > 0" class="ng-scope">
+                    <h1 class="title is-6 ng-binding">Format</h1>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--csv" name="check--csv"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--csv" class="ng-binding">csv</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-if="!$ctrl.readonly" class="add-filter ng-scope">
+                        <div class="control has-icons-left">
+                            <input id="version-filter" type="text" placeholder="More Formats..."
+                                   class="input is-transparent ng-pristine ng-untouched ng-valid ng-empty"
+                                   ng-model="facet.autofill.input" ng-keyup="$ctrl.complete(facet)"
+                                   ng-focus="$ctrl.complete(facet)">
+                            <span class="icon is-left">
+          <i class="fa fa-search"></i>
+        </span>
+
+                        </div>
+                    </div>
+                </div>
+                <div ng-repeat="facet in $ctrl.viewModel"
+                     ng-if="!$ctrl.isLoading &amp;&amp; facet.visibleFacetSettings.length > 0" class="ng-scope">
+                    <h1 class="title is-6 ng-binding">Type</h1>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--dev" name="check--dev"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--dev" class="ng-binding">dev</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-repeat="facetValue in facet.visibleFacetSettings" class="ng-scope">
+                        <override-checkbox label="$ctrl.getFacetLabel(facetValue.value)"
+                                           is-override="facetValue.isOverride" check-value="facetValue.checked"
+                                           readonly="$ctrl.readonly"
+                                           on-change="$ctrl.changeFacetValueState(facet.key, facetValue.value, !facetValue.checked)"
+                                           class="ng-isolate-scope">
+                            <div class="field override-checkbox" ng-class="{ 'is-override' : $ctrl.isOverride }">
+                                <input id="check--official" name="check--official"
+                                       class="is-checkradio ng-pristine ng-untouched ng-valid ng-empty"
+                                       ng-disabled="$ctrl.readonly" type="checkbox" ng-change="$ctrl.change()"
+                                       ng-model="$ctrl.checkValue">
+                                <label for="check--official" class="ng-binding">official</label>
+                            </div>
+                        </override-checkbox>
+                    </div>
+                    <div ng-if="!$ctrl.readonly" class="add-filter ng-scope">
+                        <div class="control has-icons-left">
+                            <input id="version-filter" type="text" placeholder="More Types..."
+                                   class="input is-transparent ng-pristine ng-untouched ng-valid ng-empty"
+                                   ng-model="facet.autofill.input" ng-keyup="$ctrl.complete(facet)"
+                                   ng-focus="$ctrl.complete(facet)">
+                            <span class="icon is-left">
+                    <i class="fa fa-search"></i>
+                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </facets-view>
+    </div>
+-->
+    <div ng-app="wofApp">
+<!--    <div ng-controller="webIdController">-->
+<!--        <select name="cboGender" ng-model ="selectedValue">-->
+<!--            <option ng:repeat="webid in webids" value="{{webid.gender}}">-->
+<!--                {{webid.gender}}-->
+<!--            </option>-->
+<!--        </select>-->
+<!--        <select name="cboMaker" ng-model ="selectedValue">-->
+<!--            <option ng:repeat="webid in webids" value="{{webid.maker}}">-->
+<!--                {{webid.maker}}-->
+<!--            </option>-->
+<!--        </select>-->
+<!--    </div>-->
+
+        <div ng-controller="webIdController">
+            <div ng-repeat="webid in webids | unique:'gender'">{{webid.maker}}</div>
+        </div>
+
+        <div ng-controller="webIdController">
+            <md-select ng-model="selectedValue">
+                <md-option ng-value="webid.gender" ng-repeat="webid in webids | unique:'gender'">{{ webid.gender }}</md-option>
+            </md-select>
+        </div>
+
+
+
+        You could use the unique filter from AngularUI (source code available here: AngularUI unique filter) and use it directly in the ng-options (or ng-repeat).
+
+        <div ng-controller="webIdController">
+
+        <select ng-model="orderProp" ng-options="webid.gender for webid in webids | unique:'gender'">
+            <option value="0">Default</option>
+            // unique options from the categories
+        </select>
+        </div>
+
+
+        <!-- DBPEDIA ACCOUNTS -->
+    <div ng-controller="webIdController" ng-cloak="" class="carddemoCardActionButtons">
+        <!--        <div class='md-padding' layout="row" layout-wrap>-->
+        <!--            -->
+        <md-content layout-xs="column" layout="row" layout-wrap flex>
+            <md-card ng-repeat="x in webids">
+                <img ng-src="{{x.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}" alt=""
+                     style="object-fit: scale-down; height: 200px; width: 100%">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline" style="text-align: center"><a
+                                href="https://databus.dbpedia.org/{{x.account}}">{{x.account}}</a></span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td valign="top">Name:</td>
+                            <td>{{x.name}}</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">Maker:</td>
+                            <td><a href="{{x.maker}}">{{x.maker}}</a></td>
+                        </tr>
+                        <tr ng-if="x.gender">
+                            <td valign="top">Gender:</td>
+                            <td>{{x.gender}}</td>
+                        </tr>
+                        <tr ng-if="x.geekcode">
+                            <td valign="top">GeekCode:</td>
+                            <td>{{x.geekcode}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-card-content>
+                <md-card-actions layout="column" layout-align="start">
+                    <md-button><a href="{{x.webid}}">WebId</a></md-button>
+                    <md-button><a href="{{x.webid}}">Github</a></md-button>
+                </md-card-actions>
+            </md-card>
+        </md-content>
+    </div>
+
+    </div>
+</div>
+
+<script th:src="@{js/wof.js}"></script>
+<script th:src="@{js/unique.js}"></script>
 
 </body>
 </html>

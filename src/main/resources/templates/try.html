@@ -1,0 +1,64 @@
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.css">
+    <link rel="stylesheet" href="https://material.angularjs.org/1.2.2/docs.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+    <script src="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.js"></script>
+</head>
+
+<body>
+
+
+
+<div ng-app="wofApp" ng-controller="webIdController" ng-cloak="" class="carddemoCardActionButtons" >
+    <div class='md-padding' layout="row" layout-wrap>
+        <md-card ng-repeat="x in webids" flex="15">
+            <img ng-src="{{x.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}" alt="" style="object-fit: scale-down; height: 200px; width: 100%">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline" style="text-align: center"><a href="https://databus.dbpedia.org/{{x.account}}">{{x.account}}</a></span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td valign="top">Name:</td>
+                            <td>{{x.name}}</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">Maker:</td>
+                            <td><a href="{{x.maker}}">{{x.maker}}</a></td>
+                        </tr>
+                        <tr ng-if="{{x.gender}}">
+                            <td valign="top">Gender:</td>
+                            <td>{{x.gender}}</td>
+                        </tr>
+                        <tr ng-if="{{x.geekcode}}">
+                            <td valign="top">GeekCode:</td>
+                            <td>{{x.geekcode}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-card-content>
+            <md-card-actions layout="column" layout-align="start">
+                <md-button><a href="{{x.webid}}">WebId</a></md-button>
+                <md-button><a href="{{x.webid}}">Github</a></md-button>
+            </md-card-actions>
+        </md-card>
+                </div>
+            </div>
+    </div>
+</div>
+
+<script th:src="@{js/wof.js}"></script>
+</body>
+</html>
