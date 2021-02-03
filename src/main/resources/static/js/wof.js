@@ -2,46 +2,90 @@ var app = angular.module('wofApp', ['ngMaterial', 'ngMessages', 'material.svgAss
 
 
 app.controller('webIdController', function($scope, $http, $filter) {
-    $http.get("/webids.json").then(function(response) {
+
+    $scope.request = $http.get("/webids.json").then(function(response) {
         $scope.webids = response.data.webIds;
+
+        $scope.model={};
+        $scope.model.searchString = "";
+        //variables for gender selection
+        $scope.filteredByGender = $filter('unique')($scope.webids, 'gender');
+        $scope.genderOptions = [];
+        for(var i=0; i < $scope.filteredByGender.length; i++){
+          $scope.genderOptions.push($scope.filteredByGender[i].gender);
+        }
+        $scope.selectedGender = [];
+
+        //variables for image selection
+        $scope.imgOptions = ["yes", "no"];
+        $scope.selectedIMG = [];
+
+
+        $scope.toggle = function (item, list) {
+            var idx = list.indexOf(item);
+            if (idx > -1) {
+                list.splice(idx, 1);
+            }
+            else {
+                list.push(item);
+            }
+
+            // $scope.filteredWebIds = $filter('filterWithArray')($scope.webids, $scope.selectedGender);
+            $scope.filteredWebIds = $scope.filtered()
+            console.log($scope.model.searchString)
+        };
+
+        $scope.filtered = function (){
+            var filtered=$filter('filterWithArray')($scope.webids, $scope.selectedGender);
+
+            console.log("test");
+            // var newar = out.filter(x => filtered.includes(x));
+            if($scope.selectedIMG.length===0){
+                return [];
+            }
+            if($scope.selectedIMG.includes("yes") && $scope.selectedIMG.length===1) {
+                filtered = $filter('isdefined')(filtered, "img");
+            }
+            if($scope.selectedIMG.includes("no") && $scope.selectedIMG.length===1) {
+                var oppositeFiltered = $filter('isdefined')(filtered, "img");
+                console.log(oppositeFiltered);
+
+                filtered = filtered.filter(x => !oppositeFiltered.includes(x));
+            }
+
+            console.log($scope.selectedGender);
+            console.log($scope.selectedIMG);
+            console.log(filtered);
+
+            return filtered;
+        }
+
+        $scope.exists = function (item, list) {
+            return list.indexOf(item) > -1;
+        };
+
+        $scope.isIndeterminate = function(sel, opt) {
+            return ($scope[sel].length !== 0 &&
+                $scope[sel].length !== opt.length);
+        };
+
+        $scope.isChecked = function(sel, opt) {
+            return $scope[sel].length === opt.length;
+        };
+
+        $scope.toggleAll = function(sel, opt) {
+            if ($scope[sel].length === opt.length) {
+                $scope[sel] = [];
+            } else if ($scope[sel].length === 0 || $scope[sel].length > 0) {
+                $scope[sel] = opt.slice(0);
+            }
+
+            console.log($scope[sel]);
+
+            // $scope.filteredWebIds = $filter('filterWithArray')($scope.webids, $scope[sel]);
+            $scope.filteredWebIds = $scope.filtered()
+        };
     });
-
-    $scope.items = [1,2,3,4,5];
-
-    $scope.filteredArray =  $filter('unique')($scope.webids,'gender');
-
-    $scope.selected = [1];
-
-    $scope.toggle = function (item, list) {
-        var idx = list.indexOf(item);
-        if (idx > -1) {
-            list.splice(idx, 1);
-        }
-        else {
-            list.push(item);
-        }
-    };
-
-    $scope.exists = function (item, list) {
-        return list.indexOf(item) > -1;
-    };
-
-    $scope.isIndeterminate = function() {
-        return ($scope.selected.length !== 0 &&
-            $scope.selected.length !== $scope.items.length);
-    };
-
-    $scope.isChecked = function() {
-        return $scope.selected.length === $scope.items.length;
-    };
-
-    $scope.toggleAll = function() {
-        if ($scope.selected.length === $scope.items.length) {
-            $scope.selected = [];
-        } else if ($scope.selected.length === 0 || $scope.selected.length > 0) {
-            $scope.selected = $scope.items.slice(0);
-        }
-    };
 });
 
 /**
@@ -89,3 +133,38 @@ angular.module('wofApp').filter('unique', function () {
         return items;
     };
 });
+
+
+angular.module('wofApp').filter('filterWithArray', function ($filter) {
+   return function (input, filterArray){
+
+       var output = [];
+       filterArray.forEach(element => output = output.concat($filter('filter')(input, element)));
+
+       return $filter('unique')(output);
+   };
+});
+
+angular.module('wofApp').filter('isdefined', function ($filter) {
+    return function (input, key){
+        var output = [];
+        input.forEach(element => {
+            if(element.hasOwnProperty(key)) {
+                output = output.concat(element);
+            }
+        });
+
+        return $filter('unique')(output);
+    };
+});
+
+// angular.module('wofApp').filter('filterWithMultipleArrays', function ($filter) {
+//     return function (input, filterArray){
+//
+//
+//         var output = [];
+//         filterArray.forEach(element => output = output.concat($filter('filter')(input, element)));
+//
+//         return $filter('unique')(output);
+//     };
+// });

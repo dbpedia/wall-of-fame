@@ -40,18 +40,18 @@ class WoFController {
     "result"
   }
 
-  @RequestMapping(value = Array("/new"), method = Array(RequestMethod.GET))
-  def getWOF(): String={
-//    val optModels =
-//      try {
-//        VirtuosoHandler.getAllWebIds(config.virtuoso)
-//      } catch {
-//        case virtuosoException: VirtuosoException => Seq.empty[(String, Model)]
-//      }
-//
-//    if (optModels.nonEmpty) ModelToJSONConverter.createJSONFile(optModels, File(config.exhibit.file))
-    "newwof"
-  }
+//  @RequestMapping(value = Array("/new"), method = Array(RequestMethod.GET))
+//  def getWOF(): String={
+////    val optModels =
+////      try {
+////        VirtuosoHandler.getAllWebIds(config.virtuoso)
+////      } catch {
+////        case virtuosoException: VirtuosoException => Seq.empty[(String, Model)]
+////      }
+////
+////    if (optModels.nonEmpty) ModelToJSONConverter.createJSONFile(optModels, File(config.exhibit.file))
+//    "newwof"
+//  }
 
   @GetMapping(value = Array("/webids.json"), produces = Array("application/json"))
   def getJson(response: HttpServletResponse): Unit = {
