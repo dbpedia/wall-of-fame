@@ -1,5 +1,6 @@
 package org.dbpedia.walloffame
 
+import better.files.File
 import org.dbpedia.walloffame.crawling.WebIdFetcher
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,9 +15,9 @@ class InitRunner extends CommandLineRunner {
 
   override def run(args: String*): Unit = {
 
-//    File("./tmp/").delete(true)
-//    File("./tmp/").createDirectory()
-//
+    File("./tmp/").delete(true)
+    File("./tmp/").createDirectory()
+
 //    prepareWallOfFame()
   }
 

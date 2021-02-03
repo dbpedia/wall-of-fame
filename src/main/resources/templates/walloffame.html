@@ -108,7 +108,7 @@
                     </md-checkbox>
                     <div class="select-all-checkboxes" ng-repeat="item in genderOptions">
                         <md-checkbox ng-checked="exists(item, selectedGender)" ng-click="toggle(item, selectedGender)">
-                            {{ item }}
+                            {{ item || "undefined" }}
                         </md-checkbox>
                     </div>
                     </div>

@@ -14,6 +14,9 @@ app.controller('webIdController', function($scope, $http, $filter) {
         for(var i=0; i < $scope.filteredByGender.length; i++){
           $scope.genderOptions.push($scope.filteredByGender[i].gender);
         }
+        // var index = $scope.genderOptions.indexOf(undefined);
+        // $scope.genderOptions[index] = "undefined";
+
         $scope.selectedGender = [];
 
         //variables for image selection
@@ -33,6 +36,7 @@ app.controller('webIdController', function($scope, $http, $filter) {
             // $scope.filteredWebIds = $filter('filterWithArray')($scope.webids, $scope.selectedGender);
             $scope.filteredWebIds = $scope.filtered()
             console.log($scope.model.searchString)
+            console.log($scope.genderOptions)
         };
 
         $scope.filtered = function (){
