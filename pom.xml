@@ -20,7 +20,7 @@
         <java.version>1.8</java.version>
         <scala.version>2.11.12</scala.version>
         <jena.version>3.14.0</jena.version>
-<!--        <start-class>org.dbpedia.walloffame.Application</start-class>-->
+        <start-class>org.dbpedia.walloffame.Application</start-class>
     </properties>
 
     <dependencies>
