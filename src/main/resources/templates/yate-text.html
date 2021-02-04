@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Yate Text</title>
+    <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{css/yate.css}"/>
+</head>
+<body>
+<textarea id="webid"></textarea>
+
+
+<script src="https://perfectkb.github.io/yate/dist/yate.bundled.min.js"></script>
+<script type="text/javascript">
+    var yate = YATE.fromTextArea(document.getElementById('webid'));
+</script>
+</body>
