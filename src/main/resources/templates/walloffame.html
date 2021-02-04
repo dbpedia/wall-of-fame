@@ -76,12 +76,24 @@
     <!-- DESCRIPTION TEXT -->
     <p style="vertical-align:middle; text-align: center">
         Welcome to DBpedia's Wall of Fame. Here you can have a look at all Users registered on the DBpedia
-        Databus. Additionally, you can validate and publish your own WebId. <br>
+        Databus. Additionally, you can validate your own WebId with the WebId Validator. <br>
         For further information about WebIds check <a href="https://github.com/dbpedia/webid" target="_blank">DBpedia's
         WebId Repository</a> and the <a href="https://forum.dbpedia.org/" target="_blank">DBpedia Forum</a>.
     </p>
 
     <hr>
+
+<!--    <div ng-app="mymodal" ng-controller="MyController" class="container">-->
+<!--        <h1>Modal example</h1>-->
+<!--        <button ng-click="MyController.open()" class="btn btn-primary">Test Modal</button>-->
+
+<!--        <modal id="login" title="Login form">-->
+<!--            asd-->
+<!--            <form role="form">-->
+<!--                asd-->
+<!--            </form>-->
+<!--        </modal>-->
+<!--    </div>-->
 
     <div ng-app="wofApp" ng-controller="webIdController" ng-cloak="">
 
@@ -212,7 +224,7 @@
     </div>
 
 </div>
-
+<script th:src="@{js/modal.js}"></script>
 <script th:src="@{js/wof.js}"></script>
 </body>
 </html>

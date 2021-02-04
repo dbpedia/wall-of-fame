@@ -1,15 +1,14 @@
 package org.dbpedia.walloffame.crawling
 
 import org.apache.jena.atlas.web.HttpException
-
-import java.io.{ByteArrayOutputStream, EOFException, FileOutputStream, IOException}
-import java.net.{ConnectException, SocketException}
-import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException, RiotNotFoundException}
 import org.dbpedia.walloffame.VosConfig
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.slf4j.LoggerFactory
+
+import java.io.EOFException
+import java.net.{ConnectException, SocketException}
 
 
 object WebIdFetcher {
@@ -23,7 +22,8 @@ object WebIdFetcher {
         |Download, validate, and uniform all registered WebIds on the DBpedia Databus.
         |Accounts:""".stripMargin)
 
-    val url = "https://databus.dbpedia.org/system/api/accounts"
+    val url_normal = "https://databus.dbpedia.org/system/api/accounts"
+    val url = "./src/main/resources/accounts.ttl"
     val model = RDFDataMgr.loadModel(url, Lang.NTRIPLES)
 
     val stmts = model.listStatements()

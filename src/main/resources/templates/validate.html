@@ -61,6 +61,13 @@
 
 <br>
 
+<div ng-app="yateApp" ng-class="{ 'read-only' : $ctrl.readOnly }">
+    <textarea disabled="true" id="custom-query" multiline="true" class="textarea"></textarea>
+
+    <yate-text query="addToCollectionQuery"></yate-text>
+</div>
+
+
 <div class="container-fluid" style="padding: 0 100px 100px;">
 
     <div class="row">
@@ -196,7 +203,7 @@
 </div>
 
 <script th:src="@{js/validate.js}"></script>
-
+<script th:src="@{js/yateWrapper.js}"></script>
 <!--Yate Turtle Syntax Highlighting-->
 <!--<script th:src="@{js/yate.bundled.js}"></script>-->
 <script src="https://perfectkb.github.io/yate/dist/yate.bundled.min.js"></script>

@@ -99,7 +99,7 @@ app.controller('webIdController', function($scope, $http, $filter) {
  if the key === false then no filtering will be performed
  * @return {array}
  */
-angular.module('wofApp').filter('unique', function () {
+app.filter('unique', function () {
 
     return function (items, filterOn) {
 
@@ -139,7 +139,7 @@ angular.module('wofApp').filter('unique', function () {
 });
 
 
-angular.module('wofApp').filter('filterWithArray', function ($filter) {
+app.filter('filterWithArray', function ($filter) {
    return function (input, filterArray){
 
        var output = [];
@@ -149,7 +149,7 @@ angular.module('wofApp').filter('filterWithArray', function ($filter) {
    };
 });
 
-angular.module('wofApp').filter('isdefined', function ($filter) {
+app.filter('isdefined', function ($filter) {
     return function (input, key){
         var output = [];
         input.forEach(element => {

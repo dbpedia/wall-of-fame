@@ -65,7 +65,7 @@ class WoFController {
 
   @RequestMapping(value = Array("/try"), method = Array(RequestMethod.GET))
   def gettry(): String={
-    "try"
+    "yate-text"
   }
 
 }
