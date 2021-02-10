@@ -1,9 +1,6 @@
 package org.dbpedia.walloffame.convert
 
-import java.io.FileWriter
-import java.nio.file.{Files, Paths}
 import better.files.File
-import better.files.File.OpenOptions
 import org.apache.jena.rdf.model.Model
 import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.uniform.queries.{SelectOptionalQueries, SelectQueries}
@@ -44,8 +41,8 @@ object ModelToJSONConverter {
         addToListBuffer("webid", result.getResource("?webid").toString)
         addToListBuffer("maker", result.getResource("?maker").toString)
         addToListBuffer("name", result.getLiteral("?name").getLexicalForm)
-        addToListBuffer("keyname", result.getLiteral("?keyname").getLexicalForm)
-        addToListBuffer("keyvalue", result.getLiteral("?keyvalue").getLexicalForm)
+//        addToListBuffer("keyname", result.getLiteral("?keyname").getLexicalForm)
+//        addToListBuffer("keyvalue", result.getLiteral("?keyvalue").getLexicalForm)
 
 
         var optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGeekCode(), model._2)
@@ -71,29 +68,7 @@ object ModelToJSONConverter {
     var rawJSON =
       s"""
          |{
-         |    "types": {
-         |        "WebId": {
-         |            "pluralLabel": "WebIds"
-         |        }
-         |    },
-         |    "properties": {
-         |        "webid": {
-         |            "valueType": "url"
-         |        },
-         |        "type": {
-         |            "valueType": "url"
-         |        },
-         |        "maker": {
-         |            "valueType": "url"
-         |        },
-         |        "primaryTopic": {
-         |            "valueType": "url"
-         |        },
-         |        "img": {
-         |            "valueType": "url"
-         |        }
-         |    },
-         |    "items": [
+         |    "webIds": [
       """.stripMargin
 
     items.foreach(item => rawJSON = rawJSON.concat(s"{ ${item.toList.mkString(",")} },"))

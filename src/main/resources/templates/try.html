@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>DBpedia's Wall of Fame</title>
+    <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
+    <style>
+        legend {
+            color: #3F51B5; }
+
+        fieldset {
+            border-style: solid;
+            border-width: 10px; }
+
+        .demo-select-all-checkboxes {
+            padding-left: 30px; }
+    </style>
+<!--    <link rel="stylesheet" type="text/css" th:href="@{css/wof.css}">-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.css">
+    <link rel="stylesheet" href="https://material.angularjs.org/1.2.2/docs.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+    <script src="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.js"></script>
+
+
+</head>
+
+<body>
+
+<div ng-app="wofApp" ng-controller="webIdController">
+
+    <fieldset>
+        <legend>Using ˂md-checkbox˃ with the 'indeterminate' attribute</legend>
+        <md-checkbox aria-label="Select All" ng-checked="isChecked()" md-indeterminate="isIndeterminate()" ng-click="toggleAll()">
+            <span ng-if="isChecked()">Un-</span>Select All
+        </md-checkbox>
+        <div class="demo-select-all-checkboxes" ng-repeat="item in genderOptions">
+            <md-checkbox ng-checked="exists(item, selected)" ng-click="toggle(item, selected)">
+                {{ item }}
+            </md-checkbox>
+        </div>
+    </fieldset>
+</div>
+
+<script th:src="@{js/wof.js}"></script>
+
+</body>
+</html>

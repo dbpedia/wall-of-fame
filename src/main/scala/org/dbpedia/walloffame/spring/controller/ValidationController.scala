@@ -12,10 +12,8 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping}
 import org.springframework.web.servlet.ModelAndView
 
-import java.io
-import java.io.{ByteArrayOutputStream, FileInputStream, IOException}
+import java.io.{ByteArrayOutputStream, IOException}
 import java.net.{MalformedURLException, SocketTimeoutException, UnknownHostException}
-import javax.servlet.http.HttpServletResponse
 
 @Controller
 class ValidationController(config: Config) {
@@ -26,8 +24,7 @@ class ValidationController(config: Config) {
   def getValidate(): ModelAndView = {
 
     val str =
-      """
-        |@base <https://raw.githubusercontent.com/Eisenbahnplatte/eisenbahnplatte.github.io/master/webid.ttl> .
+      """@base <https://raw.githubusercontent.com/Eisenbahnplatte/eisenbahnplatte.github.io/master/webid.ttl> .
         |@prefix foaf: <http://xmlns.com/foaf/0.1/> .
         |@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
         |@prefix cert: <http://www.w3.org/ns/auth/cert#> .
@@ -49,8 +46,7 @@ class ValidationController(config: Config) {
         |      rdfs:label "HP Elitebook";
         |      cert:modulus "C133F14349AC1035EC007228975FA276E52A7D4E2F227710D645C616E92666C861838AFF268491990F9C30F6999E2C62DF3379DA0FDCE300CF1BED6B37F25FF9ADD5BD242E346E1C25E33891A95BD9B998D177D389A163B150383FE6EE1D9F479B2F186EF0BB11B4E8AC87AEB2414BA653741E87E8E72A083D00C813B1242158FFC957089C97044241DBC9CAE553CEE5B869A3667596E4E6A34998CEE9A588617B54432010CCDCF5EC7C4140B6AA3422AB089E5676847F727DA8762D1BA35FA4F0593AF91BFFA5AA4B433C07F1982CA22F1BEB1B538C8890632608C04E4A4E9129C1AA4575BAAE9014E30C0D7A5F96D98BCB4C5D0C794A8B5A2A7D823ECC5411"^^xsd:hexBinary;
         |      cert:exponent "65537"^^xsd:nonNegativeInteger
-        |     ] .
-        |""".stripMargin
+        |     ] .""".stripMargin
 
     val model: Model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(str, "UTF-8"), "", "TURTLE")
 
@@ -67,6 +63,34 @@ class ValidationController(config: Config) {
   def sendWebIdToValidate(@ModelAttribute("webid") webId: WebId): ModelAndView = {
     handlePostedWebId(webId)
   }
+
+
+  @PostMapping(value = Array("/fetchAndValidate"))
+  def fetchAndValidate(@ModelAttribute("webid") webId: WebId): ModelAndView = {
+
+    try {
+      val model = RDFDataMgr.loadModel(webId.url.trim)
+
+      val newWebId = new WebId(model)
+      newWebId.setUrl(webId.url)
+
+      val out = new ByteArrayOutputStream()
+      RDFDataMgr.write(out, model, Lang.TURTLE)
+      newWebId.setTurtle(out.toString)
+
+      handlePostedWebId(newWebId)
+
+    } catch {
+      case unknownHostException: UnknownHostException => handleException(new ModelAndView("validate"), webId, unknownHostException.toString)
+      case malformedURLException: MalformedURLException => handleException(new ModelAndView("validate"), webId, malformedURLException.toString)
+      case ioexception: IOException => handleException(new ModelAndView("validate"), webId, ioexception.toString)
+      case httpException: HttpException => handleException(new ModelAndView("validate"), webId, httpException.toString)
+      case socketTimeoutException: SocketTimeoutException => handleException(new ModelAndView("validate"), webId, socketTimeoutException.toString)
+      case riotNotFoundException: RiotNotFoundException => handleException(new ModelAndView("validate"), webId, riotNotFoundException.toString)
+    }
+
+  }
+
 
   def handlePostedWebId(webId: WebId): ModelAndView = {
 
@@ -100,43 +124,6 @@ class ValidationController(config: Config) {
     result.addViolation("Exception", exception)
     modelAndView.addObject("webid", webId)
     modelAndView.addObject("result", result)
-  }
-
-  @PostMapping(value = Array("/fetchAndValidate"))
-  def fetchAndValidate(@ModelAttribute("webid") webId: WebId): ModelAndView = {
-
-    try {
-      val model = RDFDataMgr.loadModel(webId.url.trim)
-
-      val newWebId = new WebId(model)
-      newWebId.setUrl(webId.url)
-
-      val out = new ByteArrayOutputStream()
-      RDFDataMgr.write(out, model, Lang.TURTLE)
-      newWebId.setTurtle(out.toString)
-
-      handlePostedWebId(newWebId)
-
-    } catch {
-      case unknownHostException: UnknownHostException => handleException(new ModelAndView("validate"), webId, unknownHostException.toString)
-      case malformedURLException: MalformedURLException => handleException(new ModelAndView("validate"), webId, malformedURLException.toString)
-      case ioexception: IOException => handleException(new ModelAndView("validate"), webId, ioexception.toString)
-      case httpException: HttpException => handleException(new ModelAndView("validate"), webId, httpException.toString)
-      case socketTimeoutException: SocketTimeoutException => handleException(new ModelAndView("validate"), webId, socketTimeoutException.toString)
-      case riotNotFoundException: RiotNotFoundException => handleException(new ModelAndView("validate"), webId, riotNotFoundException.toString)
-    }
-
-  }
-
-
-  @GetMapping(value = Array("/webids.js"), produces = Array("application/json"))
-  def getJson(response: HttpServletResponse): Unit = {
-    try {
-      IOUtils.copy(new FileInputStream(new io.File(config.exhibit.file)), response.getOutputStream)
-      response.setStatus(200)
-    } catch {
-      case e: Exception => response.setStatus(500)
-    }
   }
 
 }

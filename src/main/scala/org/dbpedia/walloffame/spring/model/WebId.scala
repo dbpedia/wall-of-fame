@@ -1,8 +1,9 @@
 package org.dbpedia.walloffame.spring.model
 
-import org.apache.jena.rdf.model.{Model, ModelFactory}
+import org.apache.jena.rdf.model.Model
 import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.uniform.queries.{SelectOptionalQueries, SelectQueries}
+
 import scala.beans.BeanProperty
 
 class WebId {
@@ -51,7 +52,11 @@ class WebId {
     if (optional.nonEmpty) this.geekCode = optional.head.getLiteral("?geekcode").getLexicalForm
 
     optional = QueryHandler.executeQuery(SelectOptionalQueries.queryImg(), model)
-    if (optional.nonEmpty) this.img = optional.head.getResource("?img").toString
+    if (optional.nonEmpty) this.img = try{
+      optional.head.getResource("?img").toString
+    } catch {
+      case classCastException: ClassCastException => optional.head.getLiteral("?img").getLexicalForm
+    }
 
     optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGender(), model)
     if (optional.nonEmpty) this.gender = optional.head.getLiteral("?gender").getLexicalForm

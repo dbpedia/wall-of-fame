@@ -7,7 +7,7 @@ virtuoso:
   psw: "dba"
   graph: "http://webids/"
 exhibit:
-  file: "./tmp/webids.js"
+  file: "./tmp/webids.json"
 #databus:
 #  file: "./databus/uniformedWebIds/"
 

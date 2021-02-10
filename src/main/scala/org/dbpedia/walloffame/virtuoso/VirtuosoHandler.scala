@@ -2,7 +2,7 @@ package org.dbpedia.walloffame.virtuoso
 
 import better.files.File
 import org.apache.jena.query.{Query, QueryFactory}
-import org.apache.jena.rdf.model.{Model, ModelFactory, ModelMaker}
+import org.apache.jena.rdf.model.Model
 import org.apache.jena.util.FileManager
 import org.dbpedia.walloffame.VosConfig
 import org.slf4j.LoggerFactory
@@ -83,15 +83,13 @@ object VirtuosoHandler {
       graphs
     }
 
-
-
   }
 
   def getAllWebIds(vosConfig: VosConfig): Seq[(String, Model)] = {
     try {
       var models = Seq.empty[(String, Model)]
       VirtuosoHandler.getAllGraphs(vosConfig).foreach(graph =>
-        models = models :+ (graph.split('/').last.capitalize, VirtuosoHandler.getModel(vosConfig, graph))
+        models = models :+ (graph.split('/').last, VirtuosoHandler.getModel(vosConfig, graph))
       )
       models
     } catch {

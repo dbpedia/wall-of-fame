@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{css/validate.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{css/yate.css}"/>
 
+    <script th:src="@{js/yateWrapper.js}"></script>
 </head>
 
 <body>
@@ -60,6 +61,11 @@
 </nav>
 
 <br>
+<yate-text query="webidStr"></yate-text>
+<div ng-app="yateApp" ng-model="webidStr" ng-cloak="">
+
+</div>
+
 
 <div class="container-fluid" style="padding: 0 100px 100px;">
 
@@ -196,7 +202,6 @@
 </div>
 
 <script th:src="@{js/validate.js}"></script>
-
 <!--Yate Turtle Syntax Highlighting-->
 <!--<script th:src="@{js/yate.bundled.js}"></script>-->
 <script src="https://perfectkb.github.io/yate/dist/yate.bundled.min.js"></script>
