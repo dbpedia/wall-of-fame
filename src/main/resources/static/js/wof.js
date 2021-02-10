@@ -1,6 +1,3 @@
-var app = angular.module('wofApp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache']);
-
-
 app.controller('webIdController', function($scope, $http, $filter) {
 
     $scope.request = $http.get("/webids.json").then(function(response) {

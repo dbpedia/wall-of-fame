@@ -6,10 +6,10 @@
 
     <link rel="stylesheet" type="text/css" th:href="@{css/yate.css}"/>
 
+    <script th:src="@{js/application.js}"></script>
     <script th:src="@{js/yateWrapper.js}"></script>
 </head>
 <body>
-<!--<textarea id="webid"></textarea>-->
 
 <div ng-app="yateApp" ng-class="{ 'read-only' : $ctrl.readOnly }">
     <textarea disabled="true" id="custom-query" multiline="true" class="textarea"></textarea>
@@ -19,5 +19,4 @@
 <script type="text/javascript">
     var yate = YATE.fromTextArea(document.getElementById('custom-query'));
 </script>
-<script th:src="@{js/yateWrapper.js}"></script>
 </body>

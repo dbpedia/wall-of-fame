@@ -1,8 +1,4 @@
-var app = angular.module('yateApp', []);
-
 function YasqeTextController($scope, $element) {
-
-    $scope.webidStr="";
 
     var ctrl = this;
     ctrl.textField = $element.find('textarea');
@@ -38,7 +34,7 @@ function YasqeTextController($scope, $element) {
 }
 
 app.component('yateText', {
-    templateUrl: '../../templates/yate-text.html',
+    templateUrl: '/html/yate-text.html',
     controller: [ '$scope', '$element', YasqeTextController ],
     bindings: {
         query: '=',

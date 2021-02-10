@@ -1,3 +1,9 @@
+app.controller('validateController', function($scope, $http, $filter) {
+
+    $scope.webidStr="";
+
+});
+
 var coll = document.getElementsByClassName("collapsible");
 var i;
 
