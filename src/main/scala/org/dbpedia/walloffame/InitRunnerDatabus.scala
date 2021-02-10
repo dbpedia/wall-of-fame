@@ -53,7 +53,7 @@ class InitRunnerDatabus extends CommandLineRunner {
     aggregatedModel.setNsPrefixes(prefixes)
 
     //write file
-    val file = targetDir / "webids.ttl.gz"
+    val file = targetDir / "uniformedWebIds_webids.ttl.gz"
     val fos  = new FileOutputStream(file.toJava)
     val gzos = new GZIPOutputStream( fos )
 
