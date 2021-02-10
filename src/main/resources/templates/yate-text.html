@@ -5,13 +5,20 @@
     <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
 
     <link rel="stylesheet" type="text/css" th:href="@{css/yate.css}"/>
+
+    <script th:src="@{js/yateWrapper.js}"></script>
 </head>
 <body>
-<textarea id="webid"></textarea>
+<!--<textarea id="webid"></textarea>-->
 
+<div ng-app="yateApp" ng-class="{ 'read-only' : $ctrl.readOnly }">
+    <textarea disabled="true" id="custom-query" multiline="true" class="textarea"></textarea>
+
+</div>
 
 <script src="https://perfectkb.github.io/yate/dist/yate.bundled.min.js"></script>
 <script type="text/javascript">
-    var yate = YATE.fromTextArea(document.getElementById('webid'));
+    var yate = YATE.fromTextArea(document.getElementById('custom-query'));
 </script>
+<script th:src="@{js/yateWrapper.js}"></script>
 </body>

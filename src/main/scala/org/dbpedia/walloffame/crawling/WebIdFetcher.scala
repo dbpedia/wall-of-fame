@@ -22,8 +22,8 @@ object WebIdFetcher {
         |Download, validate, and uniform all registered WebIds on the DBpedia Databus.
         |Accounts:""".stripMargin)
 
-    val url_normal = "https://databus.dbpedia.org/system/api/accounts"
-    val url = "./src/main/resources/accounts.ttl"
+    val url = "https://databus.dbpedia.org/system/api/accounts"
+//    val url = "./src/main/resources/accounts.ttl"
     val model = RDFDataMgr.loadModel(url, Lang.NTRIPLES)
 
     val stmts = model.listStatements()

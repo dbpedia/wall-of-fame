@@ -1,19 +1,15 @@
 package org.dbpedia.walloffame
 
 import better.files.File
-import org.apache.commons.compress.compressors.{CompressorOutputStream, CompressorStreamFactory}
-import org.apache.jena.rdf.model.{Model, ModelFactory}
+import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.riot.{Lang, RDFDataMgr}
-import org.apache.jena.shared.PrefixMapping
-import org.dbpedia.walloffame.convert.ModelToJSONConverter
-import org.dbpedia.walloffame.crawling.WebIdFetcher
-import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 
-import java.io.{BufferedOutputStream, ByteArrayOutputStream, FileOutputStream}
+import java.io.FileOutputStream
+import java.util.zip.GZIPOutputStream
 
 @Component
 class InitRunnerDatabus extends CommandLineRunner {
@@ -23,8 +19,6 @@ class InitRunnerDatabus extends CommandLineRunner {
 
   override def run(args: String*): Unit = {
 
-    //    println(config.databus.file)
-    //    val targetDir = File(config.databus.file)
     if (args.isEmpty) {
       println("Please set the target directory, where the WebId files need to be written to.")
       return 1
@@ -59,13 +53,13 @@ class InitRunnerDatabus extends CommandLineRunner {
     aggregatedModel.setNsPrefixes(prefixes)
 
     //write file
-    val file = targetDir / "webids.ttl"
-    val out = new FileOutputStream(file.toJava)
+    val file = targetDir / "webids.ttl.gz"
+    val fos  = new FileOutputStream(file.toJava)
+    val gzos = new GZIPOutputStream( fos )
 
-    val gzippedOut: CompressorOutputStream = new CompressorStreamFactory()
-      .createCompressorOutputStream(CompressorStreamFactory.GZIP, out);
+    RDFDataMgr.write(gzos, aggregatedModel, Lang.TTL)
 
-    RDFDataMgr.write(gzippedOut, aggregatedModel, Lang.TTL)
+    gzos.close()
+    fos.close()
   }
 }
-

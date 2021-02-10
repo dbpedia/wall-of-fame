@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{css/validate.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{css/yate.css}"/>
 
+    <script th:src="@{js/yateWrapper.js}"></script>
 </head>
 
 <body>
@@ -60,11 +61,9 @@
 </nav>
 
 <br>
+<yate-text query="webidStr"></yate-text>
+<div ng-app="yateApp" ng-model="webidStr" ng-cloak="">
 
-<div ng-app="yateApp" ng-class="{ 'read-only' : $ctrl.readOnly }">
-    <textarea disabled="true" id="custom-query" multiline="true" class="textarea"></textarea>
-
-    <yate-text query="addToCollectionQuery"></yate-text>
 </div>
 
 
@@ -203,7 +202,6 @@
 </div>
 
 <script th:src="@{js/validate.js}"></script>
-<script th:src="@{js/yateWrapper.js}"></script>
 <!--Yate Turtle Syntax Highlighting-->
 <!--<script th:src="@{js/yate.bundled.js}"></script>-->
 <script src="https://perfectkb.github.io/yate/dist/yate.bundled.min.js"></script>
