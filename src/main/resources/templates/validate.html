@@ -42,13 +42,8 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
-                       href="https://github.com/dbpedia/wall-of-fame/blob/master/src/main/resources/shacl/shapes.ttl">Shacl
+                       href="https://github.com/dbpedia/wall-of-fame/blob/master/src/main/resources/shacl/shapes.ttl" target="_blank">SHACL
                         File</a>
-                </li>
-                <li class="nav-item">
-                    <script language="JavaScript">
-                        document.write('<a class="nav-link" href="' + window.location.protocol + '//' + window.location.hostname + ':8895/sparql/' + '" >Sparql Endpoint</a> ');
-                    </script>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/about">About</a>
@@ -61,9 +56,9 @@
 </nav>
 
 <br>
-<yate-text query="webidStr"></yate-text>
-<div ng-app="yateApp" ng-model="webidStr" ng-cloak="">
 
+<div ng-app="yateApp" ng-model="webidStr">
+    <yate-text query="webidStr"></yate-text>
 </div>
 
 

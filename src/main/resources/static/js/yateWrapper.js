@@ -1,6 +1,9 @@
 var app = angular.module('yateApp', []);
 
 function YasqeTextController($scope, $element) {
+
+    $scope.webidStr="";
+
     var ctrl = this;
     ctrl.textField = $element.find('textarea');
 
