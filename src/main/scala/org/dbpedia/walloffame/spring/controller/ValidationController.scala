@@ -1,5 +1,6 @@
 package org.dbpedia.walloffame.spring.controller
 
+import better.files.File
 import org.apache.commons.io.IOUtils
 import org.apache.jena.atlas.web.HttpException
 import org.apache.jena.rdf.model.{Model, ModelFactory}
@@ -9,11 +10,14 @@ import org.dbpedia.walloffame.spring.model.{Result, WebId}
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping}
+import org.springframework.web.bind.annotation._
 import org.springframework.web.servlet.ModelAndView
 
 import java.io.{ByteArrayOutputStream, IOException}
 import java.net.{MalformedURLException, SocketTimeoutException, UnknownHostException}
+import java.nio.charset.StandardCharsets
+import javax.servlet.http.HttpServletResponse
+import scala.io.Source
 
 @Controller
 class ValidationController(config: Config) {
@@ -60,10 +64,24 @@ class ValidationController(config: Config) {
   }
 
   @PostMapping(value = Array("/", "validate"))
-  def sendWebIdToValidate(@ModelAttribute("webid") webId: WebId): ModelAndView = {
+  def sendWebIdToValidate(@RequestBody webIdStr: String): ModelAndView = {
+    println(webIdStr)
+    val webId = new WebId()
+    webId.setTurtle(webIdStr.trim)
     handlePostedWebId(webId)
+//    println("hallo")
+//    new ModelAndView("walloffame")
   }
 
+  @PostMapping(value = Array("validateWebId"))
+  def validateWebId(@RequestBody webIdStr: String): ModelAndView = {
+    println(webIdStr)
+    val webId = new WebId()
+    webId.setTurtle(webIdStr.trim)
+    handlePostedWebId(webId)
+//    println("hallo2")
+//    new ModelAndView("walloffame")
+  }
 
   @PostMapping(value = Array("/fetchAndValidate"))
   def fetchAndValidate(@ModelAttribute("webid") webId: WebId): ModelAndView = {
@@ -93,7 +111,6 @@ class ValidationController(config: Config) {
 
 
   def handlePostedWebId(webId: WebId): ModelAndView = {
-
     val modelAndView = new ModelAndView("validate")
     val model: Model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(webId.turtle, "UTF-8"), "", "TURTLE")
 
@@ -102,7 +119,11 @@ class ValidationController(config: Config) {
 
       if (result.conforms()) {
         //valid webid
-        val newWebId = new WebId(WebIdUniformer.uniform(model))
+        val newModel = WebIdUniformer.uniform(model)
+        val stmts = newModel.listStatements()
+        while(stmts.hasNext) println(stmts.nextStatement())
+
+        val newWebId = new WebId(newModel)
         newWebId.setTurtle(webId.turtle)
         newWebId.setUrl(webId.url)
         modelAndView.addObject("webid", newWebId)
@@ -124,6 +145,26 @@ class ValidationController(config: Config) {
     result.addViolation("Exception", exception)
     modelAndView.addObject("webid", webId)
     modelAndView.addObject("result", result)
+  }
+
+
+
+  @RequestMapping(value = Array("/logs"), method = Array(RequestMethod.GET))
+  def logs(response: HttpServletResponse): Unit = {
+
+    val os = response.getOutputStream
+    val source = Source.fromFile(File("./tmp/errors.log").toJava)
+
+    os.write("<html>".getBytes(StandardCharsets.UTF_8))
+    source.getLines().foreach({line =>
+      os.write(s"$line\n".getBytes(StandardCharsets.UTF_8))
+    })
+    os.write("</html>".getBytes(StandardCharsets.UTF_8))
+
+    response.setHeader("Content-Type","text/html")
+    response.setStatus(200)
+
+    source.close()
   }
 
 }

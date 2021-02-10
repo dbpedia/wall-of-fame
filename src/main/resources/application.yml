@@ -8,6 +8,13 @@ virtuoso:
   graph: "http://webids/"
 exhibit:
   file: "./tmp/webids.json"
+spring:
+  main:
+    banner-mode: "log"
+#logging:
+#  level:
+#    root: ERROR
+#    org.foo.bar.baz: INFO
 #databus:
 #  file: "./databus/uniformedWebIds/"
 

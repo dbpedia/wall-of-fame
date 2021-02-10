@@ -4,8 +4,9 @@ package org.dbpedia.walloffame.utils
 import org.slf4j.LoggerFactory
 
 import java.io.IOException
-import java.net.{HttpURLConnection, MalformedURLException, SocketTimeoutException, URL, UnknownHostException}
+import java.net.{MalformedURLException, SocketTimeoutException, URL, UnknownHostException}
 import javax.net.ssl.HttpsURLConnection
+import scala.io.Source
 
 object Util {
 
@@ -21,7 +22,7 @@ object Util {
         connection.setConnectTimeout(connectTimeout)
         connection.setReadTimeout(readTimeout)
         val inputStream = connection.getInputStream
-        val content = io.Source.fromInputStream(inputStream).mkString
+        val content = Source.fromInputStream(inputStream).mkString
         if (inputStream != null) inputStream.close
         Option(content)
       } else {

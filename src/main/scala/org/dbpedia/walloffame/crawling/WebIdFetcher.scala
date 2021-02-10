@@ -3,6 +3,8 @@ package org.dbpedia.walloffame.crawling
 import org.apache.jena.atlas.web.HttpException
 import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException, RiotNotFoundException}
 import org.dbpedia.walloffame.VosConfig
+import org.dbpedia.walloffame.logging.HtmlLogger
+import org.dbpedia.walloffame.logging.HtmlLogger.logAccountException
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.slf4j.LoggerFactory
@@ -14,6 +16,7 @@ import java.net.{ConnectException, SocketException}
 object WebIdFetcher {
 
   var logger = LoggerFactory.getLogger("WebIdFetcher")
+
 
   def fetchRegisteredWebIds(virtuosoConfig: VosConfig): Unit = {
 
@@ -38,12 +41,30 @@ object WebIdFetcher {
         val uniformedModel = WebIdUniformer.uniform(RDFDataMgr.loadModel(account, Lang.TURTLE))
         VirtuosoHandler.insertModel(uniformedModel, virtuosoConfig, accountName)
       } catch {
-        case httpException: HttpException => logger.error("httpException")
-        case eofException: EOFException => logger.error("eofException")
-        case socketException: SocketException => logger.error(s"SOCKETEXCEPTIon")
-        case connectException: ConnectException => logger.error(s"Connection timed out for $account")
-        case riotNotFoundException: RiotNotFoundException => logger.error(s"url $account not found.")
-        case riotException: RiotException => logger.error(s"riotException in $account .")
+        case httpException: HttpException => {
+          logAccountException(account, "httpException")
+          logger.error("httpException")
+        }
+        case eofException: EOFException => {
+          logAccountException(account, "httpException")
+          logger.error("eofException")
+        }
+        case socketException: SocketException => {
+          logAccountException(account, "httpException")
+          logger.error(s"socketException")
+        }
+        case connectException: ConnectException => {
+          HtmlLogger.append(s"$account : connection timed out")
+          logger.error(s"Connection timed out for $account")
+        }
+        case riotNotFoundException: RiotNotFoundException => {
+          HtmlLogger.append(s"$account : url not found")
+          logger.error(s"$account : url not found.")
+        }
+        case riotException: RiotException => {
+          HtmlLogger.append(s"$account : ${riotException.toString}")
+          logger.error(s"riotException in $account .")
+        }
       }
 
     }
@@ -65,6 +86,7 @@ object WebIdFetcher {
     //
     //    })
   }
+
 
 
 //  def crawl(): File = {

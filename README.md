@@ -38,7 +38,8 @@ Run webapp (accessible at port 20088, per default):
 Push WebIds of Wall of Fame to DBpedia Databus:
 
     mvn spring-boot:run -Dstart-class=org.dbpedia.walloffame.DatabusApplication -Dspring-boot.run.arguments=databus/uniformedWebIds/$(date +%y-%m-%d) && cd databus/uniformedWebIds/ && mvn versions:set -DnewVersion=$(date +%y-%m-%d) && mvn prepare-package && mvn databus:package-export && mvn databus:deploy
-
+    
+    mvn spring-boot:run -Dstart-class=org.dbpedia.walloffame.DatabusApplication -Dspring-boot.run.arguments=webids/uniformedWebIds/$(date +%y-%m-%d) && cd webids/ && mvn versions:set -DnewVersion=$(date +%y-%m-%d) && mvn prepare-package && mvn databus:package-export && mvn databus:deploy
 --------------------------------
 
 Virtuoso and App in one command (not working yet):

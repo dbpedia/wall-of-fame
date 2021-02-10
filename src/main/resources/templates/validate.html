@@ -55,7 +55,10 @@
                         File</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/about">About</a>
+                    <a class="nav-link" href="/about" target="_blank">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logs" target="_blank">errorLogs</a>
                 </li>
             </ul>
 
@@ -97,14 +100,17 @@
     <br>
 
     <div class="row">
-        <div class="col-sm">
+        <div class="col-sm" ng-app="wofApp" ng-controller="validateController" ng-model="webidStr">
             Or you can paste the content of your WebId here:
             <br/>
-            <form method="post" th:action="@{/validate}" th:object="${webid}">
-                <textarea class="form-control" id="webid" th:field="*{turtle}" style="height: 20px"></textarea>
+                <form style="display: none" action="/validateWebId" method="POST" id="form">
+                    <input type="hidden" id="var1" name="var1" value=""/>
+                    <input type="hidden" id="var2" name="var2" value=""/>
+                </form>
+<!--                <textarea class="form-control" id="webid" th:field="*{turtle}" style="height: 20px"></textarea>-->
+                <yate-text query="webidStr"></yate-text>
                 <br>
-                <button class="btn btn-primary" type="submit">Validate</button>
-            </form>
+                <button class="btn btn-primary" type="submit" ng-click="sendPost()">Validate</button>
         </div>
         <div class="col-sm">
             Your WebId:
