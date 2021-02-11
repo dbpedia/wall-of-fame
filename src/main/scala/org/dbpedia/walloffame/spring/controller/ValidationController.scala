@@ -157,7 +157,7 @@ class ValidationController(config: Config) {
 
     os.write("<html>".getBytes(StandardCharsets.UTF_8))
     source.getLines().foreach({line =>
-      os.write(s"$line\n".getBytes(StandardCharsets.UTF_8))
+      os.write(s"$line<br>".getBytes(StandardCharsets.UTF_8))
     })
     os.write("</html>".getBytes(StandardCharsets.UTF_8))
 

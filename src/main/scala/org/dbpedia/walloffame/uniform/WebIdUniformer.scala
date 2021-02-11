@@ -1,8 +1,6 @@
 package org.dbpedia.walloffame.uniform
 
-import better.files.File
 import org.apache.jena.rdf.model.{Model, ModelFactory}
-import org.apache.jena.riot.RDFDataMgr
 import org.dbpedia.walloffame.uniform.queries.{ConstructOptionalQueries, ConstructQueries}
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.slf4j.{Logger, LoggerFactory}
@@ -11,44 +9,9 @@ object WebIdUniformer {
 
   val logger: Logger = LoggerFactory.getLogger("validator")
 
-  //  def uniformWebIds(dir: File): Model = {
-  //
-  //    val constructModel = ModelFactory.createDefaultModel()
-  //
-  //    if (dir.exists && dir.isDirectory) {
-  //      dir.listRecursively().foreach(file => {
-  //        println(file.pathAsString)
-  //        if (WebIdValidator.validate(file).conforms) uniform(file, constructModel)
-  //      })
-  //    }
-  //
-  //    //    val stmts = constructModel.listStatements()
-  //    //    while (stmts.hasNext) println(stmts.nextStatement())
-  //
-  //    constructModel
-  //  }
-  //
-  //
-  //  def uniform(webidFile: File, constructModel: Model): Boolean = {
-  //
-  //    val model = RDFDataMgr.loadModel(webidFile.pathAsString)
-  //
-  //    def construct(constructQuery: String): Boolean = {
-  //      QueryHandler.executeConstructQuery(
-  //        constructQuery,
-  //        model,
-  //        constructModel
-  //      )
-  //    }
-  //
-  //    if (!construct(ConstructQueries.constructWebId())) {
-  //      logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
-  //      return false
-  //    }
-  //    true
-  //  }
-
   def uniform(model: Model): Model = {
+    val result = WebIdValidator.validate(model)
+    result.logResults()
 
     //    val model = RDFDataMgr.loadModel(webidFile.pathAsString)
     val constructModel = ModelFactory.createDefaultModel()

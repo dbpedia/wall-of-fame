@@ -1,15 +1,14 @@
 package org.dbpedia.walloffame.validation
 
 import better.files.File
-import org.apache.jena.rdf.model.{ModelFactory, Model}
+import org.apache.jena.rdf.model.Model
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
-import org.apache.jena.sparql.graph.GraphFactory
 import org.dbpedia.walloffame.spring.model.Result
 import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.uniform.queries.SelectQueries
 
-import java.io.{ByteArrayOutputStream, File => JavaFile}
+import java.io.ByteArrayOutputStream
 
 object WebIdValidator {
 

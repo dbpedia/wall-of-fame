@@ -16,6 +16,6 @@ object HtmlLogger {
   }
 
   def logAccountException(acc:String, exc:String): Unit ={
-    HtmlLogger.append(s"$acc : $exc occured while Download Process")
+    HtmlLogger.append(s"$acc : $exc occured while Download Process\n")
   }
 }

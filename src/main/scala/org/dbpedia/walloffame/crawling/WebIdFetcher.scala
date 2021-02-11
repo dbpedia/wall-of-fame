@@ -54,15 +54,15 @@ object WebIdFetcher {
           logger.error(s"socketException")
         }
         case connectException: ConnectException => {
-          HtmlLogger.append(s"$account : connection timed out")
+          HtmlLogger.append(s"$account : connection timed out\n")
           logger.error(s"Connection timed out for $account")
         }
         case riotNotFoundException: RiotNotFoundException => {
-          HtmlLogger.append(s"$account : url not found")
+          HtmlLogger.append(s"$account : url not found\n")
           logger.error(s"$account : url not found.")
         }
         case riotException: RiotException => {
-          HtmlLogger.append(s"$account : ${riotException.toString}")
+          HtmlLogger.append(s"$account : ${riotException.toString}\n")
           logger.error(s"riotException in $account .")
         }
       }

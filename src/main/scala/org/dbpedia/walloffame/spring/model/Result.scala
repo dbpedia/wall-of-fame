@@ -1,5 +1,7 @@
 package org.dbpedia.walloffame.spring.model
 
+import org.dbpedia.walloffame.logging.HtmlLogger
+
 import scala.beans.BeanProperty
 
 class Result {
@@ -23,6 +25,17 @@ class Result {
     infos = infos :+ (focusNode, message)
   }
 
+  def logResults():Unit={
+    log(violations)
+    log(infos)
+    if(violations.nonEmpty || infos.nonEmpty) HtmlLogger.append("")
+  }
+
+  def log(array:Array[(String,String)]):Unit={
+    array.foreach(tuple=>{
+      HtmlLogger.append(s"${tuple._1}: ${tuple._2}")
+    })
+  }
   //  def prepareResult():Unit={
   //    infos.foreach(tuple=>{
   //      if (tuple._2.contains("dbo:DBpedian")) {
