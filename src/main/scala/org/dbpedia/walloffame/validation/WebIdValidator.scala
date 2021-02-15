@@ -13,17 +13,17 @@ import java.io.ByteArrayOutputStream
 object WebIdValidator {
 
 
-  def writeFile(str: String): File = {
-
-    import java.io.PrintWriter
-    val fileToValidate = File("./tmp/webIdToValidate.ttl")
-    new PrintWriter(fileToValidate.toJava) {
-      write(str)
-      close
-    }
-
-    fileToValidate
-  }
+//  def writeFile(str: String): File = {
+//
+//    import java.io.PrintWriter
+//    val fileToValidate = File("./tmp/webIdToValidate.ttl")
+//    new PrintWriter(fileToValidate.toJava) {
+//      write(str)
+//      close
+//    }
+//
+//    fileToValidate
+//  }
 
 
   def validate(webId: Model): Result = {
@@ -36,6 +36,7 @@ object WebIdValidator {
 
     //iterate over all shapeFiles and validate for each
     val tmpShapeFile = File("./tmp/tmpShapeFile.ttl")
+    tmpShapeFile.parent.createDirectoryIfNotExists()
     for (resource <- resources) {
       //write shacl file out of jar, because Jena can't handle stream
       val is = resource.getInputStream
@@ -55,6 +56,11 @@ object WebIdValidator {
     }
 
     result
+  }
+
+  def validate(webId:Model, shapesURL:String):Result = {
+    val shapes = RDFDataMgr.loadModel(shapesURL)
+    validate(webId, shapes)
   }
 
   def validate(webId: Model, shapesModel: Model): Result = {

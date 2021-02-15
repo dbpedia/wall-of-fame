@@ -18,7 +18,7 @@ class InitRunner extends CommandLineRunner {
     File("./tmp/").delete(true)
     File("./tmp/").createDirectory()
 
-//    prepareWallOfFame()
+    prepareWallOfFame()
   }
 
   def prepareWallOfFame() = {
@@ -39,6 +39,6 @@ class InitRunner extends CommandLineRunner {
     }
 
     //fetch databus-registered webIds to virtuoso of wall of fame
-    WebIdFetcher.fetchRegisteredWebIds(config.virtuoso)
+    WebIdFetcher.fetchRegisteredWebIds(config)
   }
 }

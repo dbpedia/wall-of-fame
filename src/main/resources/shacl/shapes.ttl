@@ -74,13 +74,6 @@
 	sh:maxCount 1 ;
 	sh:severity sh:Info ;
 	sh:message "Optional property foaf:img is missing."@en .
-
-<#firstname> a sh:PropertyShape ;
-	sh:path foaf:firstname ;
-	sh:minCount 1 ;
-	sh:maxCount 1 ;
-	sh:severity sh:Info ;
-	sh:message "Optional property foaf:firstname is missing."@en .
 	
 <#geekcode> a sh:PropertyShape ;
 			sh:path foaf:geekcode ;

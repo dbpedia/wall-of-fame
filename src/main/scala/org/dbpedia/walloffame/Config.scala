@@ -1,8 +1,7 @@
 package org.dbpedia.walloffame
 
-import org.dbpedia.walloffame.spring.controller.{ValidationController, WoFController}
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.context.annotation.{ComponentScan, Configuration, FilterType}
+import org.springframework.context.annotation.Configuration
 
 import scala.beans.BeanProperty
 
@@ -12,7 +11,7 @@ case class Config() {
   @BeanProperty
   var virtuoso: VosConfig = new VosConfig
   @BeanProperty
-  var exhibit: ExhibitConfig = new ExhibitConfig
+  var shacl: ShaclConfig = new ShaclConfig
   //  @BeanProperty
   //  var databus: DatabusConfig = new DatabusConfig
 }
@@ -28,9 +27,9 @@ case class VosConfig() {
   var graph: String = _
 }
 
-case class ExhibitConfig() {
+case class ShaclConfig() {
   @BeanProperty
-  var file: String = _
+  var url: String = _
 }
 
 //case class DatabusConfig() {

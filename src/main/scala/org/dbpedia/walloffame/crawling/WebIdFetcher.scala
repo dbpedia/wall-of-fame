@@ -2,10 +2,11 @@ package org.dbpedia.walloffame.crawling
 
 import org.apache.jena.atlas.web.HttpException
 import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException, RiotNotFoundException}
-import org.dbpedia.walloffame.VosConfig
+import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.logging.HtmlLogger
 import org.dbpedia.walloffame.logging.HtmlLogger.logAccountException
 import org.dbpedia.walloffame.uniform.WebIdUniformer
+import org.dbpedia.walloffame.validation.WebIdValidator
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.slf4j.LoggerFactory
 
@@ -18,7 +19,7 @@ object WebIdFetcher {
   var logger = LoggerFactory.getLogger("WebIdFetcher")
 
 
-  def fetchRegisteredWebIds(virtuosoConfig: VosConfig): Unit = {
+  def fetchRegisteredWebIds(config: Config): Unit = {
 
     println(
       """
@@ -38,8 +39,11 @@ object WebIdFetcher {
       println(account)
 
       try {
-        val uniformedModel = WebIdUniformer.uniform(RDFDataMgr.loadModel(account, Lang.TURTLE))
-        VirtuosoHandler.insertModel(uniformedModel, virtuosoConfig, accountName)
+        val model = RDFDataMgr.loadModel(account, Lang.TURTLE)
+        val result = WebIdValidator.validate(model, config.shacl.url)
+        result.logResults()
+        val uniformedModel = WebIdUniformer.uniform(model)
+        VirtuosoHandler.insertModel(uniformedModel, config.virtuoso, accountName)
       } catch {
         case httpException: HttpException => {
           logAccountException(account, "httpException")
@@ -68,54 +72,6 @@ object WebIdFetcher {
       }
 
     }
-    //
-    //    accounts.foreach(account => {
-    ////      println(s"ACCOUNT: $account")
-    //      try{
-    //        val accountModel = ModelFactory.createDefaultModel()
-    //        accountModel.read(account.head, "TURTLE")
-    //
-    //        val uniformedModel = WebIdUniformer.uniform(accountModel)
-    //        VirtuosoHandler.insertModel(uniformedModel, virtuoso, account.last)
-    ////        val outFile= crawlDir/ s"${account(1)}.nt"
-    ////        RDFDataMgr.write(new FileOutputStream(outFile.toJava), accountModel, Lang.NTRIPLES)
-    //      } catch {
-    //        case riotNotFoundException: RiotNotFoundException => LoggerFactory.getLogger("Crawler").error(s"url ${account.head} not found.")
-    //        case riotException: RiotException => LoggerFactory.getLogger("Crawler").error(s"riotException in ${account.head}.")
-    //      }
-    //
-    //    })
   }
 
-
-
-//  def crawl(): File = {
-//    val crawlStream = getClass.getClassLoader.getResourceAsStream("crawl.sh")
-//    val in = scala.io.Source.fromInputStream(crawlStream)
-//
-//    val crawlFile = File("./tmp/crawl.sh")
-//    crawlFile.parent.createDirectoryIfNotExists()
-//
-//    val out = new java.io.PrintWriter(crawlFile.toJava)
-//    try {
-//      in.getLines().foreach(out.println(_))
-//    }
-//    finally {
-//      out.close
-//    }
-//
-//    var result =""
-//
-//    try{
-//      import sys.process._
-//      Seq("chmod", "+x", crawlFile.pathAsString).!!
-//      result = Seq(crawlFile.pathAsString).!!
-//
-////      crawlFile.delete()
-//    } catch {
-//      case io:IOException => println(s"${crawlFile.pathAsString} not found")
-//    }
-//
-//    File(result.trim)
-//  }
 }

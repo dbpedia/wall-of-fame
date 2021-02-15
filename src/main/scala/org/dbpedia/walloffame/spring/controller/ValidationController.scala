@@ -64,7 +64,6 @@ class ValidationController(config: Config) {
     } catch {
       case malformedURLException: MalformedURLException => {
         //if webId is send as plain text
-        println(malformedURLException)
         newWebId.setTurtle(str.trim)
         handleWebId(newWebId, response)
       }
@@ -76,14 +75,11 @@ class ValidationController(config: Config) {
     try{
       val model: Model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(webId.turtle, "UTF-8"), "", "TURTLE")
 
-      val result = WebIdValidator.validate(model)
+      val result = WebIdValidator.validate(model, config.shacl.url)
 
       if (result.conforms()) {
         //valid webid
         val newModel = WebIdUniformer.uniform(model)
-//        val stmts = newModel.listStatements()
-//        while(stmts.hasNext) println(stmts.nextStatement())
-
         val newWebId = new WebId(newModel)
         newWebId.setTurtle(webId.turtle)
         newWebId.setUrl(webId.url)

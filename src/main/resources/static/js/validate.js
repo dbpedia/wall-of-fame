@@ -17,7 +17,6 @@ app.controller('validateController', function($scope, $http, $filter) {
             '     foaf:img <https://eisenbahnplatte.github.io/eisenbahnplatte.jpeg>;\n' +
             '     foaf:gender "male";\n' +
             '     foaf:geekcode "GMU GCS s: d? !a L++ PS+++ PE- G h";\n' +
-            '     foaf:firstname "Fabian";\n' +
             '\n' +
             'cert:key [\n' +
             '    a cert:RSAPublicKey;\n' +
