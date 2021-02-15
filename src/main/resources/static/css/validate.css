@@ -47,7 +47,7 @@ textarea {
 .content {
     padding: 1em;
     display: block;
-    overflow: hidden;
+    /*overflow: hidden;*/
     background-color: #f1f1f1;
     width: auto;
     border-radius: 4px;

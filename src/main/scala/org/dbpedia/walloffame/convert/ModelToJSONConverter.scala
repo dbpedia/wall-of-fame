@@ -1,6 +1,5 @@
 package org.dbpedia.walloffame.convert
 
-import better.files.File
 import org.apache.jena.rdf.model.Model
 import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.uniform.queries.{SelectOptionalQueries, SelectQueries}
@@ -10,15 +9,15 @@ import scala.collection.mutable.ListBuffer
 object ModelToJSONConverter {
 
 
-  def createJSONFile(models: Seq[(String, Model)], outFile: File): File = {
-    val json = toJSON(models)
-
-    val bw = outFile.newBufferedWriter
-    bw.write(json)
-    bw.close()
-
-    outFile
-  }
+//  def createJSONFile(models: Seq[(String, Model)], outFile: File): File = {
+//    val json = toJSON(models)
+//
+//    val bw = outFile.newBufferedWriter
+//    bw.write(json)
+//    bw.close()
+//
+//    outFile
+//  }
 
   def toJSON(models: Seq[(String, Model)]): String = {
     val items = new ListBuffer[ListBuffer[String]]
