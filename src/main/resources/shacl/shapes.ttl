@@ -22,7 +22,6 @@
 	sh:property <#img> ;
 	sh:property <#gender> ;
 	sh:property <#geekcode> ;
-	sh:property <#firstname> ;
 	sh:property <#dbpedia-support-info> .
     
 <#KeyShape> a sh:NodeShape ;
