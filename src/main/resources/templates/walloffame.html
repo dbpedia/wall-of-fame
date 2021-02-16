@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <title>DBpedia's Wall of Fame</title>
     <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
@@ -20,12 +20,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
     <script src="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.js"></script>
-    <link rel="stylesheet" type="text/css" th:href="@{css/wof.css}">
+    <link rel="stylesheet" type="text/css" href="/css/wof.css">
 
 
-    <script th:src="@{js/application.js}"></script>
-    <script th:src="@{js/modal.js}"></script>
-    <script th:src="@{js/wof.js}"></script>
+    <script src="/js/application.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/wof.js"></script>
 </head>
 
 <body>
@@ -35,7 +35,7 @@
     <div class="container">
 
         <a class="navbar-brand" href="/">
-            <img th:src="@{images/DBpediaLogo.svg}"/>
+            <img src="/images/DBpediaLogo.svg"/>
         </a>
 
         <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
@@ -87,29 +87,16 @@
 
     <hr>
 
-<!--    <div ng-app="mymodal" ng-controller="MyController" class="container">-->
-<!--        <h1>Modal example</h1>-->
-<!--        <button ng-click="MyController.open()" class="btn btn-primary">Test Modal</button>-->
-
-<!--        <modal id="login" title="Login form">-->
-<!--            asd-->
-<!--            <form role="form">-->
-<!--                asd-->
-<!--            </form>-->
-<!--        </modal>-->
-<!--    </div>-->
-
     <div ng-app="wofApp" ng-controller="webIdController" ng-cloak="">
-
         <!-- SELECT PANELS -->
         <div class="row" >
-
             <div class="col-sm-2" style="border-right: 1px solid; border-color: #dddddd">
 
                 <legend><h4>Search</h4></legend>
                 <div class="bar">
                     <input type="text" class="search" ng-model="model.searchString" />
                 </div>
+
                 <br>
                 <hr>
 
@@ -150,8 +137,6 @@
                     </div>
                 </fieldset>
 
-
-
 <!--
                 <ul>
                     <li ng-repeat="tab in filteredArray">{{tab}}</li>
@@ -179,8 +164,6 @@
             <!-- DBPEDIA ACCOUNTS -->
             <div class="col-sm">
                 <div class="carddemoCardActionButtons">
-                    <!--        <div class='md-padding' layout="row" layout-wrap>-->
-                    <!--            -->
                     <md-content layout-xs="column" layout="row" layout-wrap flex>
                         <md-card ng-repeat="x in filteredWebIds | filter:model.searchString">
 
@@ -188,8 +171,9 @@
                                  style="object-fit: scale-down; height: 200px; width: 100%">
                             <md-card-title>
                                 <md-card-title-text>
-                        <span class="md-headline" style="text-align: center"><a
-                                href="https://databus.dbpedia.org/{{x.account}}">{{x.account}}</a></span>
+                                    <span class="md-headline" style="text-align: center">
+                                        <a href="https://databus.dbpedia.org/{{x.account}}">{{x.account}}</a>
+                                    </span>
                                 </md-card-title-text>
                             </md-card-title>
                             <md-card-content>
@@ -223,7 +207,6 @@
                 </div>
             </div>
         </div>
-
 
     </div>
 

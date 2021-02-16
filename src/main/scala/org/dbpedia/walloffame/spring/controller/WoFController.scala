@@ -1,14 +1,11 @@
 package org.dbpedia.walloffame.spring.controller
 
 import better.files.File
-import org.apache.jena.rdf.model.Model
 import org.dbpedia.walloffame.Config
-import org.dbpedia.walloffame.convert.ModelToJSONConverter
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{RequestMapping, RequestMethod, ResponseBody}
-import virtuoso.jdbc4.VirtuosoException
 
 import java.nio.charset.StandardCharsets
 import javax.servlet.http.HttpServletResponse
@@ -48,15 +45,11 @@ class WoFController {
   @ResponseBody
   def getJson(response: HttpServletResponse): Unit = {
 
-    val optModels =
-      try {
-        VirtuosoHandler.getAllWebIds(config.virtuoso)
-      } catch {
-        case virtuosoException: VirtuosoException => Seq.empty[(String, Model)]
-      }
+    val vos = new VirtuosoHandler(config.virtuoso)
+    val json = vos.getAllWebIdsAsJson()
 
-    if (optModels.nonEmpty) {
-      val json = ModelToJSONConverter.toJSON(optModels)
+    if (json.nonEmpty) {
+      println(json)
 
       val os = response.getOutputStream
       os.write(json.getBytes(StandardCharsets.UTF_8))

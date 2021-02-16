@@ -3,8 +3,8 @@ package org.dbpedia.walloffame.crawling
 import org.apache.jena.atlas.web.HttpException
 import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException, RiotNotFoundException}
 import org.dbpedia.walloffame.Config
-import org.dbpedia.walloffame.logging.HtmlLogger
-import org.dbpedia.walloffame.logging.HtmlLogger.logAccountException
+import org.dbpedia.walloffame.logging.JsonLDLogger
+import org.dbpedia.walloffame.logging.JsonLDLogger.logAccountException
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
@@ -21,53 +21,61 @@ object WebIdFetcher {
 
   def fetchRegisteredWebIds(config: Config): Unit = {
 
+    val vos = new VirtuosoHandler(config.virtuoso)
+
     println(
       """
         |Download, validate, and uniform all registered WebIds on the DBpedia Databus.
         |Accounts:""".stripMargin)
 
+    //get all registered webIds
     val url = "https://databus.dbpedia.org/system/api/accounts"
 //    val url = "./src/main/resources/accounts.ttl"
     val model = RDFDataMgr.loadModel(url, Lang.NTRIPLES)
 
     val stmts = model.listStatements()
     while (stmts.hasNext) {
-
       val stmt = stmts.nextStatement()
-      val account = stmt.getSubject.toString
-      val accountName = stmt.getObject.toString.replaceFirst("https://databus.dbpedia.org/", "")
-      println(account)
+      val webid = stmt.getSubject.toString
+      val accountURL = stmt.getObject.toString //.replaceFirst("https://databus.dbpedia.org/", "")
+      println(webid)
 
       try {
-        val model = RDFDataMgr.loadModel(account, Lang.TURTLE)
+        val model = RDFDataMgr.loadModel(webid, Lang.TURTLE)
         val result = WebIdValidator.validate(model, config.shacl.url)
+
         result.logResults()
-        val uniformedModel = WebIdUniformer.uniform(model)
-        VirtuosoHandler.insertModel(uniformedModel, config.virtuoso, accountName)
+        if (result.conforms()) {
+          val uniformedModel = WebIdUniformer.uniform(model)
+          vos.insertModel(uniformedModel, accountURL)
+        } else {
+
+        }
+
       } catch {
         case httpException: HttpException => {
-          logAccountException(account, "httpException")
-          logger.error("httpException")
+          logAccountException(webid, httpException)
+          logger.error(s"$webid: ${httpException.toString}")
         }
         case eofException: EOFException => {
-          logAccountException(account, "httpException")
-          logger.error("eofException")
+          logAccountException(webid, eofException)
+          logger.error(s"$webid: ${eofException.toString}")
         }
         case socketException: SocketException => {
-          logAccountException(account, "httpException")
-          logger.error(s"socketException")
+          logAccountException(webid, socketException)
+          logger.error(s"$webid: ${socketException.toString}")
         }
         case connectException: ConnectException => {
-          HtmlLogger.append(s"$account : connection timed out\n")
-          logger.error(s"Connection timed out for $account")
+          JsonLDLogger.append(s"$webid : connection timed out\n")
+          logger.error(s"$webid: Connection timed out.")
         }
         case riotNotFoundException: RiotNotFoundException => {
-          HtmlLogger.append(s"$account : url not found\n")
-          logger.error(s"$account : url not found.")
+          JsonLDLogger.append(s"$webid : url not found\n")
+          logger.error(s"$webid : url not found.")
         }
         case riotException: RiotException => {
-          HtmlLogger.append(s"$account : ${riotException.toString}\n")
-          logger.error(s"riotException in $account .")
+          JsonLDLogger.append(s"$webid : ${riotException.toString}\n")
+          logger.error(s"$webid : ${riotException.toString}")
         }
       }
 

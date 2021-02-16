@@ -1,6 +1,6 @@
 package org.dbpedia.walloffame.spring.model
 
-import org.dbpedia.walloffame.logging.HtmlLogger
+import org.dbpedia.walloffame.logging.JsonLDLogger
 
 import scala.beans.BeanProperty
 
@@ -28,20 +28,13 @@ class Result {
   def logResults():Unit={
     log(violations)
     log(infos)
-    if(violations.nonEmpty || infos.nonEmpty) HtmlLogger.append("")
+    if(violations.nonEmpty || infos.nonEmpty) JsonLDLogger.append("")
   }
 
   def log(array:Array[(String,String)]):Unit={
     array.foreach(tuple=>{
-      HtmlLogger.append(s"${tuple._1}: ${tuple._2}")
+      JsonLDLogger.append(s"${tuple._1}: ${tuple._2}")
     })
   }
-  //  def prepareResult():Unit={
-  //    infos.foreach(tuple=>{
-  //      if (tuple._2.contains("dbo:DBpedian")) {
-  //        infos.update(infos.indexOf(tuple), (tuple._1, tuple._2.concat(" <img th:src=\"@{images/DBpedia_favicon.png}\"/>")))
-  //      }
-  //    })
-  //  }
 }
 

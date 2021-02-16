@@ -24,12 +24,12 @@ class ValidationController(config: Config) {
   //value = Array("url") is the url the resulting site will be located at
   //viewname is the path to the related jsp file
   @RequestMapping(value = Array("/validator"), method = Array(RequestMethod.GET))
-  def getValidate(): ModelAndView = {
+  def getValidator(): ModelAndView = {
     new ModelAndView("validate")
   }
 
   @RequestMapping(value = Array("/validate"), method= Array(RequestMethod.GET))
-  def validateWithURL(@RequestParam str:String, response: HttpServletResponse): Unit = {
+  def validate(@RequestParam str:String, response: HttpServletResponse): Unit = {
 
     response.setHeader("Content-Type","application/json")
 
@@ -107,9 +107,6 @@ class ValidationController(config: Config) {
   def writeWholeJsonOnRespone(webId:WebId, result:Result, response: HttpServletResponse): Unit = {
     val gson = new Gson()
     val os = response.getOutputStream
-
-    result.violations.foreach(println(_))
-
     os.write(s"""{ "WebId":${gson.toJson(webId)},""".getBytes(StandardCharsets.UTF_8))
     os.write(s""" "Result":${gson.toJson(result)}}""".getBytes(StandardCharsets.UTF_8))
   }

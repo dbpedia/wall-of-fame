@@ -5,21 +5,11 @@ virtuoso:
 #  url: "jdbc:virtuoso://db:1111/charset=UTF-8/log_enable=2"
   usr: "dba"
   psw: "dba"
-  graph: "http://webids/"
+#  graph: "http://webids/"
 shacl:
   url: "https://raw.githubusercontent.com/dbpedia/wall-of-fame/master/src/main/resources/shacl/shapes.ttl"
 spring:
   main:
     banner-mode: "log"
-#logging:
-#  level:
-#    root: ERROR
-#    org.foo.bar.baz: INFO
-#databus:
-#  file: "./databus/uniformedWebIds/"
-
-#spring:
-#  main:
-#    web-application-type: none
 
 

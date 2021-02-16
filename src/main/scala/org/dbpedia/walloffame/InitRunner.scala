@@ -18,7 +18,7 @@ class InitRunner extends CommandLineRunner {
     File("./tmp/").delete(true)
     File("./tmp/").createDirectory()
 
-    prepareWallOfFame()
+//    prepareWallOfFame()
   }
 
   def prepareWallOfFame() = {
@@ -28,7 +28,8 @@ class InitRunner extends CommandLineRunner {
     var time = 0
     while (wait) {
       try {
-        VirtuosoHandler.getAllGraphs(config.virtuoso).foreach(graph => VirtuosoHandler.clearGraph(config.virtuoso, graph))
+        val vos = new VirtuosoHandler(config.virtuoso)
+        vos.getAllGraphURIs().foreach(graph => vos.clearGraph(graph))
         wait = false
       } catch {
         case e: Exception =>

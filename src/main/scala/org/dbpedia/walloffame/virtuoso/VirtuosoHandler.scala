@@ -2,18 +2,22 @@ package org.dbpedia.walloffame.virtuoso
 
 import better.files.File
 import org.apache.jena.query.{Query, QueryFactory}
-import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.{Model, ModelFactory}
 import org.apache.jena.util.FileManager
 import org.dbpedia.walloffame.VosConfig
+import org.dbpedia.walloffame.spring.model.WebId
 import org.slf4j.LoggerFactory
 import virtuoso.jdbc4.VirtuosoException
 import virtuoso.jena.driver.{VirtGraph, VirtModel, VirtuosoQueryExecution, VirtuosoQueryExecutionFactory}
 
 import java.io.{InputStream, InputStreamReader}
 
-object VirtuosoHandler {
+class VirtuosoHandler(vosConfig: VosConfig) {
 
-  def insertFile(file: File, vosConfig: VosConfig, subGraph: String) = {
+  val logger = LoggerFactory.getLogger(classOf[VirtuosoHandler])
+  val mainGraph = "https://databus.dbpedia.org/"
+
+  def insertFile(file: File, subGraph: String): Unit = {
     try {
       val model: Model = VirtModel.openDatabaseModel(vosConfig.graph.concat(subGraph), vosConfig.url, vosConfig.usr, vosConfig.psw)
       val in: InputStream = FileManager.get().open(file.pathAsString)
@@ -27,27 +31,27 @@ object VirtuosoHandler {
     }
   }
 
-  def insertModel(model: Model, vosConfig: VosConfig, subGraph:String) = {
-    val virtmodel: VirtModel = VirtModel.openDatabaseModel(vosConfig.graph.concat(subGraph), vosConfig.url, vosConfig.usr, vosConfig.psw)
+  def insertModel(model: Model, targetGraph:String): Unit = {
+    val virtmodel: VirtModel = VirtModel.openDatabaseModel(targetGraph, vosConfig.url, vosConfig.usr, vosConfig.psw)
     virtmodel.add(model)
     virtmodel.close()
   }
 
-  def clearGraph(vosConfig: VosConfig, graph:String) = {
+  def clearGraph(graph:String): Unit = {
     val set = new VirtGraph(graph, vosConfig.url, vosConfig.usr, vosConfig.psw)
     set.clear()
   }
 
-  def getModel(vosConfig: VosConfig, graph:String): Model = {
-    val model: Model = VirtModel.openDatabaseModel(graph, vosConfig.url, vosConfig.usr, vosConfig.psw)
-    model
+  def getGraph(graph:String): VirtGraph = {
+    val virtGraph = new VirtGraph(graph, vosConfig.url, vosConfig.usr, vosConfig.psw)
+    virtGraph
   }
 
-  def getAllGraphs(vosConfig: VosConfig):Seq[String] ={
+  def getAllGraphURIs():Seq[String] ={
 
     val virt =
       try{
-        val newVirt = new VirtGraph(vosConfig.url, vosConfig.usr, vosConfig.psw)
+        val newVirt = new VirtGraph(mainGraph, vosConfig.url, vosConfig.usr, vosConfig.psw)
         Option(newVirt)
       } catch {
         case virtuosoException: VirtuosoException => {
@@ -56,14 +60,14 @@ object VirtuosoHandler {
       }
     }
 
-    if (virt == None) Seq.empty[String]
+    if (virt.isEmpty) Seq.empty[String]
     else {
       val sparql: Query = QueryFactory.create(
         s"""
            |SELECT  DISTINCT ?g
            |WHERE  {
            |   GRAPH ?g {?s ?p ?o}
-           |   FILTER regex(?g, "^${vosConfig.graph}")
+           |   FILTER regex(?g, "^${mainGraph}")
            |}
            |ORDER BY  ?g
       """.stripMargin)
@@ -85,18 +89,39 @@ object VirtuosoHandler {
 
   }
 
-  def getAllWebIds(vosConfig: VosConfig): Seq[(String, Model)] = {
+  def getAllWebIdGraphs(): Seq[VirtGraph] = {
     try {
-      var models = Seq.empty[(String, Model)]
-      VirtuosoHandler.getAllGraphs(vosConfig).foreach(graph =>
-        models = models :+ (graph.split('/').last, VirtuosoHandler.getModel(vosConfig, graph))
+      var graphs = Seq.empty[VirtGraph]
+
+      this.getAllGraphURIs().foreach(graph =>
+        graphs = graphs :+ this.getGraph(graph)
       )
-      models
+      graphs
     } catch {
       case virtuosoException: VirtuosoException => {
-        LoggerFactory.getLogger("Virtuoso").error("Connection to Virtuoso DB failed.")
-        Seq.empty[(String, Model)]
+        logger.error(s"Connection to Virtuoso DB failed. ${virtuosoException.toString}")
+        Seq.empty[VirtGraph]
       }
+    }
+  }
+
+  def getAllWebIdsAsJson(): String = {
+    val graphs = this.getAllWebIdGraphs()
+
+    if (graphs.isEmpty) {
+      ""
+    } else {
+      var json = "{ \"webIds\": [\n"
+
+      import com.google.gson.Gson
+      val gson = new Gson()
+
+      graphs.foreach(graph => {
+        val webid = new WebId(ModelFactory.createModelForGraph(graph))
+        json += s"${gson.toJson(webid)},\n"
+      })
+
+      json.dropRight(2).concat("\n]}")
     }
   }
 

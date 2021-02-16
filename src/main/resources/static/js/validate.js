@@ -13,6 +13,7 @@ app.controller('validateController', function($scope, $http, $filter) {
             '    foaf:primaryTopic <#this> .\n' +
             '\n' +
             '<#this> a foaf:Person ;\n' +
+            '     a dbo:DBpedian;\n' +
             '     foaf:name "Eisenbahnplatte";\n' +
             '     foaf:img <https://eisenbahnplatte.github.io/eisenbahnplatte.jpeg>;\n' +
             '     foaf:gender "male";\n' +

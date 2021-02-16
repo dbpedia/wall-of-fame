@@ -1,4 +1,4 @@
-package org.dbpedia.walloffame.utils
+package org.dbpedia.walloffame.archived
 
 
 import org.slf4j.LoggerFactory

@@ -32,11 +32,10 @@ class InitRunnerDatabus extends CommandLineRunner {
   def getWebIdsFromWallOfFame(targetDir: File) = {
 
     val aggregatedModel = ModelFactory.createDefaultModel()
-    val webIdModels = VirtuosoHandler.getAllWebIds(config.virtuoso)
+    val vos = new VirtuosoHandler(config.virtuoso)
+    val webIdModels = vos.getAllWebIdGraphs()
 
-    webIdModels.foreach(tuple => {
-      aggregatedModel.add(tuple._2)
-    })
+    webIdModels.foreach(graph => aggregatedModel.add(ModelFactory.createModelForGraph(graph)))
 
     //fix prefixes
     val prefixes = Map(

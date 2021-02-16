@@ -1,16 +1,14 @@
 package org.dbpedia.walloffame.virtuosoTest
 
-import java.io.{ByteArrayOutputStream, InputStream, InputStreamReader}
-
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.util.FileManager
-import org.dbpedia.walloffame.VosConfig
-import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import virtuoso.jdbc4.VirtuosoException
-import virtuoso.jena.driver.{VirtGraph, VirtModel, VirtuosoQueryExecution, VirtuosoQueryExecutionFactory, VirtuosoUpdateFactory}
+import virtuoso.jena.driver._
+
+import java.io.{ByteArrayOutputStream, InputStream, InputStreamReader}
 
 
 class VirtuosoHandler {
@@ -142,7 +140,6 @@ class VirtuosoHandler {
     while (results.hasNext) {
       val rs = results.nextSolution
       val s = rs.get("g")
-      System.out.println(s)
     }
   }
 
@@ -174,7 +171,6 @@ class VirtuosoHandler {
         Option(newVirt)
       } catch {
         case virtuosoException: VirtuosoException => {
-          println("haloo")
           LoggerFactory.getLogger("Virtuoso").error("Connection refused")
           None
         }
