@@ -8,6 +8,8 @@ virtuoso:
 #  graph: "http://webids/"
 shacl:
   url: "https://raw.githubusercontent.com/dbpedia/wall-of-fame/master/src/main/resources/shacl/shapes.ttl"
+log:
+  file: "./tmp/log.jsonld"
 spring:
   main:
     banner-mode: "log"

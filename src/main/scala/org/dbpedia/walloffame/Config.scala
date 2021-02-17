@@ -12,8 +12,8 @@ case class Config() {
   var virtuoso: VosConfig = new VosConfig
   @BeanProperty
   var shacl: ShaclConfig = new ShaclConfig
-  //  @BeanProperty
-  //  var databus: DatabusConfig = new DatabusConfig
+  @BeanProperty
+  var log: LogConfig = new LogConfig
 }
 
 case class VosConfig() {
@@ -32,7 +32,7 @@ case class ShaclConfig() {
   var url: String = _
 }
 
-//case class DatabusConfig() {
-//  @BeanProperty
-//  var file: String = _
-//}
+case class LogConfig(){
+  @BeanProperty
+  var file: String =_
+}

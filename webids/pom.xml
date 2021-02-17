@@ -21,7 +21,7 @@
             /var/www/html/databus/repo/${project.groupId}/${project.artifactId}
         </databus.packageDirectory>
         <databus.downloadUrlPath>
-            http://downloads.dbpedia.org/repo/${project.groupId}/${project.artifactId}/${project.version}/
+            https://tools.dbpedia.org/databus/repo/${project.groupId}/${project.artifactId}/${project.version}/
         </databus.downloadUrlPath>
         <databus.publisher>https://eisenbahnplatte.github.io/webid.ttl#this</databus.publisher>
         <databus.pkcs12serverId>databus.eisenbahnplatte</databus.pkcs12serverId>

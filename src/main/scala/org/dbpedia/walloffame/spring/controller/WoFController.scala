@@ -27,15 +27,15 @@ class WoFController {
   def logs(response: HttpServletResponse): Unit = {
 
     val os = response.getOutputStream
-    val source = Source.fromFile(File("./tmp/errors.log").toJava)
+    val source = Source.fromFile(File(config.log.file).toJava)
 
-    os.write("<html>".getBytes(StandardCharsets.UTF_8))
+//    os.write("<html>".getBytes(StandardCharsets.UTF_8))
     source.getLines().foreach({line =>
-      os.write(s"$line<br>".getBytes(StandardCharsets.UTF_8))
+      os.write(s"$line".getBytes(StandardCharsets.UTF_8))
     })
-    os.write("</html>".getBytes(StandardCharsets.UTF_8))
+//    os.write("</html>".getBytes(StandardCharsets.UTF_8))
 
-    response.setHeader("Content-Type","text/html")
+    response.setHeader("Content-Type","application/ld+json")
     response.setStatus(200)
 
     source.close()

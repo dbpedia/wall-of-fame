@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 
 import java.io.FileOutputStream
+import java.nio.file.NoSuchFileException
 import java.util.zip.GZIPOutputStream
 
 @Component
@@ -51,14 +52,20 @@ class InitRunnerDatabus extends CommandLineRunner {
     import collection.JavaConversions._
     aggregatedModel.setNsPrefixes(prefixes)
 
-    //write file
-    val file = targetDir / "uniformedWebIds_webids.ttl.gz"
+    //write webids file
+    val file = targetDir / targetDir.parent.name.concat("_webids.ttl.gz")
     val fos  = new FileOutputStream(file.toJava)
     val gzos = new GZIPOutputStream( fos )
-
     RDFDataMgr.write(gzos, aggregatedModel, Lang.TTL)
-
     gzos.close()
     fos.close()
+
+    //write log file
+    val logFile = targetDir / targetDir.parent.name.concat("_errorLog.jsonld")
+    try{
+      File(config.log.file).copyTo(logFile, true)
+    } catch {
+      case noSuchFileException: NoSuchFileException => println("log file not found")
+    }
   }
 }

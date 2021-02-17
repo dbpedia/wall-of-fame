@@ -7,6 +7,7 @@ app.controller('validateController', function($scope, $http, $filter) {
             '@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n' +
             '@prefix cert: <http://www.w3.org/ns/auth/cert#> .\n' +
             '@prefix rdfs: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n' +
+            '@prefix dbo: <http://dbpedia.org/ontology/>.\n' +
             '\n' +
             '<> a foaf:PersonalProfileDocument ;\n' +
             '    foaf:maker <#this> ;\n' +
@@ -28,8 +29,7 @@ app.controller('validateController', function($scope, $http, $filter) {
         name: "Fabian",
         img: "https://eisenbahnplatte.github.io/eisenbahnplatte.jpeg",
         gender: "male",
-        geekCode: "GMU GCS s: d? !a L++ PS+++ PE- G h",
-        firstname: "Fabian"
+        geekCode: "GMU GCS s: d? !a L++ PS+++ PE- G h"
     };
 
     $scope.result={

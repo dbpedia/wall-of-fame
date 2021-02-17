@@ -3,27 +3,22 @@ package org.dbpedia.walloffame.logging
 import org.apache.jena.rdf.model.{ModelFactory, ResourceFactory, Statement}
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 
-import java.io.{FileOutputStream, FileWriter}
+import java.io.FileOutputStream
 
-object JsonLDLogger {
+class JsonLDLogger(logFile: String) {
 
-  val logFile = "./tmp/errors.jsonld"
+//  val logFile = "./tmp/errors.jsonld"
   val model = ModelFactory.createDefaultModel()
 
-  def append(string: String)={
-
-    val fw = new FileWriter(logFile, true)
-    try {
-      fw.write(s"$string\n")
-    }
-    finally fw.close()
-  }
-
-  def logAccountException(acc:String, exc:Exception): Unit ={
-    JsonLDLogger.append(s"$acc : ${exc.toString} occured while Download Process\n")
+  def resetModel()={
+    model.removeAll()
   }
 
   def writeOut():Unit ={
+
+//    val stmts = model.listStatements()
+//    while (stmts.hasNext) println(stmts.nextStatement())
+
     val fos = new FileOutputStream(logFile)
     RDFDataMgr.write(fos, model, Lang.RDFJSON)
   }
@@ -39,4 +34,27 @@ object JsonLDLogger {
         ResourceFactory.createStringLiteral(obj)
     )
   }
+
+  def addException(webid:String, exc:Exception)={
+    this.add(webid, "https://example.org/hasException", exc.toString)
+  }
+
+
+  //  def append(string: String)={
+  //
+  //    val fw = new FileWriter(logFile, true)
+  //    try {
+  //      fw.write(s"$string\n")
+  //    }
+  //    finally fw.close()
+  //  }
+  //
+  //  def deleteLogFile()={
+  //    File(logFile).delete(true)
+  //  }
+
+
+  //  def logAccountException(acc:String, exc:Exception): Unit ={
+  //    JsonLDLogger.append(s"$acc : ${exc.toString} occured while Download Process\n")
+  //  }
 }

@@ -1,7 +1,5 @@
 package org.dbpedia.walloffame.spring.model
 
-import org.dbpedia.walloffame.logging.JsonLDLogger
-
 import scala.beans.BeanProperty
 
 class Result {
@@ -25,16 +23,5 @@ class Result {
     infos = infos :+ (focusNode, message)
   }
 
-  def logResults():Unit={
-    log(violations)
-    log(infos)
-    if(violations.nonEmpty || infos.nonEmpty) JsonLDLogger.append("")
-  }
-
-  def log(array:Array[(String,String)]):Unit={
-    array.foreach(tuple=>{
-      JsonLDLogger.append(s"${tuple._1}: ${tuple._2}")
-    })
-  }
 }
 

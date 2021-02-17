@@ -6,32 +6,34 @@ import org.dbpedia.walloffame.uniform.queries.{SelectOptionalQueries, SelectQuer
 
 import scala.beans.BeanProperty
 
-class WebId {
+class WebId() {
+
+  @BeanProperty
+  var account: String = _
 
   @BeanProperty
   //  @Pattern(regexp = "^https://.*")
   var url: String = _
 
   @BeanProperty
-  var turtle: String = _
-
-  @BeanProperty
-  var geekCode: String = _
-
-  @BeanProperty
   var name: String = _
-
-  @BeanProperty
-  var firstName: String = _
-
-  @BeanProperty
-  var img: String = _
 
   @BeanProperty
   var maker: String = _
 
   @BeanProperty
+  var img: String = _
+
+  @BeanProperty
   var gender: String = _
+
+  @BeanProperty
+  var geekCode: String = _
+
+  @BeanProperty
+  var turtle: String = _
+
+
 
   def this(model: Model) {
     this()
@@ -41,25 +43,20 @@ class WebId {
   def fetchFieldsWithModel(model: Model): Unit = {
     val mandatory = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model).head
 
+    this.url = mandatory.getResource("?webid").toString
     this.name = mandatory.getLiteral("?name").getLexicalForm
     this.maker = mandatory.getResource("?maker").toString
 
 
-    var optional = QueryHandler.executeQuery(SelectOptionalQueries.queryFirstName(), model)
-    if (optional.nonEmpty) this.firstName = optional.head.getLiteral("?firstname").getLexicalForm
+    var optional = QueryHandler.executeQuery(SelectOptionalQueries.queryImg(), model)
+    if (optional.nonEmpty) this.img = optional.head.getResource("?img").toString
+
+    optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGender(), model)
+    if (optional.nonEmpty) this.gender = optional.head.getLiteral("?gender").getLexicalForm
 
     optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGeekCode(), model)
     if (optional.nonEmpty) this.geekCode = optional.head.getLiteral("?geekcode").getLexicalForm
 
-    optional = QueryHandler.executeQuery(SelectOptionalQueries.queryImg(), model)
-    if (optional.nonEmpty) this.img = try{
-      optional.head.getResource("?img").toString
-    } catch {
-      case classCastException: ClassCastException => optional.head.getLiteral("?img").getLexicalForm
-    }
-
-    optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGender(), model)
-    if (optional.nonEmpty) this.gender = optional.head.getLiteral("?gender").getLexicalForm
   }
 
 }

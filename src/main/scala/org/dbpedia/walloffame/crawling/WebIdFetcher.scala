@@ -4,7 +4,6 @@ import org.apache.jena.atlas.web.HttpException
 import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException, RiotNotFoundException}
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.logging.JsonLDLogger
-import org.dbpedia.walloffame.logging.JsonLDLogger.logAccountException
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
@@ -22,6 +21,7 @@ object WebIdFetcher {
   def fetchRegisteredWebIds(config: Config): Unit = {
 
     val vos = new VirtuosoHandler(config.virtuoso)
+    val jsonldLogger = new JsonLDLogger(config.log.file)
 
     println(
       """
@@ -44,42 +44,46 @@ object WebIdFetcher {
         val model = RDFDataMgr.loadModel(webid, Lang.TURTLE)
         val result = WebIdValidator.validate(model, config.shacl.url)
 
-        result.logResults()
         if (result.conforms()) {
           val uniformedModel = WebIdUniformer.uniform(model)
           vos.insertModel(uniformedModel, accountURL)
         } else {
-
+          result.violations.foreach(tuple=>{
+            jsonldLogger.add(webid, "https://example.org/hasViolation" ,tuple._2)})
         }
 
       } catch {
         case httpException: HttpException => {
-          logAccountException(webid, httpException)
           logger.error(s"$webid: ${httpException.toString}")
+          jsonldLogger.addException(webid, httpException)
         }
         case eofException: EOFException => {
-          logAccountException(webid, eofException)
           logger.error(s"$webid: ${eofException.toString}")
+          jsonldLogger.addException(webid, eofException)
         }
         case socketException: SocketException => {
-          logAccountException(webid, socketException)
           logger.error(s"$webid: ${socketException.toString}")
+          jsonldLogger.addException(webid, socketException)
         }
         case connectException: ConnectException => {
-          JsonLDLogger.append(s"$webid : connection timed out\n")
           logger.error(s"$webid: Connection timed out.")
+          jsonldLogger.addException(webid, connectException)
         }
         case riotNotFoundException: RiotNotFoundException => {
-          JsonLDLogger.append(s"$webid : url not found\n")
           logger.error(s"$webid : url not found.")
+          jsonldLogger.addException(webid, riotNotFoundException)
         }
         case riotException: RiotException => {
-          JsonLDLogger.append(s"$webid : ${riotException.toString}\n")
           logger.error(s"$webid : ${riotException.toString}")
+          jsonldLogger.addException(webid, riotException)
         }
       }
 
     }
+
+    jsonldLogger.writeOut()
   }
+
+
 
 }
