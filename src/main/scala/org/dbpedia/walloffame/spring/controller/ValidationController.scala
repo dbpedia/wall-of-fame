@@ -46,12 +46,12 @@ class ValidationController(config: Config) {
         //if webid is send as url
         val src =  scala.io.Source.fromURL(str)
         val turtle =
-          s"""@base <https://raw.githubusercontent.com/Eisenbahnplatte/eisenbahnplatte.github.io/master/webid.ttl> .
+          s"""@base <$str> .
              |${src.mkString}
              |""".stripMargin
 
         src.close()
-
+        println(turtle)
         newWebId.setTurtle(turtle)
         handleWebId(newWebId, response)
       } catch {
@@ -75,6 +75,9 @@ class ValidationController(config: Config) {
     try{
       val model: Model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(webId.turtle, "UTF-8"), "", "TURTLE")
 
+//      println("WEBID")
+//      val stmts = model.listStatements()
+//      while (stmts.hasNext) println(stmts.nextStatement())
       val result = WebIdValidator.validate(model, config.shacl.url)
 
       if (result.conforms()) {

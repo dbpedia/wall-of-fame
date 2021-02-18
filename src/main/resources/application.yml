@@ -1,5 +1,5 @@
 server:
-  port: 20088
+  port: 21288
 virtuoso:
   url: "jdbc:virtuoso://localhost:1111/charset=UTF-8/log_enable=2"
 #  url: "jdbc:virtuoso://db:1111/charset=UTF-8/log_enable=2"
@@ -9,7 +9,7 @@ virtuoso:
 shacl:
   url: "https://raw.githubusercontent.com/dbpedia/wall-of-fame/master/src/main/resources/shacl/shapes.ttl"
 log:
-  file: "./tmp/log.jsonld"
+  file: "./errorLog.jsonld"
 spring:
   main:
     banner-mode: "log"

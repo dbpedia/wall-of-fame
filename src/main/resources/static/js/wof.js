@@ -1,112 +1,164 @@
-app.controller('webIdController', function($scope, $http, $filter) {
-
-    $scope.filterOptions = {
-        "gender" : {
-            title : "Gender",
-            type: "options",
-            options: [ "Male", "Female", "Divers" ]
-        },
-        "img" :{
-            title: "IMG",
-            type: "hasField",
-        }
-    };
+app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
 
     $scope.model={};
     $scope.model.searchString = "";
 
-    $scope.selectedGender = [];
-    $scope.genderOptions = [];
-    //variables for image selection
-    $scope.imgOptions = ["yes", "no"];
-    $scope.selectedIMG = [];
+    $scope.filterOptions = [
+        {
+            title: "img",
+            type: "hasField",
+            options: ["yes", "no"]
+        },
+        {
+            title: "geekCode",
+            type: "hasField",
+            options: ["yes", "no"]
+        }
+    ];
+    $scope.selectedOptions = [];
+
+    // $scope.openOffscreen = function(webid) {
+    //     $mdDialog.show(
+    //         $mdDialog.alert()
+    //             .clickOutsideToClose(true)
+    //             .title('WebId')
+    //             .textContent('Closing to offscreen')
+    //             .ariaLabel('Offscreen Demo')
+    //             .ok('Amazing!')
+    //             // Or you can specify the rect to do the transition from
+    //             .openFrom({
+    //                 top: -50,
+    //                 width: 30,
+    //                 height: 80
+    //             })
+    //             .closeTo({
+    //                 left: 1500
+    //             })
+    //     );
+    // };
 
     $scope.request = $http.get("/webids.json", {headers: { 'Accept': 'application/json'}}).then(function(response) {
 
         $scope.webids = response.data.webIds;
 
-        //variables for gender selection
-        $scope.filteredByGender = $filter('unique')($scope.webids, 'gender');
-        for(var i=0; i < $scope.filteredByGender.length; i++){
-            $scope.genderOptions.push($scope.filteredByGender[i].gender);
-        }
-        // var index = $scope.genderOptions.indexOf(undefined);
-        // $scope.genderOptions[index] = "undefined";
+        var options = [];
+        angular.forEach($scope.webids, function(webid){
+            angular.forEach(Object.keys(webid), function(key){
+                if(options.indexOf(key) < 0) options.push(key);
+            })
+        });
+
+        let optionsToBeIgnored = ["account", "url", "name", "maker", "img", "geekCode"];
+        options = options.filter(item => !optionsToBeIgnored.includes(item));
+
+        angular.forEach(options, function (option){
+            var optionList = $filter('unique')($scope.webids, option);
+            var optionObject = {
+                title : option ,
+                type: "options",
+                options: optionList
+            };
+            $scope.filterOptions.push(optionObject);
+        });
+
+        $scope.selectedOptions = angular.copy($scope.filterOptions);
+        $scope.filteredWebIds = $scope.filtered();
     });
 
-
     $scope.filtered = function (){
-        console.log("asd");
-        var filtered=$filter('filterWithArray')($scope.webids, $scope.selectedGender);
+        var filtered = [];
 
-        // var newar = out.filter(x => filtered.includes(x));
-        if($scope.selectedIMG.length===0){
-            return [];
-        }
-        if($scope.selectedIMG.includes("yes") && $scope.selectedIMG.length===1) {
-            filtered = $filter('isdefined')(filtered, "img");
-        }
-        if($scope.selectedIMG.includes("no") && $scope.selectedIMG.length===1) {
-            var oppositeFiltered = $filter('isdefined')(filtered, "img");
-            console.log(oppositeFiltered);
+        angular.forEach($scope.webids, function (webid){
+            var valid = true;
+            angular.forEach($scope.selectedOptions, function (option){
+                if (option.type==="hasField"){
+                    if (option.options.length===1) {
+                        if (option.options.includes("no")) {
+                            if(!(webid[option.title]===undefined)) valid = false;
+                        }
+                        if (option.options.includes("yes")) {
+                            if(webid[option.title]===undefined) valid = false;
+                        }
+                    }
+                } else {
+                    if (option.options.length>0) {
+                        if (!option.options.includes(webid[option.title])) valid = false;
+                    }
+                }
+            });
 
-            filtered = filtered.filter(x => !oppositeFiltered.includes(x));
-        }
-
-
-        console.log("hello");
-        console.log($scope.selectedGender);
-        console.log($scope.selectedIMG);
-        console.log(filtered);
+            if (valid) filtered.push(webid);
+        })
 
         return filtered;
     };
 
-    $scope.filteredWebIds = $scope.filtered();
 
+    $scope.toggle = function (toggledOption, item) {
+        angular.forEach($scope.selectedOptions, function(option){
+           if (option.title===toggledOption){
+               if(option.options.includes(item)){
+                   let index = option.options.indexOf(item);
+                    option.options.splice(index,1);
+               }else{
+                   option.options.push(item);
+               }
+           }
+        });
 
-
-
-    $scope.toggle = function (item, list) {
-        var idx = list.indexOf(item);
-        if (idx > -1) {
-            list.splice(idx, 1);
-        }
-        else {
-            list.push(item);
-        }
-
-        // $scope.filteredWebIds = $filter('filterWithArray')($scope.webids, $scope.selectedGender);
-        $scope.filteredWebIds = $scope.filtered()
-        console.log($scope.model.searchString)
-        console.log($scope.genderOptions)
+        $scope.filteredWebIds = $scope.filtered();
     };
 
 
+    $scope.exists = function (checkedOption, item) {
+        if ($scope.selectedOptions.length===0) return true;
 
-    $scope.exists = function (item, list) {
-        return list.indexOf(item) > -1;
+        var exists = false;
+        angular.forEach($scope.selectedOptions, function(option){
+            if (option.title===checkedOption){
+                if(option.options.includes(item)){
+                    exists=true;
+                }
+            }
+        });
+
+        return exists;
     };
 
-    $scope.isIndeterminate = function(sel, opt) {
-        return ($scope[sel].length !== 0 &&
-            $scope[sel].length !== opt.length);
+
+    $scope.isIndeterminate = function(opt) {
+        var isIndeterminate = false
+
+        angular.forEach($scope.selectedOptions, function(option){
+            if (option.title===opt.title){
+                isIndeterminate = (option.options.length !==0 && option.options.length !== opt.options.length);
+            }});
+
+        return isIndeterminate;
     };
 
-    $scope.isChecked = function(sel, opt) {
-        return $scope[sel].length === opt.length;
+
+    $scope.isChecked = function(opt) {
+        var isChecked = false;
+
+        angular.forEach($scope.selectedOptions, function(option){
+            if (option.title===opt.title){
+                isChecked = (option.options.length === opt.options.length);
+            }});
+
+        return isChecked;
     };
 
-    $scope.toggleAll = function(sel, opt) {
-        if ($scope[sel].length === opt.length) {
-            $scope[sel] = [];
-        } else if ($scope[sel].length === 0 || $scope[sel].length > 0) {
-            $scope[sel] = opt.slice(0);
-        }
 
-        console.log($scope[sel]);
-
-        // $scope.filteredWebIds = $filter('filterWithArray')($scope.webids, $scope[sel]);
+    $scope.toggleAll = function(opt) {
+        angular.forEach($scope.selectedOptions, function(option){
+            if (option.title===opt.title){
+                if (option.options.length === opt.options.length) {
+                    option.options = [];
+                } else if (option.options.length === 0 || option.options.length > 0) {
+                    option.options = angular.copy(opt.options);
+                }
+            }});
         $scope.filteredWebIds = $scope.filtered();
     };
 
@@ -149,7 +201,7 @@ app.filter('unique', function () {
                     }
                 }
                 if (!isDuplicate) {
-                    newItems.push(item);
+                    newItems.push(item[filterOn]);
                 }
 
             });
@@ -160,40 +212,27 @@ app.filter('unique', function () {
 });
 
 
-app.filter('filterWithArray', function ($filter) {
-   return function (input, filterArray){
-       if(filterArray.length===0){
-           return input;
-       }
-
-       var output = [];
-       filterArray.forEach(element => output = output.concat($filter('filter')(input, element)));
-
-       return $filter('unique')(output);
-   };
-});
-
-app.filter('isdefined', function ($filter) {
-    return function (input, key){
-        var output = [];
-        input.forEach(element => {
-            if(element.hasOwnProperty(key)) {
-                output = output.concat(element);
-            }
-        });
-
-        return $filter('unique')(output);
-    };
-});
-
-
-
-// angular.module('wofApp').filter('filterWithMultipleArrays', function ($filter) {
-//     return function (input, filterArray){
+// app.filter('filterWebIds', function ($filter) {
+//    return function (input, filterArray){
+//        if(filterArray.length===0){
+//            return input;
+//        }
 //
+//        var output = [];
+//        filterArray.forEach(element => output = output.concat($filter('filter')(input, element)));
 //
+//        return $filter('unique')(output);
+//    };
+// });
+//
+// app.filter('isdefined', function ($filter) {
+//     return function (input, key){
 //         var output = [];
-//         filterArray.forEach(element => output = output.concat($filter('filter')(input, element)));
+//         input.forEach(element => {
+//             if(element.hasOwnProperty(key)) {
+//                 output = output.concat(element);
+//             }
+//         });
 //
 //         return $filter('unique')(output);
 //     };

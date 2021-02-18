@@ -1,5 +1,13 @@
 legend {
-    color: #3F51B5; }
+    color: #3F51B5;
+
+}
+
+.cardImg{
+    width: 100%;
+    max-height:200px;
+    object-fit: contain;
+}
 
 fieldset {
     border-style: solid;
@@ -8,4 +16,7 @@ fieldset {
 .select-all-checkboxes {
     padding-left: 30px; }
 
-
+.dbpedia {
+    height: 80px;
+    width: auto;
+}

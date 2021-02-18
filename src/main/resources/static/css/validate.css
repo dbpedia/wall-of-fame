@@ -1,3 +1,8 @@
+.dbpedia {
+    height: 80px;
+    width: auto;
+}
+
 textarea {
     width: 100%;
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
