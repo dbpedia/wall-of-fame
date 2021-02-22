@@ -121,7 +121,7 @@
 
 
             <!-- DBPEDIA ACCOUNTS -->
-            <div class="col-sm" ng-controller="validateController">
+            <div class="col-sm">
                 <div class="carddemoCardActionButtons">
                     <md-content layout-xs="column" layout="row" layout-wrap flex>
 <!--                        <div class="card" style="width: 24rem;" ng-repeat="webId in filteredWebIds | filter:model.searchString">-->
@@ -169,7 +169,7 @@
                             </md-card-content>
                             <md-card-actions layout="column" layout-align="start">
                                 <md-button><a href="{{x.url}}">WebId</a></md-button>
-                                <md-button ><a href="/validate?str={{x.url}}" target="_blank">Validate</a></md-button>
+                                <md-button><a ng-href="/validator?webid={{x.url | escape}}" target="_blank">Validate</a></md-button>
                             </md-card-actions>
                         </md-card>
                     </md-content>

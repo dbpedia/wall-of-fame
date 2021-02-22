@@ -33,6 +33,8 @@ class WebId() {
   @BeanProperty
   var turtle: String = _
 
+  @BeanProperty
+  var validation: Result = _
 
 
   def this(model: Model) {

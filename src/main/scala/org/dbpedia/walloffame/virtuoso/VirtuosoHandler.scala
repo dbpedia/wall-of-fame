@@ -126,4 +126,36 @@ class VirtuosoHandler(vosConfig: VosConfig) {
     }
   }
 
+  def getAccountOfWebId(url:String): Option[String] ={
+    val virt =
+      try{
+        val newVirt = new VirtGraph(mainGraph, vosConfig.url, vosConfig.usr, vosConfig.psw)
+        Option(newVirt)
+      } catch {
+        case virtuosoException: VirtuosoException => {
+          LoggerFactory.getLogger("Virtuoso").error("Connection refused")
+          None
+        }
+      }
+
+    if (virt.isDefined) {
+      val sparql: Query = QueryFactory.create(
+        s"""
+          |SELECT DISTINCT ?g
+          |WHERE {
+          |  GRAPH ?g { <$url> a <http://xmlns.com/foaf/0.1/PersonalProfileDocument> . }
+          |}
+          |""".stripMargin)
+
+      val vqe: VirtuosoQueryExecution = VirtuosoQueryExecutionFactory.create(sparql, virt.get)
+      val results = vqe.execSelect
+
+      if (results.hasNext) {
+        val accountURL = results.nextSolution.get("g").toString
+        return Option(accountURL.splitAt(accountURL.lastIndexOf("/")+1)._2)
+      }
+    }
+
+    None
+  }
 }

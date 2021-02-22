@@ -41,7 +41,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
 
         $scope.webids = response.data.webIds;
 
-        var options = [];
+        let options = [];
         angular.forEach($scope.webids, function(webid){
             angular.forEach(Object.keys(webid), function(key){
                 if(options.indexOf(key) < 0) options.push(key);
@@ -52,8 +52,8 @@ app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
         options = options.filter(item => !optionsToBeIgnored.includes(item));
 
         angular.forEach(options, function (option){
-            var optionList = $filter('unique')($scope.webids, option);
-            var optionObject = {
+            let optionList = $filter('unique')($scope.webids, option);
+            let optionObject = {
                 title : option ,
                 type: "options",
                 options: optionList
@@ -66,7 +66,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
     });
 
     $scope.filtered = function (){
-        var filtered = [];
+        let filtered = [];
 
         angular.forEach($scope.webids, function (webid){
             var valid = true;
@@ -209,6 +209,10 @@ app.filter('unique', function () {
         }
         return items;
     };
+});
+
+app.filter('escape', function() {
+    return window.encodeURIComponent;
 });
 
 

@@ -108,8 +108,10 @@
                 <img alt="Card image cap" class="card-img-top" src="{{webId.img}}">
                 <div class="card-body">
                     <h5 class="card-title">
-                        {{webId.name}}
+                        Account: <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
                     </h5>
+                    Name: {{webId.name}}
+                    <br>
                     Gender: {{webId.gender}}
                     <br>
                     Geekcode: {{webId.geekCode}}
@@ -123,13 +125,13 @@
 
     <br>
 
-    <div id="result" class="content" ng-model="result" ng-if="result.result.length>0 || result.violations.length>0">
+    <div id="result" class="content" ng-if="webId.validation.result.length>0 || webId.validation.violations.length>0">
 
-        <div id="violations" class="violations" ng-if="result.violations.length>0">
+        <div id="violations" class="violations" ng-if="webId.validation.violations.length>0">
             <strong> Violations: </strong>
             <br>
             <ul>
-                <li ng-repeat="violation in result.violations">
+                <li ng-repeat="violation in webId.validation.violations">
                     <p>
                         Conflicting Node: {{violation._1}}
                         <br>
@@ -139,11 +141,11 @@
             </ul>
         </div>
 
-        <div id="warnings" class="warnings"  ng-if="result.infos.length>0">
+        <div id="warnings" class="warnings"  ng-if="webId.validation.infos.length>0">
             <strong> Warnings: </strong>
             <br>
             <ul>
-                <li ng-repeat="warning in result.infos">
+                <li ng-repeat="warning in webId.validation.infos">
                     <p>
                         Conflicting Node: {{warning._1}}
                         <br>
@@ -156,9 +158,9 @@
         </div>
 
 
-        <div id="shaclResult" class="shaclResult" ng-if="result.result.length>0">
+        <div id="shaclResult" class="shaclResult" ng-if="webId.validation.result.length>0">
             <strong>Full Shacl Result: </strong>
-            <div class="form-control" id="fineGrainedResult" style="white-space: pre-wrap">{{result.result.trim()}}</div>
+            <div class="form-control" id="fineGrainedResult" style="white-space: pre-wrap">{{webId.validation.result.trim()}}</div>
         </div>
 
     </div>

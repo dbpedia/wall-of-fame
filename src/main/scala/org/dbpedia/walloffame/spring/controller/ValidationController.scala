@@ -9,6 +9,7 @@ import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.spring.model.{Result, WebId}
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
+import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation._
 import org.springframework.web.servlet.ModelAndView
@@ -25,46 +26,42 @@ class ValidationController(config: Config) {
   //viewname is the path to the related jsp file
   @RequestMapping(value = Array("/validator"), method = Array(RequestMethod.GET))
   def getValidator(): ModelAndView = {
-    new ModelAndView("validate")
+    new ModelAndView("validator")
   }
 
   @RequestMapping(value = Array("/validate"), method= Array(RequestMethod.GET))
-  def validate(@RequestParam str:String, response: HttpServletResponse): Unit = {
+  def validate(@RequestParam webid:String, response: HttpServletResponse): Unit = {
 
     response.setHeader("Content-Type","application/json")
 
     val newWebId = new WebId()
 
     try {
-      //check if webid was send as url or as plain text
+      //if webid is send as url
+      new URL(webid)
+      newWebId.setUrl(webid)
 
-      new URL(str)
-      newWebId.setUrl(str)
-      newWebId.setTurtle("")
+      val vos = new VirtuosoHandler(config.virtuoso)
+      println("nun")
+      println(vos.getAccountOfWebId(webid))
+      newWebId.setAccount(vos.getAccountOfWebId(webid).getOrElse(""))
+      val src =  scala.io.Source.fromURL(webid)
+      val turtle =
+        s"""@base <$webid> .
+           |${src.mkString}
+           |""".stripMargin
+      src.close()
+      newWebId.setTurtle(turtle)
 
-      try {
-        //if webid is send as url
-        val src =  scala.io.Source.fromURL(str)
-        val turtle =
-          s"""@base <$str> .
-             |${src.mkString}
-             |""".stripMargin
-
-        src.close()
-        println(turtle)
-        newWebId.setTurtle(turtle)
-        handleWebId(newWebId, response)
-      } catch {
-        case unknownHostException: UnknownHostException => handleException(newWebId, response, unknownHostException)
-        case malformedURLException: MalformedURLException => handleException(newWebId, response, malformedURLException)
-        case ioexception: IOException => handleException(newWebId, response, ioexception)
-        case httpException: HttpException => handleException(newWebId, response, httpException)
-        case socketTimeoutException: SocketTimeoutException => handleException(newWebId, response, socketTimeoutException)
-      }
+      handleWebId(newWebId, response)
     } catch {
+      case unknownHostException: UnknownHostException => handleException(newWebId, response, unknownHostException)
+      case ioexception: IOException => handleException(newWebId, response, ioexception)
+      case httpException: HttpException => handleException(newWebId, response, httpException)
+      case socketTimeoutException: SocketTimeoutException => handleException(newWebId, response, socketTimeoutException)
       case malformedURLException: MalformedURLException => {
         //if webId is send as plain text
-        newWebId.setTurtle(str.trim)
+        newWebId.setTurtle(webid.trim)
         handleWebId(newWebId, response)
       }
     }
@@ -74,10 +71,6 @@ class ValidationController(config: Config) {
   def handleWebId(webId: WebId, response: HttpServletResponse): Unit = {
     try{
       val model: Model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(webId.turtle, "UTF-8"), "", "TURTLE")
-
-//      println("WEBID")
-//      val stmts = model.listStatements()
-//      while (stmts.hasNext) println(stmts.nextStatement())
       val result = WebIdValidator.validate(model, config.shacl.url)
 
       if (result.conforms()) {
@@ -86,12 +79,15 @@ class ValidationController(config: Config) {
         val newWebId = new WebId(newModel)
         newWebId.setTurtle(webId.turtle)
         newWebId.setUrl(webId.url)
+        newWebId.setAccount(webId.account)
+        newWebId.setValidation(result)
 
-        writeWholeJsonOnRespone(newWebId, result, response)
+        writeWholeJsonOnRespone(newWebId, response)
         response.setStatus(200)
       }
       else {
-        writeWholeJsonOnRespone(webId, result, response)
+        webId.setValidation(result)
+        writeWholeJsonOnRespone(webId, response)
       }
     }
     catch{
@@ -102,16 +98,17 @@ class ValidationController(config: Config) {
   def handleException(webId:WebId, response: HttpServletResponse, exception: Exception): Unit = {
     val result = new Result
     result.addViolation("Exception", exception.toString)
+    webId.setValidation(result)
 
-    writeWholeJsonOnRespone(webId, result, response)
+    writeWholeJsonOnRespone(webId, response)
     response.setStatus(200)
   }
 
-  def writeWholeJsonOnRespone(webId:WebId, result:Result, response: HttpServletResponse): Unit = {
+  def writeWholeJsonOnRespone(webId:WebId, response: HttpServletResponse): Unit = {
     val gson = new Gson()
     val os = response.getOutputStream
-    os.write(s"""{ "WebId":${gson.toJson(webId)},""".getBytes(StandardCharsets.UTF_8))
-    os.write(s""" "Result":${gson.toJson(result)}}""".getBytes(StandardCharsets.UTF_8))
+    os.write(gson.toJson(webId).getBytes(StandardCharsets.UTF_8))
+//    os.write(s""" "Result":${gson.toJson(result)}}""".getBytes(StandardCharsets.UTF_8))
   }
 
 }
