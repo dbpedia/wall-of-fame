@@ -1,4 +1,4 @@
-app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
+app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $mdDialog) {
 
     $scope.model={};
     $scope.model.searchString = "";
@@ -15,7 +15,60 @@ app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
             options: ["yes", "no"]
         }
     ];
-    $scope.selectedOptions = [];
+    $scope.selectedOptions=[];
+
+
+    function PanelMenuCtrl(mdPanelRef) {
+        this.closeMenu = function() {
+            mdPanelRef && mdPanelRef.close();
+        };
+    }
+
+    this.menuTemplate = '' +
+        '<div class="menu-panel" md-whiteframe="4">' +
+        '  <div class="menu-content">' +
+        '    <div class="menu-item">' +
+        '      <md-button><a ng-href="{{webId.url}}" target="_blank">Go To WebId</a></md-button>' +
+        '    </div>' +
+        '    <div class="menu-item">' +
+        '      <md-button><a ng-href="/validator?webid={{webId.url | escape}}" target="_blank">Validate</a></md-button>' +
+        '    </div>' +
+        '    <md-divider></md-divider>' +
+        '    <div class="menu-item">' +
+        '      <button class="md-button" ng-click="panelCtrl.closeMenu()">' +
+        '        <span>Close Menu</span>' +
+        '      </button>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+
+    this.showToolbarMenu = function($event) {
+        let template = this.menuTemplate;
+        let position = $mdPanel.newPanelPosition()
+            .relativeTo($event.target)
+            .addPanelPosition(
+                $mdPanel.xPosition.ALIGN_START,
+                $mdPanel.yPosition.BELOW
+            );
+
+        let config = {
+            id: 'toolbar',
+            attachTo: angular.element(document.body),
+            controller: PanelMenuCtrl,
+            controllerAs: 'panelCtrl',
+            template: template,
+            position: position,
+            panelClass: 'menu-panel-container',
+            locals: {} ,
+            openFrom: $event,
+            focusOnOpen: false,
+            zIndex: 100,
+            propagateContainerEvents: true,
+            groupName: ['toolbar', 'menus']
+        };
+
+        $mdPanel.open(config);
+    };
 
     // $scope.openOffscreen = function(webid) {
     //     $mdDialog.show(
@@ -62,14 +115,15 @@ app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
         });
 
         $scope.selectedOptions = angular.copy($scope.filterOptions);
-        $scope.filteredWebIds = $scope.filtered();
+        $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
     });
 
-    $scope.filtered = function (){
+
+    $scope.filterWebIdsBySelectedOptions = function (){
         let filtered = [];
 
         angular.forEach($scope.webids, function (webid){
-            var valid = true;
+            let valid = true;
             angular.forEach($scope.selectedOptions, function (option){
                 if (option.type==="hasField"){
                     if (option.options.length===1) {
@@ -106,14 +160,14 @@ app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
            }
         });
 
-        $scope.filteredWebIds = $scope.filtered();
+        $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
     };
 
 
     $scope.exists = function (checkedOption, item) {
         if ($scope.selectedOptions.length===0) return true;
 
-        var exists = false;
+        let exists = false;
         angular.forEach($scope.selectedOptions, function(option){
             if (option.title===checkedOption){
                 if(option.options.includes(item)){
@@ -127,7 +181,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
 
 
     $scope.isIndeterminate = function(opt) {
-        var isIndeterminate = false
+        let isIndeterminate = false
 
         angular.forEach($scope.selectedOptions, function(option){
             if (option.title===opt.title){
@@ -139,7 +193,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
 
 
     $scope.isChecked = function(opt) {
-        var isChecked = false;
+        let isChecked = false;
 
         angular.forEach($scope.selectedOptions, function(option){
             if (option.title===opt.title){
@@ -159,11 +213,12 @@ app.controller('webIdController', function($scope, $http, $filter, $mdDialog) {
                     option.options = angular.copy(opt.options);
                 }
             }});
-        $scope.filteredWebIds = $scope.filtered();
+        $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
     };
 
-
 });
+
+
 
 /**
  * Filters out all duplicate items from an array by checking the specified key
@@ -181,9 +236,9 @@ app.filter('unique', function () {
         }
 
         if ((filterOn || angular.isUndefined(filterOn)) && angular.isArray(items)) {
-            var hashCheck = {}, newItems = [];
+            let hashCheck = {}, newItems = [];
 
-            var extractValueToCompare = function (item) {
+            let extractValueToCompare = function (item) {
                 if (angular.isObject(item) && angular.isString(filterOn)) {
                     return item[filterOn];
                 } else {
@@ -192,9 +247,9 @@ app.filter('unique', function () {
             };
 
             angular.forEach(items, function (item) {
-                var valueToCheck, isDuplicate = false;
+                let valueToCheck, isDuplicate = false;
 
-                for (var i = 0; i < newItems.length; i++) {
+                for (let i = 0; i < newItems.length; i++) {
                     if (angular.equals(extractValueToCompare(newItems[i]), extractValueToCompare(item))) {
                         isDuplicate = true;
                         break;
@@ -214,7 +269,6 @@ app.filter('unique', function () {
 app.filter('escape', function() {
     return window.encodeURIComponent;
 });
-
 
 // app.filter('filterWebIds', function ($filter) {
 //    return function (input, filterArray){

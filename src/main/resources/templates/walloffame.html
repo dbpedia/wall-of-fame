@@ -77,16 +77,17 @@
     <br>
     <!-- DESCRIPTION TEXT -->
     <p style="vertical-align:middle; text-align: center">
-        Welcome to DBpedia's Wall of Fame. Here you can have a look at all Users registered on the DBpedia
-        Databus. Additionally, you can validate your own WebId with the WebId Validator.
+        Welcome to DBpedia's Wall of Fame. Here you can have a look at all Users registered on the
+        <a href="https://databus.dbpedia.org/" target="_blank">DBpedia Databus</a>.
+        Additionally, you can validate your own WebId with the <a href="/validator">WebId Validator</a>.
         For further information about WebIds check <a href="https://github.com/dbpedia/webid" target="_blank">DBpedia's
         WebId Repository</a> and the <a href="https://forum.dbpedia.org/" target="_blank">DBpedia Forum</a>.
-        If you have registered a webid but not or only incompletely find it in the Wall of Fame, look in the <a href="/logs" target="_blank">logs</a> for errors in your WebId.
+        If you have registered a WebId but not or only incompletely find it in the Wall of Fame, look in the <a href="/logs" target="_blank">logs</a> for errors in your WebId.
     </p>
 
     <hr>
 
-    <div ng-app="wofApp" ng-controller="webIdController" ng-cloak="">
+    <div ng-app="wofApp" ng-controller="webIdController as ctrl" ng-cloak="">
         <div class="row" >
             <!-- SELECT PANELS -->
             <div class="col-sm-2" style="border-right: 1px solid; border-color: #dddddd">
@@ -123,7 +124,7 @@
             <!-- DBPEDIA ACCOUNTS -->
             <div class="col-sm">
                 <div class="carddemoCardActionButtons">
-                    <md-content layout-xs="column" layout="row" layout-wrap flex>
+                    <md-content layout-xs="column" layout="row" layout-wrap>
 <!--                        <div class="card" style="width: 24rem;" ng-repeat="webId in filteredWebIds | filter:model.searchString">-->
 <!--                            <img class="card-img-top" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}" alt="" style="width: 100%; max-height:200px; object-fit: contain;">-->
 <!--                            <div class="card-body">-->
@@ -139,38 +140,19 @@
 <!--                                <a class="btn btn-primary" href="{{webId.url}}">Go to WebId</a> <a class="btn btn-primary" href="/validate?str={{x.url}}" target="_blank">Validate</a>-->
 <!--                            </div>-->
 <!--                        </div>-->
-                        <md-card ng-repeat="x in filteredWebIds | filter:model.searchString">
+                        <md-card ng-repeat="webId in shownWebIds | filter:model.searchString" style="width: 198px">
 <!--                            ng-click="openOffscreen(x)"-->
-                            <img class="cardImg" ng-src="{{x.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}" alt="">
+                            <img class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
                             <md-card-title>
                                 <md-card-title-text>
-                                    <span class="md-headline" style="text-align: center">
-                                        <a href="https://databus.dbpedia.org/{{x.account}}" target="_blank">{{x.account}}</a>
-                                    </span>
+                                   <a class="md-headline" style="text-align: center" href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
                                 </md-card-title-text>
+                                <md-card-content>
+                                    <md-button class="md-icon-button" aria-label="More" ng-click="ctrl.showToolbarMenu($event)">
+                                        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+                                    </md-button>
+                                </md-card-content>
                             </md-card-title>
-                            <md-card-content>
-                                <table>
-                                    <tbody>
-                                    <tr>
-                                        <td valign="top">Name:</td>
-                                        <td>{{x.name}}</td>
-                                    </tr>
-                                    <tr ng-if="x.gender">
-                                        <td valign="top">Gender:</td>
-                                        <td>{{x.gender}}</td>
-                                    </tr>
-                                    <tr ng-if="x.geekCode">
-                                        <td valign="top">GeekCode:</td>
-                                        <td>{{x.geekCode}}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </md-card-content>
-                            <md-card-actions layout="column" layout-align="start">
-                                <md-button><a href="{{x.url}}">WebId</a></md-button>
-                                <md-button><a ng-href="/validator?webid={{x.url | escape}}" target="_blank">Validate</a></md-button>
-                            </md-card-actions>
                         </md-card>
                     </md-content>
                 </div>
@@ -178,5 +160,42 @@
         </div>
     </div>
 </div>
+
+<!--<md-card ng-repeat="webId in shownWebIds | filter:model.searchString">-->
+<!--    &lt;!&ndash;                            ng-click="openOffscreen(x)"&ndash;&gt;-->
+<!--    <img class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">-->
+<!--    <md-card-title>-->
+<!--        <md-card-title-text>-->
+<!--                                    <span class="md-headline" style="text-align: center">-->
+<!--                                        <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>-->
+<!--                                    </span>-->
+<!--        </md-card-title-text>-->
+<!--    </md-card-title>-->
+<!--    <md-card-content>-->
+<!--        <table>-->
+<!--            <tbody>-->
+<!--            <tr>-->
+<!--                <td valign="top">Name:</td>-->
+<!--                <td>{{webId.name}}</td>-->
+<!--            </tr>-->
+<!--            <tr ng-if="webId.gender">-->
+<!--                <td valign="top">Gender:</td>-->
+<!--                <td>{{webId.gender}}</td>-->
+<!--            </tr>-->
+<!--            <tr ng-if="webId.geekCode">-->
+<!--                <td valign="top">GeekCode:</td>-->
+<!--                <td>{{webId.geekCode}}</td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--    </md-card-content>-->
+<!--    <md-card-actions layout="column" layout-align="start">-->
+<!--        <md-button class="md-icon-button" aria-label="Settings" ng-click="ctrl.showToolbarMenu($event)">-->
+<!--            <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>-->
+<!--        </md-button>-->
+<!--        <md-button><a href="{{webId.url}}">WebId</a></md-button>-->
+<!--        <md-button><a ng-href="/validator?webid={{webId.url | escape}}" target="_blank">Validate</a></md-button>-->
+<!--    </md-card-actions>-->
+<!--</md-card>-->
 </body>
 </html>
