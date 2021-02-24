@@ -6,11 +6,12 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="/css/wof.css">
+
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.css">
     <link rel="stylesheet" href="https://material.angularjs.org/1.2.2/docs.css">
+    <link rel="stylesheet" type="text/css" href="/css/wof.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
@@ -144,9 +145,10 @@
                                 <img id="small-img" class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
                             </div>
                             <md-card-actions layout="column" layout-align="start">
-                                <a class="md-button" style="font-size: 18px; text-align: center" ng-href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
+                                <a class="md-button" style="text-overflow: ellipsis; font-size: 18px; text-align: center" ng-href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
                                 <md-button ng-click="ctrl.showToolbarMenu($event, webId)">
                                     <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+
                                 </md-button>
                             </md-card-actions>
                         </md-card>

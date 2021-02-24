@@ -1,6 +1,6 @@
 app.controller('validateController', function($scope, $http, $filter) {
     $scope.webId = {
-        url: "https://raw.githubusercontent.com/Eisenbahnplatte/eisenbahnplatte.github.io/master/webid.ttl",
+        url: "https://eisenbahnplatte.github.io/webid.ttl",
         account: "",
         turtle: "",
         name: "",

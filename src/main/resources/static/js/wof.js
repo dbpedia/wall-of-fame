@@ -28,7 +28,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         let escapedURL = escape(webId.url);
 
         let template = ''+
-            '<div class="menu-panel" md-whiteframe="4" style="width: 180px">' +
+            '<div class="menu-panel" md-whiteframe="4" ng-mouseleave="panelCtrl.closeMenu()">' +
             '  <div class="menu-content">' +
             '    <div class="menu-item">' +
             `      <a class="md-button" ng-href="/validator?webid=${escapedURL}" target="_blank">Validate</a>` +
@@ -79,7 +79,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
 
         let template = '' +
             '<div id="opaque" ng-click="panelCtrl.closeMenu()"></div>' +
-            '<md-card style="z-index: 1">\n' +
+            '<md-card class="webid-card" style="z-index: 1">\n' +
             `    <img id="big-img" class="md-card-image" ng-src=${img}>\n` +
             '    <md-card-title>\n' +
             '        <md-card-title-text>\n' +

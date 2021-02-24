@@ -108,14 +108,13 @@
 
         <div class="col-sm">
             Your WebId:
-            <md-card ng-model="webId" ng-controller="webIdController as ctrl">
-                <!--                            ng-click="openOffscreen(x)"-->
-                <img class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
+            <md-card class="webid-card" ng-model="webId" ng-controller="webIdController as ctrl">
+                <img id="big-img" class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
                 <md-card-title>
                     <md-card-title-text>
-            <span class="md-headline" style="text-align: center">
-                <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
-            </span>
+                        <span class="md-headline" style="text-align: center">
+                            <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
+                        </span>
                     </md-card-title-text>
                 </md-card-title>
                 <md-card-content>

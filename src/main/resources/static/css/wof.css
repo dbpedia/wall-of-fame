@@ -31,15 +31,24 @@ legend {
     text-align: center;
 }
 
+/*.menu-panel .menu-item{*/
+/*    width: 180px;*/
+/*}*/
+
 .md-card-image-wrapper{
     height: 200px;
 }
 
 #small-img{
     width: 100%;
-    max-height:200px;
+    height:200px;
     object-fit: contain;
+    horiz-align: center;
     /*vertical-align: center; warum geht das nicht*/
+}
+
+.webid-card{
+    width: 400px;
 }
 
 #big-img{
