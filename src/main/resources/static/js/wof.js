@@ -17,33 +17,36 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
     ];
     $scope.selectedOptions=[];
 
+    this.showToolbarMenu = function($event, webId) {
 
-    function PanelMenuCtrl(mdPanelRef) {
-        this.closeMenu = function() {
-            mdPanelRef && mdPanelRef.close();
-        };
-    }
+        function PanelMenuCtrl(mdPanelRef) {
+            this.closeMenu = function() {
+                mdPanelRef && mdPanelRef.close();
+            };
+        }
 
-    this.menuTemplate = '' +
-        '<div class="menu-panel" md-whiteframe="4">' +
-        '  <div class="menu-content">' +
-        '    <div class="menu-item">' +
-        '      <md-button><a ng-href="{{webId.url}}" target="_blank">Go To WebId</a></md-button>' +
-        '    </div>' +
-        '    <div class="menu-item">' +
-        '      <md-button><a ng-href="/validator?webid={{webId.url | escape}}" target="_blank">Validate</a></md-button>' +
-        '    </div>' +
-        '    <md-divider></md-divider>' +
-        '    <div class="menu-item">' +
-        '      <button class="md-button" ng-click="panelCtrl.closeMenu()">' +
-        '        <span>Close Menu</span>' +
-        '      </button>' +
-        '    </div>' +
-        '  </div>' +
-        '</div>';
+        let escapedURL = escape(webId.url);
 
-    this.showToolbarMenu = function($event) {
-        let template = this.menuTemplate;
+        let template = ''+
+            '<div class="menu-panel" md-whiteframe="4" style="width: 180px">' +
+            '  <div class="menu-content">' +
+            '    <div class="menu-item">' +
+            `      <a class="md-button" ng-href="/validator?webid=${escapedURL}" target="_blank">Validate</a>` +
+            '    </div>' +
+            '    <div class="menu-item">' +
+            `      <a class="md-button" ng-href="${webId.url}" target="_blank">Download</a>` +
+            '    </div>' +
+            '    <md-divider></md-divider>' +
+            '    <div class="menu-item">' +
+            '      <button class="md-button" ng-click="panelCtrl.closeMenu()">' +
+            '        <span>Close Menu</span>' +
+            '      </button>' +
+            '    </div>' +
+            '  </div>' +
+            '</div>';
+
+        console.log(template);
+
         let position = $mdPanel.newPanelPosition()
             .relativeTo($event.target)
             .addPanelPosition(
@@ -70,25 +73,74 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         $mdPanel.open(config);
     };
 
-    // $scope.openOffscreen = function(webid) {
-    //     $mdDialog.show(
-    //         $mdDialog.alert()
-    //             .clickOutsideToClose(true)
-    //             .title('WebId')
-    //             .textContent('Closing to offscreen')
-    //             .ariaLabel('Offscreen Demo')
-    //             .ok('Amazing!')
-    //             // Or you can specify the rect to do the transition from
-    //             .openFrom({
-    //                 top: -50,
-    //                 width: 30,
-    //                 height: 80
-    //             })
-    //             .closeTo({
-    //                 left: 1500
-    //             })
-    //     );
-    // };
+    this.showFullCard = function($event, webId) {
+
+        let img = webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png';
+
+        let template = '' +
+            '<div id="opaque" ng-click="panelCtrl.closeMenu()"></div>' +
+            '<md-card style="z-index: 1">\n' +
+            `    <img id="big-img" class="md-card-image" ng-src=${img}>\n` +
+            '    <md-card-title>\n' +
+            '        <md-card-title-text>\n' +
+            '           <span class="md-headline" style="text-align: center">\n' +
+            `             <a href="https://databus.dbpedia.org/${webId.account}" target="_blank">${webId.account}</a>\n` +
+            '           </span>\n' +
+            '        </md-card-title-text>\n' +
+            '    </md-card-title>\n' +
+            '    <md-card-content>\n' +
+            '        <table>\n' +
+            '            <tbody>\n' +
+            '            <tr>\n' +
+            '                <td valign="top">Name:</td>\n' +
+            `                <td>${webId.name}</td>\n` +
+            '            </tr>\n' +
+            `            <tr ng-if="${!!webId.gender}">\n` +
+            `                <td valign="top">Gender:</td>\n` +
+            `                <td>${webId.gender}</td>\n` +
+            '            </tr>\n' +
+            `            <tr ng-if=${!!webId.geekCode}>\n` +
+            '                <td valign="top">GeekCode:</td>\n' +
+            `                <td>${webId.geekCode}</td>\n` +
+            '            </tr>\n' +
+            '            </tbody>\n' +
+            '        </table>\n' +
+            '    </md-card-content>\n' +
+            '     <md-card-actions layout="column" layout-align="start">' +
+            `         <md-button className="md-icon-button" aria-label="Settings" > ` + //ng-click=${this.showToolbarMenu($event, webId)}
+            '            <md-icon style="text-align: center" md-svg-icon="img/icons/menu.svg"></md-icon>' +
+            '         </md-button>' +
+            '     </md-card-actions>' +
+            '</md-card>'
+
+        let position = $mdPanel.newPanelPosition()
+            .absolute()
+            .center();
+
+        function PanelMenuCtrl(mdPanelRef) {
+            this.closeMenu = function() {
+                document.getElementById("opaque").style.display='none';
+                mdPanelRef && mdPanelRef.close();
+            };
+        }
+
+        let config = {
+            id: 'fullCard',
+            attachTo: angular.element(document.body),
+            controller: PanelMenuCtrl,
+            controllerAs: 'panelCtrl',
+            template: template,
+            position: position,
+            panelClass: 'menu-panel-container',
+            locals: {} ,
+            openFrom: $event,
+            focusOnOpen: false,
+            zIndex: 100,
+            propagateContainerEvents: true
+        };
+
+        $mdPanel.open(config);
+    };
 
     $scope.request = $http.get("/webids.json", {headers: { 'Accept': 'application/json'}}).then(function(response) {
 

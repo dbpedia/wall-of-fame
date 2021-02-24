@@ -8,10 +8,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="/css/validate.css"/>
     <link rel="stylesheet" type="text/css" href="/css/yate.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/wof.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <!--STYLES-->
 
     <!--SCRIPTS-->
+    <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
@@ -26,6 +28,7 @@
     <script src="/js/validate.js"></script>
     <script src="/js/yateWrapper.js"></script>
     <script src="https://perfectkb.github.io/yate/dist/yate.bundled.min.js"></script>
+    <script src="/js/wof.js"></script>
     <!--SCRIPTS-->
 </head>
 
@@ -102,23 +105,58 @@
             <button class="btn btn-primary" type="submit" ng-click="validateWebId()">Validate</button>
         </div>
 
+
         <div class="col-sm">
             Your WebId:
-            <div class="card" style="width: 24rem;" ng-model="webId">
-                <img alt="Card image cap" class="card-img-top" src="{{webId.img}}">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        Account: <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
-                    </h5>
-                    Name: {{webId.name}}
-                    <br>
-                    Gender: {{webId.gender}}
-                    <br>
-                    Geekcode: {{webId.geekCode}}
-                    </p>
-                    <a class="btn btn-primary" href="{{webId.maker}}">Go to WebId</a>
-                </div>
-            </div>
+            <md-card ng-model="webId" ng-controller="webIdController as ctrl">
+                <!--                            ng-click="openOffscreen(x)"-->
+                <img class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
+                <md-card-title>
+                    <md-card-title-text>
+            <span class="md-headline" style="text-align: center">
+                <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
+            </span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td valign="top">Name:</td>
+                            <td>{{webId.name}}</td>
+                        </tr>
+                        <tr ng-if="webId.gender">
+                            <td valign="top">Gender:</td>
+                            <td>{{webId.gender}}</td>
+                        </tr>
+                        <tr ng-if="webId.geekCode">
+                            <td valign="top">GeekCode:</td>
+                            <td>{{webId.geekCode}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-card-content>
+                <md-card-actions layout="column" layout-align="start">
+                    <md-button ng-click="ctrl.showToolbarMenu($event, webId)">
+                        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+                    </md-button>
+                </md-card-actions>
+            </md-card>
+<!--            <div class="card" style="width: 24rem;" ng-model="webId">-->
+<!--                <img alt="Card image cap" class="card-img-top" src="{{webId.img}}">-->
+<!--                <div class="card-body">-->
+<!--                    <h5 class="card-title">-->
+<!--                        Account: <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>-->
+<!--                    </h5>-->
+<!--                    Name: {{webId.name}}-->
+<!--                    <br>-->
+<!--                    Gender: {{webId.gender}}-->
+<!--                    <br>-->
+<!--                    Geekcode: {{webId.geekCode}}-->
+<!--                    </p>-->
+<!--                    <a class="btn btn-primary" href="{{webId.maker}}">Go to WebId</a>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
 
     </div>

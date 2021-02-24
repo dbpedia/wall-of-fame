@@ -33,7 +33,6 @@ class ValidationController(config: Config) {
   def validate(@RequestParam webid:String, response: HttpServletResponse): Unit = {
 
     response.setHeader("Content-Type","application/json")
-
     val newWebId = new WebId()
 
     try {
@@ -55,16 +54,49 @@ class ValidationController(config: Config) {
 
       handleWebId(newWebId, response)
     } catch {
-      case unknownHostException: UnknownHostException => handleException(newWebId, response, unknownHostException)
-      case ioexception: IOException => handleException(newWebId, response, ioexception)
-      case httpException: HttpException => handleException(newWebId, response, httpException)
-      case socketTimeoutException: SocketTimeoutException => handleException(newWebId, response, socketTimeoutException)
       case malformedURLException: MalformedURLException => {
         //if webId is send as plain text
         newWebId.setTurtle(webid.trim)
         handleWebId(newWebId, response)
       }
+      case unknownHostException: UnknownHostException => handleException(newWebId, response, unknownHostException)
+      case ioexception: IOException => handleException(newWebId, response, ioexception)
+      case httpException: HttpException => handleException(newWebId, response, httpException)
+      case socketTimeoutException: SocketTimeoutException => handleException(newWebId, response, socketTimeoutException)
     }
+//    val newWebId = new WebId()
+//
+//    try {
+//      //check if webid was send as url or as plain text
+//      new URL(webid)
+//      newWebId.setUrl(webid)
+//
+//      try {
+//        //if webid is send as url
+//        val src =  scala.io.Source.fromURL(webid)
+//        val turtle =
+//          s"""@base <$webid> .
+//             |${src.mkString.trim}
+//             |""".stripMargin
+//
+//        src.close()
+//
+//        newWebId.setTurtle(turtle)
+//        handleWebId(newWebId, response)
+//      } catch {
+//        case unknownHostException: UnknownHostException => handleException(newWebId, response, unknownHostException)
+//        case malformedURLException: MalformedURLException => handleException(newWebId, response, malformedURLException)
+//        case ioexception: IOException => handleException(newWebId, response, ioexception)
+//        case httpException: HttpException => handleException(newWebId, response, httpException)
+//        case socketTimeoutException: SocketTimeoutException => handleException(newWebId, response, socketTimeoutException)
+//      }
+//    } catch {
+//      case malformedURLException: MalformedURLException => {
+//        //if webId is send as plain text
+//        newWebId.setTurtle(webid.trim)
+//        handleWebId(newWebId, response)
+//      }
+//    }
 
   }
 
@@ -97,6 +129,7 @@ class ValidationController(config: Config) {
 
   def handleException(webId:WebId, response: HttpServletResponse, exception: Exception): Unit = {
     val result = new Result
+    println(exception.toString)
     result.addViolation("Exception", exception.toString)
     webId.setValidation(result)
 

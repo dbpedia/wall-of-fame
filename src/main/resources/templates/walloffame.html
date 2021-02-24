@@ -27,7 +27,7 @@
     <script src="/js/validate.js"></script>
 </head>
 
-<body>
+<body id="wof">
 
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -123,7 +123,6 @@
 
             <!-- DBPEDIA ACCOUNTS -->
             <div class="col-sm">
-                <div class="carddemoCardActionButtons">
                     <md-content layout-xs="column" layout="row" layout-wrap>
 <!--                        <div class="card" style="width: 24rem;" ng-repeat="webId in filteredWebIds | filter:model.searchString">-->
 <!--                            <img class="card-img-top" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}" alt="" style="width: 100%; max-height:200px; object-fit: contain;">-->
@@ -140,22 +139,18 @@
 <!--                                <a class="btn btn-primary" href="{{webId.url}}">Go to WebId</a> <a class="btn btn-primary" href="/validate?str={{x.url}}" target="_blank">Validate</a>-->
 <!--                            </div>-->
 <!--                        </div>-->
-                        <md-card ng-repeat="webId in shownWebIds | filter:model.searchString" style="width: 198px">
-<!--                            ng-click="openOffscreen(x)"-->
-                            <img class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
-                            <md-card-title>
-                                <md-card-title-text>
-                                   <a class="md-headline" style="text-align: center" href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
-                                </md-card-title-text>
-                                <md-card-content>
-                                    <md-button class="md-icon-button" aria-label="More" ng-click="ctrl.showToolbarMenu($event)">
-                                        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-                                    </md-button>
-                                </md-card-content>
-                            </md-card-title>
+                        <md-card class="webid-card-small" ng-repeat="webId in shownWebIds | filter:model.searchString">
+                            <div class="md-card-image-wrapper" ng-click="ctrl.showFullCard($event, webId)">
+                                <img id="small-img" class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
+                            </div>
+                            <md-card-actions layout="column" layout-align="start">
+                                <a class="md-button" style="font-size: 18px; text-align: center" ng-href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
+                                <md-button ng-click="ctrl.showToolbarMenu($event, webId)">
+                                    <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+                                </md-button>
+                            </md-card-actions>
                         </md-card>
                     </md-content>
-                </div>
             </div>
         </div>
     </div>
@@ -166,9 +161,9 @@
 <!--    <img class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">-->
 <!--    <md-card-title>-->
 <!--        <md-card-title-text>-->
-<!--                                    <span class="md-headline" style="text-align: center">-->
-<!--                                        <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>-->
-<!--                                    </span>-->
+<!--            <span class="md-headline" style="text-align: center">-->
+<!--                <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>-->
+<!--            </span>-->
 <!--        </md-card-title-text>-->
 <!--    </md-card-title>-->
 <!--    <md-card-content>-->

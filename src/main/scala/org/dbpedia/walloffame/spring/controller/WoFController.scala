@@ -23,6 +23,11 @@ class WoFController {
     "walloffame"
   }
 
+  @RequestMapping(value = Array("/about"), method = Array(RequestMethod.GET))
+  def getAboutPage(): String = {
+    "about"
+  }
+
   @RequestMapping(value = Array("/logs"), method = Array(RequestMethod.GET))
   def logs(response: HttpServletResponse): Unit = {
 
