@@ -141,7 +141,7 @@
 <!--                            </div>-->
 <!--                        </div>-->
                         <md-card class="webid-card-small" ng-repeat="webId in shownWebIds | filter:model.searchString">
-                            <div class="md-card-image-wrapper" ng-click="ctrl.showFullCard($event, webId)">
+                            <div class="md-card-image-wrapper" ng-click="showFullCard(webId)">
                                 <img id="small-img" class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
                             </div>
                             <md-card-actions layout="column" layout-align="start">
@@ -154,45 +154,80 @@
                         </md-card>
                     </md-content>
             </div>
+            <div id="full_webid_container" ng-model="activeWebId">
+                <div id="opaque" ng-click="hideFullCard()"></div>
+                <md-card id="webid-card-wof" class="webid-card">
+                    <img id="big-img" class="md-card-image" ng-src="{{activeWebId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
+                    <md-card-title>
+                        <md-card-title-text>
+                <span class="md-headline" style="text-align: center">
+                    <a href="https://databus.dbpedia.org/{{activeWebId.account}}" target="_blank">{{activeWebId.account}}</a>
+                </span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content>
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td valign="top">Name:</td>
+                                <td>{{activeWebId.name}}</td>
+                            </tr>
+                            <tr ng-if="activeWebId.gender">
+                                <td valign="top">Gender:</td>
+                                <td>{{activeWebId.gender}}</td>
+                            </tr>
+                            <tr ng-if="activeWebId.geekCode">
+                                <td valign="top">GeekCode:</td>
+                                <td>{{activeWebId.geekCode}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-card-content>
+                     <md-card-actions layout="column" layout-align="start">
+                         <md-button ng-click="ctrl.showToolbarMenu($event, activeWebId)">
+                             <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+                         </md-button>
+                     </md-card-actions>
+                </md-card>
+            </div>
         </div>
     </div>
 </div>
 
-<!--<md-card ng-repeat="webId in shownWebIds | filter:model.searchString">-->
-<!--    &lt;!&ndash;                            ng-click="openOffscreen(x)"&ndash;&gt;-->
-<!--    <img class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">-->
-<!--    <md-card-title>-->
-<!--        <md-card-title-text>-->
-<!--            <span class="md-headline" style="text-align: center">-->
-<!--                <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>-->
-<!--            </span>-->
-<!--        </md-card-title-text>-->
-<!--    </md-card-title>-->
-<!--    <md-card-content>-->
-<!--        <table>-->
-<!--            <tbody>-->
-<!--            <tr>-->
-<!--                <td valign="top">Name:</td>-->
-<!--                <td>{{webId.name}}</td>-->
-<!--            </tr>-->
-<!--            <tr ng-if="webId.gender">-->
-<!--                <td valign="top">Gender:</td>-->
-<!--                <td>{{webId.gender}}</td>-->
-<!--            </tr>-->
-<!--            <tr ng-if="webId.geekCode">-->
-<!--                <td valign="top">GeekCode:</td>-->
-<!--                <td>{{webId.geekCode}}</td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </md-card-content>-->
-<!--    <md-card-actions layout="column" layout-align="start">-->
-<!--        <md-button class="md-icon-button" aria-label="Settings" ng-click="ctrl.showToolbarMenu($event)">-->
-<!--            <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>-->
-<!--        </md-button>-->
-<!--        <md-button><a href="{{webId.url}}">WebId</a></md-button>-->
-<!--        <md-button><a ng-href="/validator?webid={{webId.url | escape}}" target="_blank">Validate</a></md-button>-->
-<!--    </md-card-actions>-->
-<!--</md-card>-->
+<!--'<div id="opaque" ng-click="panelCtrl.closeMenu()"></div>' +-->
+<!--'<md-card class="webid-card" style="z-index: 1">\n' +-->
+<!--    `    <img id="big-img" class="md-card-image" ng-src=${img}>\n` +-->
+<!--    '    <md-card-title>\n' +-->
+<!--        '        <md-card-title-text>\n' +-->
+<!--            '           <span class="md-headline" style="text-align: center">\n' +-->
+<!--            `             <a href="https://databus.dbpedia.org/${webId.account}" target="_blank">${webId.account}</a>\n` +-->
+<!--            '           </span>\n' +-->
+<!--            '        </md-card-title-text>\n' +-->
+<!--        '    </md-card-title>\n' +-->
+<!--    '    <md-card-content>\n' +-->
+<!--        '        <table>\n' +-->
+<!--            '            <tbody>\n' +-->
+<!--            '            <tr>\n' +-->
+<!--                '                <td valign="top">Name:</td>\n' +-->
+<!--                `                <td>${webId.name}</td>\n` +-->
+<!--                '            </tr>\n' +-->
+<!--            `            <tr ng-if="${!!webId.gender}">\n` +-->
+<!--                `                <td valign="top">Gender:</td>\n` +-->
+<!--                `                <td>${webId.gender}</td>\n` +-->
+<!--                '            </tr>\n' +-->
+<!--            `            <tr ng-if=${!!webId.geekCode}>\n` +-->
+<!--                '                <td valign="top">GeekCode:</td>\n' +-->
+<!--                `                <td>${webId.geekCode}</td>\n` +-->
+<!--                '            </tr>\n' +-->
+<!--            '            </tbody>\n' +-->
+<!--            '        </table>\n' +-->
+<!--        '    </md-card-content>\n' +-->
+<!--    '     <md-card-actions layout="column" layout-align="start">' +-->
+<!--        `         <md-button className="md-icon-button" aria-label="Settings" > ` + //ng-click=${this.showToolbarMenu($event, webId)}-->
+<!--            '            <md-icon style="text-align: center" md-svg-icon="img/icons/menu.svg"></md-icon>' +-->
+<!--            '         </md-button>' +-->
+<!--        '     </md-card-actions>' +-->
+<!--    </md-card>-->
+
 </body>
 </html>

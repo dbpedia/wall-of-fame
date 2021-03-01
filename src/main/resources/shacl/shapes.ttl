@@ -17,12 +17,11 @@
 
 <#PersonShape> a sh:NodeShape ;
 	sh:targetClass foaf:Person ;
+	sh:property <#dbpedia-support-info> ;
 	sh:property <#name> ;
 	sh:property <#key> ;
 	sh:property <#img> ;
-	sh:property <#gender> ;
-	sh:property <#geekcode> ;
-	sh:property <#dbpedia-support-info> .
+	sh:property <#geekcode> .
     
 <#KeyShape> a sh:NodeShape ;
 	sh:targetClass cert:RSAPublicKey ;
@@ -59,13 +58,6 @@
 	sh:minCount 1 ;
 	sh:severity sh:Violation ;
 	sh:message "Required property cert:key MUST occur at least once."@en .
-
-<#gender> a sh:PropertyShape ;
-	sh:path foaf:gender ;
-	sh:minCount 1 ;
-	sh:maxCount 1 ;
-	sh:severity sh:Info ;
-	sh:message "Optional property foaf:gender is missing."@en .
 	
 <#img> a sh:PropertyShape ;
 	sh:path foaf:img ;
@@ -84,7 +76,7 @@
 <#dbpedia-support-info>
 	sh:path rdf:type ;
 	sh:hasValue dbo:DBpedian ;
-	sh:severity sh:Info ;
+	sh:severity sh:Violation ;
 	sh:message
 		"Show your support to DBpedia by adding '<#me> a dbo:DBpedian' to your WebID/FOAF. If you do, we will add you to our website."@en .
 #===PersonShapeProperties===#

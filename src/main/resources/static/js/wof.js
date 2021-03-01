@@ -17,133 +17,18 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
     ];
     $scope.selectedOptions=[];
 
-    this.showToolbarMenu = function($event, webId) {
+    $scope.shownWebIds = undefined;
+    $scope.activeWebId = undefined;
 
-        function PanelMenuCtrl(mdPanelRef) {
-            this.closeMenu = function() {
-                mdPanelRef && mdPanelRef.close();
-            };
-        }
-
-        let escapedURL = escape(webId.url);
-
-        let template = ''+
-            '<div class="menu-panel" md-whiteframe="4" ng-mouseleave="panelCtrl.closeMenu()">' +
-            '  <div class="menu-content">' +
-            '    <div class="menu-item">' +
-            `      <a class="md-button" ng-href="/validator?webid=${escapedURL}" target="_blank">Validate</a>` +
-            '    </div>' +
-            '    <div class="menu-item">' +
-            `      <a class="md-button" ng-href="${webId.url}" target="_blank">Download</a>` +
-            '    </div>' +
-            '    <md-divider></md-divider>' +
-            '    <div class="menu-item">' +
-            '      <button class="md-button" ng-click="panelCtrl.closeMenu()">' +
-            '        <span>Close Menu</span>' +
-            '      </button>' +
-            '    </div>' +
-            '  </div>' +
-            '</div>';
-
-        console.log(template);
-
-        let position = $mdPanel.newPanelPosition()
-            .relativeTo($event.target)
-            .addPanelPosition(
-                $mdPanel.xPosition.ALIGN_START,
-                $mdPanel.yPosition.BELOW
-            );
-
-        let config = {
-            id: 'toolbar',
-            attachTo: angular.element(document.body),
-            controller: PanelMenuCtrl,
-            controllerAs: 'panelCtrl',
-            template: template,
-            position: position,
-            panelClass: 'menu-panel-container',
-            locals: {} ,
-            openFrom: $event,
-            focusOnOpen: false,
-            zIndex: 100,
-            propagateContainerEvents: true,
-            groupName: ['toolbar', 'menus']
-        };
-
-        $mdPanel.open(config);
+    $scope.showFullCard = function (webid) {
+        $scope.activeWebId = webid;
+        document.getElementById("full_webid_container").style.display='block';
     };
-
-    this.showFullCard = function($event, webId) {
-
-        let img = webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png';
-
-        let template = '' +
-            '<div id="opaque" ng-click="panelCtrl.closeMenu()"></div>' +
-            '<md-card class="webid-card" style="z-index: 1">\n' +
-            `    <img id="big-img" class="md-card-image" ng-src=${img}>\n` +
-            '    <md-card-title>\n' +
-            '        <md-card-title-text>\n' +
-            '           <span class="md-headline" style="text-align: center">\n' +
-            `             <a href="https://databus.dbpedia.org/${webId.account}" target="_blank">${webId.account}</a>\n` +
-            '           </span>\n' +
-            '        </md-card-title-text>\n' +
-            '    </md-card-title>\n' +
-            '    <md-card-content>\n' +
-            '        <table>\n' +
-            '            <tbody>\n' +
-            '            <tr>\n' +
-            '                <td valign="top">Name:</td>\n' +
-            `                <td>${webId.name}</td>\n` +
-            '            </tr>\n' +
-            `            <tr ng-if="${!!webId.gender}">\n` +
-            `                <td valign="top">Gender:</td>\n` +
-            `                <td>${webId.gender}</td>\n` +
-            '            </tr>\n' +
-            `            <tr ng-if=${!!webId.geekCode}>\n` +
-            '                <td valign="top">GeekCode:</td>\n' +
-            `                <td>${webId.geekCode}</td>\n` +
-            '            </tr>\n' +
-            '            </tbody>\n' +
-            '        </table>\n' +
-            '    </md-card-content>\n' +
-            '     <md-card-actions layout="column" layout-align="start">' +
-            `         <md-button className="md-icon-button" aria-label="Settings" > ` + //ng-click=${this.showToolbarMenu($event, webId)}
-            '            <md-icon style="text-align: center" md-svg-icon="img/icons/menu.svg"></md-icon>' +
-            '         </md-button>' +
-            '     </md-card-actions>' +
-            '</md-card>'
-
-        let position = $mdPanel.newPanelPosition()
-            .absolute()
-            .center();
-
-        function PanelMenuCtrl(mdPanelRef) {
-            this.closeMenu = function() {
-                document.getElementById("opaque").style.display='none';
-                mdPanelRef && mdPanelRef.close();
-            };
-        }
-
-        let config = {
-            id: 'fullCard',
-            attachTo: angular.element(document.body),
-            controller: PanelMenuCtrl,
-            controllerAs: 'panelCtrl',
-            template: template,
-            position: position,
-            panelClass: 'menu-panel-container',
-            locals: {} ,
-            openFrom: $event,
-            focusOnOpen: false,
-            zIndex: 100,
-            propagateContainerEvents: true
-        };
-
-        $mdPanel.open(config);
+    $scope.hideFullCard = function(){
+        document.getElementById("full_webid_container").style.display='none';
     };
 
     $scope.request = $http.get("/webids.json", {headers: { 'Accept': 'application/json'}}).then(function(response) {
-
         $scope.webids = response.data.webIds;
 
         let options = [];
@@ -152,7 +37,6 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
                 if(options.indexOf(key) < 0) options.push(key);
             })
         });
-
         let optionsToBeIgnored = ["account", "url", "name", "maker", "img", "geekCode"];
         options = options.filter(item => !optionsToBeIgnored.includes(item));
 
@@ -167,8 +51,11 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         });
 
         $scope.selectedOptions = angular.copy($scope.filterOptions);
+
         $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
     });
+
+
 
 
     $scope.filterWebIdsBySelectedOptions = function (){
@@ -266,6 +153,58 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
                 }
             }});
         $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
+    };
+
+
+    this.showToolbarMenu = function($event, webId) {
+
+        function PanelMenuCtrl(mdPanelRef) {
+            this.closeMenu = function() {
+                mdPanelRef && mdPanelRef.close();
+            };
+        }
+
+        let escapedURL = escape(webId.url);
+
+        let template = ''+
+            '<div class="menu-panel" md-whiteframe="4" ng-mouseleave="panelCtrl.closeMenu()">' +
+            '  <div class="menu-content">' +
+            '    <div class="menu-item">' +
+            `      <a class="md-button" ng-href="/validator?webid=${escapedURL}" target="_blank">Validate</a>` +
+            '    </div>' +
+            '    <md-divider></md-divider>' +
+            '    <div class="menu-item">' +
+            `      <a class="md-button" ng-href="${webId.url}" target="_blank">Download</a>` +
+            '    </div>' +
+            '  </div>' +
+            '</div>';
+
+        console.log(template);
+
+        let position = $mdPanel.newPanelPosition()
+            .relativeTo($event.target)
+            .addPanelPosition(
+                $mdPanel.xPosition.ALIGN_START,
+                $mdPanel.yPosition.BELOW
+            );
+
+        let config = {
+            id: 'toolbar',
+            attachTo: angular.element(document.body),
+            controller: PanelMenuCtrl,
+            controllerAs: 'panelCtrl',
+            template: template,
+            position: position,
+            panelClass: 'menu-panel-container',
+            locals: {} ,
+            openFrom: $event,
+            focusOnOpen: false,
+            zIndex: 100,
+            propagateContainerEvents: true,
+            groupName: ['toolbar', 'menus']
+        };
+
+        $mdPanel.open(config);
     };
 
 });

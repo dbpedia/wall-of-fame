@@ -26,7 +26,6 @@ object WebIdUniformer {
     }
 
     construct(ConstructOptionalQueries.constructGeekCode())
-    construct(ConstructOptionalQueries.constructGender())
     construct(ConstructOptionalQueries.constructImg())
     construct(ConstructOptionalQueries.constructName())
 

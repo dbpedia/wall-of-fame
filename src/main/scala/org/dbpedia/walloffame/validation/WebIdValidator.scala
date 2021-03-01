@@ -12,20 +12,6 @@ import java.io.ByteArrayOutputStream
 
 object WebIdValidator {
 
-
-//  def writeFile(str: String): File = {
-//
-//    import java.io.PrintWriter
-//    val fileToValidate = File("./tmp/webIdToValidate.ttl")
-//    new PrintWriter(fileToValidate.toJava) {
-//      write(str)
-//      close
-//    }
-//
-//    fileToValidate
-//  }
-
-
   def validate(webId: Model): Result = {
 
     import org.springframework.core.io.support.PathMatchingResourcePatternResolver

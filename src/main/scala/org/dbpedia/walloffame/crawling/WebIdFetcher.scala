@@ -23,14 +23,30 @@ object WebIdFetcher {
     val vos = new VirtuosoHandler(config.virtuoso)
     val jsonldLogger = new JsonLDLogger(config.log.file)
 
+    var allCurrentGraphs = Seq.empty[String]
+
+    var wait = true
+    var time = 0
+    while (wait) {
+      try {
+        allCurrentGraphs = vos.getAllGraphURIs()
+        wait = false
+      } catch {
+        case e: Exception =>
+          time +=1
+          println(s"Waiting since $time seconds for Virtuoso to start up.")
+          Thread.sleep(1000)
+      }
+    }
+
     println(
       """
         |Download, validate, and uniform all registered WebIds on the DBpedia Databus.
         |Accounts:""".stripMargin)
 
+
     //get all registered webIds
     val url = "https://databus.dbpedia.org/system/api/accounts"
-//    val url = "./src/main/resources/accounts.ttl"
     val model = RDFDataMgr.loadModel(url, Lang.NTRIPLES)
 
     val stmts = model.listStatements()
@@ -39,6 +55,10 @@ object WebIdFetcher {
       val webid = stmt.getSubject.toString
       val accountURL = stmt.getObject.toString //.replaceFirst("https://databus.dbpedia.org/", "")
       println(webid)
+
+      //clear former graph of this account
+      vos.clearGraph(accountURL)
+      allCurrentGraphs = allCurrentGraphs.filter(! _.contains(accountURL))
 
       try {
         val model = RDFDataMgr.loadModel(webid, Lang.TURTLE)
@@ -80,6 +100,12 @@ object WebIdFetcher {
       }
 
     }
+
+    println("webids that were registered before, but are not accessible now so they are deleted now.")
+    allCurrentGraphs.foreach(graph =>{
+      println(graph)
+      vos.clearGraph(graph)
+    })
 
     jsonldLogger.writeOut()
   }

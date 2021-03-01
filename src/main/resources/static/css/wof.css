@@ -13,12 +13,12 @@ legend {
     left: 0px;
     width: 100%;
     height: 100%;
-    z-index: -1;
     display: block;
     background-color: black;
     filter: alpha(opacity=30);
     opacity: 0.3;
 }
+
 * html #opaque {
     position: absolute;
 }
@@ -47,8 +47,26 @@ legend {
     /*vertical-align: center; warum geht das nicht*/
 }
 
+#full_webid_container {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
 .webid-card{
     width: 400px;
+}
+
+#webid-card-wof{
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 #big-img{
