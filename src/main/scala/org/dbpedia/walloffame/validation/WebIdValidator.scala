@@ -67,10 +67,10 @@ object WebIdValidator {
     QueryHandler.executeQuery(SelectQueries.resultSeverity, report.getModel).foreach(
       solution => {
         if (solution.getResource("severity").getURI == "http://www.w3.org/ns/shacl#Violation") {
-          result.addViolation(solution.getResource("focusNode").getURI, solution.getLiteral("message").getLexicalForm)
+          result.addViolation(solution.getResource("focusNode").getURI, solution.getLiteral("message").getLexicalForm, solution.getResource("property").getURI)
         }
         else if (solution.getResource("severity").getURI == "http://www.w3.org/ns/shacl#Info") {
-          result.addInfo(solution.getResource("focusNode").getURI, solution.getLiteral("message").getLexicalForm)
+          result.addInfo(solution.getResource("focusNode").getURI, solution.getLiteral("message").getLexicalForm, solution.getResource("property").getURI)
         }
       }
     )

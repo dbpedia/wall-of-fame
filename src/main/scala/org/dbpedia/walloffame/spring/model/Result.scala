@@ -8,19 +8,19 @@ class Result {
   var result: String = _
 
   @BeanProperty
-  var violations: Array[(String, String)] = Array.empty
+  var violations: Array[(String, String, String)] = Array.empty
 
   @BeanProperty
-  var infos: Array[(String, String)] = Array.empty
+  var infos: Array[(String, String, String)] = Array.empty
 
   def conforms(): Boolean = violations.isEmpty
 
-  def addViolation(focusNode: String, message: String): Unit = {
-    violations = violations :+ (focusNode, message)
+  def addViolation(focusNode: String, message: String, property: String =""): Unit = {
+    violations = violations :+ (focusNode, message, property)
   }
 
-  def addInfo(focusNode: String, message: String): Unit = {
-    infos = infos :+ (focusNode, message)
+  def addInfo(focusNode: String, message: String, property: String =""): Unit = {
+    infos = infos :+ (focusNode, message, property)
   }
 
 }

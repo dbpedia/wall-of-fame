@@ -12,11 +12,9 @@ import org.slf4j.LoggerFactory
 import java.io.EOFException
 import java.net.{ConnectException, SocketException}
 
-
 object WebIdFetcher {
 
   var logger = LoggerFactory.getLogger("WebIdFetcher")
-
 
   def fetchRegisteredWebIds(config: Config): Unit = {
 
@@ -65,7 +63,7 @@ object WebIdFetcher {
         val result = WebIdValidator.validate(model, config.shacl.url)
 
         if (result.conforms()) {
-          val uniformedModel = WebIdUniformer.uniform(model)
+          val uniformedModel = WebIdUniformer.uniform(model, result.getInfos)
           vos.insertModel(uniformedModel, accountURL)
         } else {
           result.violations.foreach(tuple=>{
@@ -109,7 +107,5 @@ object WebIdFetcher {
 
     jsonldLogger.writeOut()
   }
-
-
 
 }

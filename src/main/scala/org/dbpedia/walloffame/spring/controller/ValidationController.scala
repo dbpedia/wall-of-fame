@@ -107,7 +107,7 @@ class ValidationController(config: Config) {
 
       if (result.conforms()) {
         //valid webid
-        val newModel = WebIdUniformer.uniform(model)
+        val newModel = WebIdUniformer.uniform(model, result.getInfos)
         val newWebId = new WebId(newModel)
         newWebId.setTurtle(webId.turtle)
         newWebId.setUrl(webId.url)

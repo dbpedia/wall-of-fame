@@ -8,7 +8,7 @@ object WebIdUniformer {
 
   val logger: Logger = LoggerFactory.getLogger("validator")
 
-  def uniform(model: Model): Model = {
+  def uniform(model: Model, nonExistingOptionals: Array[(String, String, String)] = Array.empty[(String, String, String)]): Model = {
 
     val constructModel = ModelFactory.createDefaultModel()
 
@@ -25,9 +25,23 @@ object WebIdUniformer {
       return constructModel
     }
 
-    construct(ConstructOptionalQueries.constructGeekCode())
-    construct(ConstructOptionalQueries.constructImg())
-    construct(ConstructOptionalQueries.constructName())
+//    nonExistingOptionals.foreach(println(_))
+//    nonExistingOptionals.filter(x => x._3.split("#|/").last == "geekcode").foreach(println(_))
+//    nonExistingOptionals.filter(x => x._3.split("#|/").last == "img").foreach(println(_))
+
+    if(!nonExistingOptionals.exists(x => x._3.split("#|/").last == "img")) {
+//      println("jetzt")
+//      nonExistingOptionals.foreach(println(_))
+      construct(ConstructOptionalQueries.constructImg())
+    }
+    if(!nonExistingOptionals.exists(x => x._3.split("#|/").last == "geekcode")) {
+//      println("jetzt2")
+//      nonExistingOptionals.foreach(println(_))
+      construct(ConstructOptionalQueries.constructGeekCode())
+    }
+
+//    val stmts = constructModel.listStatements()
+//    while(stmts.hasNext) println(stmts.nextStatement())
 
     constructModel
   }

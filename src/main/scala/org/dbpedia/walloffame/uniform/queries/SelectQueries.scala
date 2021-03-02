@@ -47,15 +47,15 @@ object SelectQueries {
     """
       |PREFIX sh: <http://www.w3.org/ns/shacl#>
       |
-      |SELECT ?severity ?focusNode ?message
+      |SELECT ?severity ?focusNode ?property ?message
       |WHERE {
       |  ?report  a  sh:ValidationReport ;
       |           sh:result ?result .
       |  ?result  sh:resultSeverity ?severity ;
       |           sh:focusNode ?focusNode ;
+      |           sh:resultPath ?property ;
       |           sh:resultMessage ?message .
       |}
       |""".stripMargin
-
 
 }
