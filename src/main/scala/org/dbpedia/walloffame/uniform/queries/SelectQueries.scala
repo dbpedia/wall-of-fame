@@ -58,4 +58,33 @@ object SelectQueries {
       |}
       |""".stripMargin
 
+
+  def getDatabusUserData(webid:String):String = {
+    s"""
+      |PREFIX dcat: <http://www.w3.org/ns/dcat#>
+      |PREFIX dataid: <http://dataid.dbpedia.org/ns/core#>
+      |PREFIX dct: <http://purl.org/dc/terms/>
+      |PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+      |PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      |PREFIX databus: <https://databus.dbpedia.org/>
+      |
+      |SELECT DISTINCT ?numUploads ?uploadSize WHERE {
+      |  OPTIONAL {
+      |    SELECT (count(?version) as ?numUploads) WHERE {
+      |      ?dataset dataid:maintainer|dct:publisher <$webid>.
+      |      ?dataset dataid:version ?version .
+      |    }
+      |  }
+      |  OPTIONAL {
+      |    SELECT (sum(?size) as ?uploadSize) WHERE {
+      |      ?dataset dataid:maintainer|dct:publisher <$webid> .
+      |      ?dataset dcat:distribution ?distribution .
+      |      ?distribution dcat:byteSize ?size .
+      |    }
+      |  }
+      |}
+      |""".stripMargin
+  }
+
 }

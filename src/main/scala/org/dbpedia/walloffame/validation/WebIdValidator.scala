@@ -54,7 +54,7 @@ object WebIdValidator {
     val dataGraph = webId.getGraph
     val shapes = Shapes.parse(shapesGraph)
 
-    val report = ShaclValidator.get.validate(shapes, dataGraph)
+    val report = ShaclValidator.get().validate(shapes, dataGraph)
     val result = new Result
 
     //full result

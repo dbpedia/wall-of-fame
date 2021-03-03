@@ -1,9 +1,9 @@
 package org.dbpedia.walloffame.validate
 
 import better.files.File
-import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.riot.RDFDataMgr
 import org.dbpedia.walloffame.spring.model.WebId
+import org.dbpedia.walloffame.validation.WebIdValidator
 import org.junit.jupiter.api.Test
 
 class ValidateTest {
@@ -47,5 +47,12 @@ class ValidateTest {
     val model = RDFDataMgr.loadModel(fileToValidate.pathAsString)
 
     val webid = new WebId(model)
+  }
+
+  @Test
+  def webIdShouldValidate()={
+    val webidModel = RDFDataMgr.loadModel("https://kf4git.github.io/WebIdRep/webid.ttl")
+    val result = WebIdValidator.validate(webidModel, "https://raw.githubusercontent.com/dbpedia/wall-of-fame/master/src/main/resources/shacl/shapes.ttl")
+    println(result.result)
   }
 }

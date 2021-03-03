@@ -18,11 +18,10 @@ object WebIdFetcher {
 
   def fetchRegisteredWebIds(config: Config): Unit = {
 
-    val vos = new VirtuosoHandler(config.virtuoso)
     val jsonldLogger = new JsonLDLogger(config.log.file)
+    val vos = new VirtuosoHandler(config.virtuoso)
 
     var allCurrentGraphs = Seq.empty[String]
-
     var wait = true
     var time = 0
     while (wait) {
@@ -52,7 +51,7 @@ object WebIdFetcher {
       val stmt = stmts.nextStatement()
       val webid = stmt.getSubject.toString
       val accountURL = stmt.getObject.toString //.replaceFirst("https://databus.dbpedia.org/", "")
-      println(webid)
+      println(stmt)
 
       //clear former graph of this account
       vos.clearGraph(accountURL)
@@ -64,6 +63,7 @@ object WebIdFetcher {
 
         if (result.conforms()) {
           val uniformedModel = WebIdUniformer.uniform(model, result.getInfos)
+          val aggregatedDataModel = ""
           vos.insertModel(uniformedModel, accountURL)
         } else {
           result.violations.foreach(tuple=>{
