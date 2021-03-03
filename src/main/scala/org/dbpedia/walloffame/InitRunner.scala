@@ -2,6 +2,7 @@ package org.dbpedia.walloffame
 
 import better.files.File
 import org.dbpedia.walloffame.crawling.WebIdFetcher
+import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.scheduling.annotation.Scheduled
@@ -17,6 +18,8 @@ class InitRunner extends CommandLineRunner {
 
     File("./tmp/").delete(true)
     File("./tmp/").createDirectory()
+    val vos = new VirtuosoHandler(config.virtuoso)
+    vos.deleteAllGraphs()
 
     prepareWallOfFame()
   }
@@ -25,8 +28,6 @@ class InitRunner extends CommandLineRunner {
   @Scheduled(cron = "0 0 8 * * ?", zone = "GMT+1:00")
   def prepareWallOfFame() = {
     //fetch databus-registered webIds to virtuoso of wall of fame
-//    val vos = new VirtuosoHandler(config.virtuoso)
-//    vos.deleteAllGraphs()
     WebIdFetcher.fetchRegisteredWebIds(config)
   }
 }
