@@ -45,6 +45,7 @@ object WebIdValidator {
   }
 
   def validate(webId:Model, shapesURL:String):Result = {
+//    val shapes = RDFDataMgr.loadModel("./src/main/resources/shacl/shapes.ttl")
     val shapes = RDFDataMgr.loadModel(shapesURL)
     validate(webId, shapes)
   }

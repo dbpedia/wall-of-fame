@@ -25,18 +25,11 @@ object WebIdUniformer {
       return constructModel
     }
 
-//    nonExistingOptionals.foreach(println(_))
-//    nonExistingOptionals.filter(x => x._3.split("#|/").last == "geekcode").foreach(println(_))
-//    nonExistingOptionals.filter(x => x._3.split("#|/").last == "img").foreach(println(_))
-
     if(!nonExistingOptionals.exists(x => x._3.split("#|/").last == "img")) {
-//      println("jetzt")
-//      nonExistingOptionals.foreach(println(_))
       construct(ConstructOptionalQueries.constructImg())
     }
+
     if(!nonExistingOptionals.exists(x => x._3.split("#|/").last == "geekcode")) {
-//      println("jetzt2")
-//      nonExistingOptionals.foreach(println(_))
       construct(ConstructOptionalQueries.constructGeekCode())
     }
 

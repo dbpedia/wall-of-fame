@@ -23,6 +23,12 @@
 	sh:property <#img> ;
 	sh:property <#geekcode> .
 
+<#PersonCountShape> a sh:NodeShape ;
+    sh:targetNode foaf:Person ;
+        sh:path [ sh:inversePath rdf:type ];
+        sh:minCount 1 ;
+        sh:message "class foaf:Person MUST occur once."@en.
+
 <#KeyShape> a sh:NodeShape ;
 	sh:targetClass cert:RSAPublicKey ;
 	sh:property <#label> ;

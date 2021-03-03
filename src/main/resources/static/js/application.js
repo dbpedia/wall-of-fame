@@ -1,1 +1,1 @@
-var app = angular.module('wofApp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache']);
+var app = angular.module('wofApp', ['ngMaterial', 'ngMessages', 'material.svgAssetsCache', 'rzSlider']);

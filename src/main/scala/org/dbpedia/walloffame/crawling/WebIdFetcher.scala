@@ -1,10 +1,12 @@
 package org.dbpedia.walloffame.crawling
 
 import org.apache.jena.atlas.web.HttpException
+import org.apache.jena.rdf.model.{Model, ModelFactory, ResourceFactory}
 import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException, RiotNotFoundException}
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.logging.JsonLDLogger
-import org.dbpedia.walloffame.uniform.WebIdUniformer
+import org.dbpedia.walloffame.uniform.queries.SelectQueries
+import org.dbpedia.walloffame.uniform.{QueryHandler, WebIdUniformer}
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.slf4j.LoggerFactory
@@ -51,7 +53,11 @@ object WebIdFetcher {
       val stmt = stmts.nextStatement()
       val webid = stmt.getSubject.toString
       val accountURL = stmt.getObject.toString //.replaceFirst("https://databus.dbpedia.org/", "")
-      println(stmt)
+      println(webid)
+
+//      var graphURL = webid.replace("http://","").replace("https://","")
+//      if (graphURL.contains("#")) graphURL = graphURL.splitAt(graphURL.lastIndexOf("#"))._1
+//      graphURL = config.virtuoso.graph.concat(graphURL)
 
       //clear former graph of this account
       vos.clearGraph(accountURL)
@@ -59,15 +65,24 @@ object WebIdFetcher {
 
       try {
         val model = RDFDataMgr.loadModel(webid, Lang.TURTLE)
-        val result = WebIdValidator.validate(model, config.shacl.url)
 
-        if (result.conforms()) {
-          val uniformedModel = WebIdUniformer.uniform(model, result.getInfos)
-          val aggregatedDataModel = ""
-          vos.insertModel(uniformedModel, accountURL)
+        if(isPerson(model,webid)) {
+
+          val result = WebIdValidator.validate(model, config.shacl.url)
+
+          if (result.conforms()) {
+            val uniformedModel = WebIdUniformer.uniform(model, result.getInfos)
+            uniformedModel.add(collectAdditionalData(webid, accountURL))
+            vos.insertModel(uniformedModel, accountURL)
+
+          } else {
+            result.violations.foreach(tuple => {
+              jsonldLogger.add(webid, "https://example.org/hasViolation", tuple._2)
+            })
+          }
         } else {
-          result.violations.foreach(tuple=>{
-            jsonldLogger.add(webid, "https://example.org/hasViolation" ,tuple._2)})
+          logger.error(s"$webid: is not a foaf:Person")
+          jsonldLogger.add(webid, "https://example.org/hasViolation", "Is not a foaf:Person")
         }
 
       } catch {
@@ -99,13 +114,61 @@ object WebIdFetcher {
 
     }
 
-    println("webids that were registered before, but are not accessible now so they are deleted now.")
-    allCurrentGraphs.foreach(graph =>{
-      println(graph)
-      vos.clearGraph(graph)
-    })
+    if (allCurrentGraphs.nonEmpty) {
+      println("webids that were registered before, but are not accessible now so they are deleted now.")
+      allCurrentGraphs.foreach(graph =>{
+        println(graph)
+        vos.clearGraph(graph)
+      })
+    }
 
     jsonldLogger.writeOut()
   }
 
+
+  def collectAdditionalData(webidURL:String, account:String):Model={
+    val model = ModelFactory.createDefaultModel()
+    val result = QueryHandler.executeQuery(SelectQueries.getDatabusUserData(webidURL)).head
+
+    val ontology = "http://dbpedia.org/ontology/"
+    val numUploads = "numUploads"
+    val uploadSize = "uploadSize"
+
+    model.add(
+      ResourceFactory.createStatement(
+        ResourceFactory.createResource(webidURL),
+        ResourceFactory.createProperty("http://xmlns.com/foaf/0.1/account"),
+        ResourceFactory.createResource(account)
+      )
+    )
+
+    def addDecimalLiteralToModel(literal:String) ={
+      val value = {
+        if (result.getLiteral(literal) != null) result.getLiteral(literal)
+        else ResourceFactory.createTypedLiteral(0)
+      }
+
+      model.add(
+        ResourceFactory.createStatement(
+          ResourceFactory.createResource(account),
+          ResourceFactory.createProperty(ontology+literal),
+          value
+        )
+      )
+    }
+
+    addDecimalLiteralToModel(numUploads)
+    addDecimalLiteralToModel(uploadSize)
+
+    model
+  }
+
+  def isPerson(model: Model, webidURI:String):Boolean={
+    try{
+      QueryHandler.executeQuery(SelectQueries.checkIfIsPerson(webidURI),model).head
+      true
+    } catch {
+      case noSuchElementException: NoSuchElementException => false
+    }
+  }
 }

@@ -25,6 +25,8 @@ class InitRunner extends CommandLineRunner {
   @Scheduled(cron = "0 0 8 * * ?", zone = "GMT+1:00")
   def prepareWallOfFame() = {
     //fetch databus-registered webIds to virtuoso of wall of fame
+//    val vos = new VirtuosoHandler(config.virtuoso)
+//    vos.deleteAllGraphs()
     WebIdFetcher.fetchRegisteredWebIds(config)
   }
 }

@@ -41,8 +41,8 @@ class ValidationController(config: Config) {
       newWebId.setUrl(webid)
 
       val vos = new VirtuosoHandler(config.virtuoso)
-      println("nun")
-      println(vos.getAccountOfWebId(webid))
+//      println("nun")
+//      println(vos.getAccountOfWebId(webid))
       newWebId.setAccount(vos.getAccountOfWebId(webid).getOrElse(""))
       val src =  scala.io.Source.fromURL(webid)
       val turtle =

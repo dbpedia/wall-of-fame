@@ -51,8 +51,8 @@ class ValidateTest {
 
   @Test
   def webIdShouldValidate()={
-    val webidModel = RDFDataMgr.loadModel("https://kf4git.github.io/WebIdRep/webid.ttl")
-    val result = WebIdValidator.validate(webidModel, "https://raw.githubusercontent.com/dbpedia/wall-of-fame/master/src/main/resources/shacl/shapes.ttl")
+    val webidModel = RDFDataMgr.loadModel("https://webid.dbpedia.org/webid.ttl#this")
+    val result = WebIdValidator.validate(webidModel, "./src/main/resources/shacl/shapes.ttl")
     println(result.result)
   }
 }

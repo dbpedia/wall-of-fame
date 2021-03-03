@@ -18,15 +18,18 @@ object ConstructOptionalQueries {
   def constructImg():String={
     s"""
        |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+       |PREFIX dbo: <http://dbpedia.org/ontology/>
        |
        |CONSTRUCT {
        |  ?maker foaf:img ?img .
        |  }
        |WHERE {
+       |  ?maker a foaf:Person, dbo:DBpedian .
        |  ?maker foaf:img ?img .
        |  }
        |""".stripMargin
   }
+
 
 
   //  def constructOptionals():String ={

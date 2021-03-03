@@ -7,11 +7,15 @@ import org.apache.jena.rdf.model.{Model, ModelFactory, RDFNode}
 object QueryHandler {
 
   JenaRuntime.isRDF11 = false
+  val service = "https://databus.dbpedia.org/repo/sparql"
 
-  def executeQuery(queryString: String, model: Model): Seq[QuerySolution] = {
+  def executeQuery(queryString: String, model: Model = ModelFactory.createDefaultModel()): Seq[QuerySolution] = {
 
     val query: Query = QueryFactory.create(queryString)
-    val qexec: QueryExecution = QueryExecutionFactory.create(query, model)
+    val qexec: QueryExecution = {
+      if (model.isEmpty) QueryExecutionFactory.sparqlService(service,query)
+      else QueryExecutionFactory.create(query, model)
+    }
 
     var resultSeq: Seq[QuerySolution] = Seq.empty
 

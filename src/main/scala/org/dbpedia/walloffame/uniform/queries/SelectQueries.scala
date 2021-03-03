@@ -58,6 +58,26 @@ object SelectQueries {
       |}
       |""".stripMargin
 
+  def getUploadData(): String = {
+    s"""
+       |SELECT ?account ?numUploads ?uploadSize {
+       |  ?webid <http://xmlns.com/foaf/0.1/account> ?account .
+       |  ?account <http://dbpedia.org/ontology/numUploads> ?numUploads .
+       |  ?account <http://dbpedia.org/ontology/uploadSize> ?uploadSize .
+       |}
+    """.stripMargin
+  }
+
+  def checkIfIsPerson(webid:String):String={
+    s"""
+       |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+       |PREFIX dbo: <http://dbpedia.org/ontology/>
+       |
+       |SELECT * {
+       |  <$webid> a foaf:Person .
+       |}
+    """.stripMargin
+  }
 
   def getDatabusUserData(webid:String):String = {
     s"""

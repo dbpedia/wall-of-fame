@@ -25,7 +25,10 @@ class WebId() {
   var img: String = _
 
   @BeanProperty
-  var gender: String = _
+  var numUploads: Int = _
+
+  @BeanProperty
+  var uploadSize: Long = _
 
   @BeanProperty
   var geekCode: String = _
@@ -43,6 +46,9 @@ class WebId() {
   }
 
   def fetchFieldsWithModel(model: Model): Unit = {
+    val thisModel = model.listStatements()
+    while(thisModel.hasNext) println(thisModel.nextStatement())
+
     val mandatory = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model).head
 
     this.url = mandatory.getResource("?webid").toString
@@ -50,15 +56,23 @@ class WebId() {
     this.maker = mandatory.getResource("?maker").toString
 
 
+    val userUploadData = QueryHandler.executeQuery(SelectQueries.getUploadData(), model).head
+//    println("jetzt")
+//    println(userUploadData)
+//    println(userUploadData.getLiteral("numUploads"))
+    this.account = userUploadData.getResource("account").toString
+    this.account = this.account.splitAt(this.account.lastIndexOf("/")+1)._2
+//    println(account)
+    this.numUploads = userUploadData.getLiteral("numUploads").getLexicalForm.toInt
+    this.uploadSize = userUploadData.getLiteral("uploadSize").getLexicalForm.toLong
+
+//    println(this.uploadSize)
+
     var optional = QueryHandler.executeQuery(SelectOptionalQueries.queryImg(), model)
     if (optional.nonEmpty) this.img = optional.head.getResource("?img").toString
 
-    optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGender(), model)
-    if (optional.nonEmpty) this.gender = optional.head.getLiteral("?gender").getLexicalForm
-
     optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGeekCode(), model)
     if (optional.nonEmpty) this.geekCode = optional.head.getLiteral("?geekcode").getLexicalForm
-
   }
 
 }

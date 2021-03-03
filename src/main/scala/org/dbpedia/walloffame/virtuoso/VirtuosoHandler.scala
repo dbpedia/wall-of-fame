@@ -17,6 +17,10 @@ class VirtuosoHandler(vosConfig: VosConfig) {
   val logger = LoggerFactory.getLogger(classOf[VirtuosoHandler])
   val mainGraph = "https://databus.dbpedia.org/"
 
+  def deleteAllGraphs(): Unit ={
+    getAllGraphURIs().foreach(clearGraph)
+  }
+
   def insertFile(file: File, subGraph: String): Unit = {
     try {
       val model: Model = VirtModel.openDatabaseModel(vosConfig.graph.concat(subGraph), vosConfig.url, vosConfig.usr, vosConfig.psw)
@@ -84,6 +88,7 @@ class VirtuosoHandler(vosConfig: VosConfig) {
               graphs=graphs:+s.toString
             }
 
+      graphs.foreach(println(_))
       graphs
     }
 
@@ -117,8 +122,9 @@ class VirtuosoHandler(vosConfig: VosConfig) {
       val gson = new Gson()
 
       graphs.foreach(graph => {
+        println(graph)
         val webid = new WebId(ModelFactory.createModelForGraph(graph))
-        webid.setAccount(graph.getGraphName.splitAt(graph.getGraphName.lastIndexOf("/")+1)._2)
+//        webid.setAccount(graph.getGraphName.splitAt(graph.getGraphName.lastIndexOf("/")+1)._2)
         json += s"${gson.toJson(webid)},\n"
       })
 

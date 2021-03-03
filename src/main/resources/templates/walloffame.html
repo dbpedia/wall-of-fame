@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.css">
     <link rel="stylesheet" href="https://material.angularjs.org/1.2.2/docs.css">
+    <link rel="stylesheet" href="https://rawgit.com/rzajac/angularjs-slider/master/dist/rzslider.css">
     <link rel="stylesheet" type="text/css" href="/css/wof.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
@@ -21,6 +22,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
     <script src="https://gitcdn.xyz/cdn/angular/bower-material/v1.2.2/angular-material.js"></script>
+    <script src="https://rawgit.com/rzajac/angularjs-slider/master/dist/rzslider.js"></script>
 
 
     <script src="/js/application.js"></script>
@@ -102,8 +104,10 @@
 
                 <div ng-model="filterOptions">
                     <div ng-repeat="option in filterOptions">
+
                         <hr>
-                        <fieldset>
+
+                        <fieldset ng-if="option.type=='hasField'||option.type=='options'">
                             <legend><h4>{{option.title.charAt(0).toUpperCase() + option.title.slice(1);}}</h4></legend>
                             <md-checkbox aria-label="Select All"
                                          ng-checked="isChecked(option)"
@@ -117,8 +121,21 @@
                                 </md-checkbox>
                             </div>
                         </fieldset>
+
+                        <div ng-model="selectedOptions" ng-if="option.type=='range'" ng-init="">
+                            <legend><h4>{{option.title.charAt(0).toUpperCase() + option.title.slice(1);}}</h4></legend>
+                            <fieldset>
+                                <rzslider
+                                        rz-slider-model="selectedOptions[getIndexOfStrInSelectedOptions(option.title)].options[0]"
+                                        rz-slider-high="selectedOptions[getIndexOfStrInSelectedOptions(option.title)].options[1]"
+                                        rz-slider-options="{onEnd:updateShownWebIds}">
+                                </rzslider>
+                            </fieldset>
+                        </div>
+
                     </div>
                 </div>
+
             </div>
 
 
@@ -172,9 +189,13 @@
                                 <td valign="top">Name:</td>
                                 <td>{{activeWebId.name}}</td>
                             </tr>
-                            <tr ng-if="activeWebId.gender">
-                                <td valign="top">Gender:</td>
-                                <td>{{activeWebId.gender}}</td>
+                            <tr ng-if="activeWebId.numUploads">
+                                <td valign="top">Uploads:</td>
+                                <td>{{activeWebId.numUploads}}</td>
+                            </tr>
+                            <tr ng-if="activeWebId.uploadSize">
+                                <td valign="top">Upload Size:</td>
+                                <td>{{activeWebId.uploadSize}}</td>
                             </tr>
                             <tr ng-if="activeWebId.geekCode">
                                 <td valign="top">GeekCode:</td>

@@ -20,13 +20,6 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
     $scope.shownWebIds = undefined;
     $scope.activeWebId = undefined;
 
-    $scope.showFullCard = function (webid) {
-        $scope.activeWebId = webid;
-        document.getElementById("full_webid_container").style.display='block';
-    };
-    $scope.hideFullCard = function(){
-        document.getElementById("full_webid_container").style.display='none';
-    };
 
     $scope.request = $http.get("/webids.json", {headers: { 'Accept': 'application/json'}}).then(function(response) {
         $scope.webids = response.data.webIds;
@@ -42,12 +35,30 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
 
         angular.forEach(options, function (option){
             let optionList = $filter('unique')($scope.webids, option);
-            let optionObject = {
-                title : option ,
-                type: "options",
-                options: optionList
-            };
-            $scope.filterOptions.push(optionObject);
+
+            console.log(optionList);
+
+            if (typeof optionList !== 'undefined' && optionList.length > 0) {
+                // the array is defined and has at least one element
+                let optionObject = {
+                    title : option ,
+                    type: "options",
+                    options: optionList
+                };
+
+                switch (typeof optionList[0]){
+                    case "bigint":
+                    case "number": optionObject ={
+                        title : option ,
+                        type: "range",
+                        options: getMinAndMax(optionList)
+                    };
+                        break;
+                }
+
+                $scope.filterOptions.push(optionObject);
+            }
+
         });
 
         $scope.selectedOptions = angular.copy($scope.filterOptions);
@@ -55,8 +66,31 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
     });
 
+    $scope.showFullCard = function (webid) {
+        $scope.activeWebId = webid;
+        console.log(webid);
+        document.getElementById("full_webid_container").style.display='block';
+    };
+
+    $scope.hideFullCard = function(){
+        document.getElementById("full_webid_container").style.display='none';
+    };
 
 
+    $scope.getIndexOfStrInSelectedOptions = function(str) {
+        return $scope.selectedOptions.map(function (e){return e.title;}).indexOf(str);
+    };
+
+    function getMinAndMax(arr) {
+        let max = Math.max(...arr);
+        let min = Math.min(...arr);
+        let result = [min, max];
+        return result;
+    }
+
+    $scope.updateShownWebIds = function (){
+        $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
+    };
 
     $scope.filterWebIdsBySelectedOptions = function (){
         let filtered = [];
@@ -73,7 +107,12 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
                             if(webid[option.title]===undefined) valid = false;
                         }
                     }
-                } else {
+                } else if(option.type==="range") {
+                    if (option.options.length>0) {
+                        if(webid[option.title] < option.options[0] || webid[option.title] > option.options[1]) valid = false;
+                    }
+                }
+                else {
                     if (option.options.length>0) {
                         if (!option.options.includes(webid[option.title])) valid = false;
                     }
@@ -178,8 +217,6 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
             '    </div>' +
             '  </div>' +
             '</div>';
-
-        console.log(template);
 
         let position = $mdPanel.newPanelPosition()
             .relativeTo($event.target)
