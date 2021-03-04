@@ -1,7 +1,7 @@
 package org.dbpedia.walloffame.crawling
 
 import org.apache.jena.atlas.web.HttpException
-import org.apache.jena.rdf.model.{Model, ModelFactory, ResourceFactory}
+import org.apache.jena.rdf.model.{Literal, Model, ModelFactory, ResourceFactory}
 import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException, RiotNotFoundException}
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.logging.JsonLDLogger
@@ -142,24 +142,37 @@ object WebIdFetcher {
       )
     )
 
-    def addDecimalLiteralToModel(literal:String) ={
-      val value = {
-        if (result.getLiteral(literal) != null) result.getLiteral(literal)
-        else ResourceFactory.createTypedLiteral(0)
-      }
-
+    def addDecimalLiteralToModel(prop:String, value:Literal) ={
       model.add(
         ResourceFactory.createStatement(
           ResourceFactory.createResource(account),
-          ResourceFactory.createProperty(ontology+literal),
+          ResourceFactory.createProperty(ontology+prop),
           value
         )
       )
     }
 
-    addDecimalLiteralToModel(numUploads)
-    addDecimalLiteralToModel(uploadSize)
+    val value = {
+      if (result.getLiteral(numUploads) != null) result.getLiteral(numUploads)
+      else ResourceFactory.createTypedLiteral(0)
+    }
+    addDecimalLiteralToModel(numUploads, value)
 
+    val value2 = {
+      if(result.getLiteral(uploadSize) != null) {
+        val uploadSizeAsMB = result.getLiteral(uploadSize).getLong  / 1024 / 1024
+        println("UPLOADSIZE")
+        println(webidURL)
+        println(uploadSizeAsMB)
+        ResourceFactory.createTypedLiteral(uploadSizeAsMB)
+      } else {
+        ResourceFactory.createTypedLiteral(0)
+      }
+    }
+    addDecimalLiteralToModel(uploadSize, value2)
+
+    val stmts = model.listStatements()
+    while (stmts.hasNext) println(stmts.nextStatement())
     model
   }
 

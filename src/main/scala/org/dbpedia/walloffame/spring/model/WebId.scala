@@ -56,15 +56,20 @@ class WebId() {
     this.maker = mandatory.getResource("?maker").toString
 
 
-    val userUploadData = QueryHandler.executeQuery(SelectQueries.getUploadData(), model).head
-//    println("jetzt")
-//    println(userUploadData)
-//    println(userUploadData.getLiteral("numUploads"))
-    this.account = userUploadData.getResource("account").toString
-    this.account = this.account.splitAt(this.account.lastIndexOf("/")+1)._2
-//    println(account)
-    this.numUploads = userUploadData.getLiteral("numUploads").getLexicalForm.toInt
-    this.uploadSize = userUploadData.getLiteral("uploadSize").getLexicalForm.toLong
+    try{
+      val userUploadData = QueryHandler.executeQuery(SelectQueries.getUploadData(), model).head
+      //    println("jetzt")
+      //    println(userUploadData)
+      //    println(userUploadData.getLiteral("numUploads"))
+      this.account = userUploadData.getResource("account").toString
+      this.account = this.account.splitAt(this.account.lastIndexOf("/")+1)._2
+      //    println(account)
+      this.numUploads = userUploadData.getLiteral("numUploads").getLexicalForm.toInt
+      this.uploadSize = userUploadData.getLiteral("uploadSize").getLexicalForm.toLong
+    } catch {
+      case noSuchElementException: NoSuchElementException => println(s"no user data stored for $url")
+    }
+
 
 //    println(this.uploadSize)
 
