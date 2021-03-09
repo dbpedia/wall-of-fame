@@ -1,31 +1,33 @@
 package org.dbpedia.walloffame.spring.model
 
 import org.apache.jena.rdf.model.Model
-import org.dbpedia.walloffame.uniform.QueryHandler
-import org.dbpedia.walloffame.uniform.queries.{SelectOptionalQueries, SelectQueries}
+import org.dbpedia.walloffame.sparql.QueryHandler
+import org.dbpedia.walloffame.sparql.queries.SelectQueries
 
 import scala.beans.BeanProperty
 
 class WebId() {
 
   @BeanProperty
-  var account: String = _
-
-  @BeanProperty
-  //  @Pattern(regexp = "^https://.*")
   var url: String = _
-
-  @BeanProperty
-  var name: String = _
 
   @BeanProperty
   var maker: String = _
 
   @BeanProperty
+  var name: String = _
+
+  @BeanProperty
   var img: String = _
 
   @BeanProperty
-  var numUploads: Int = _
+  var account: String = _
+
+  @BeanProperty
+  var numVersions: Int = _
+
+  @BeanProperty
+  var numArtifacts: Int = _
 
   @BeanProperty
   var uploadSize: Long = _
@@ -37,8 +39,10 @@ class WebId() {
   var turtle: String = _
 
   @BeanProperty
-  var validation: Result = _
+  var uniformedTurtle: String = _
 
+  @BeanProperty
+  var validation: Result = _
 
   def this(model: Model) {
     this()
@@ -46,38 +50,31 @@ class WebId() {
   }
 
   def fetchFieldsWithModel(model: Model): Unit = {
-    val thisModel = model.listStatements()
-    while(thisModel.hasNext) println(thisModel.nextStatement())
+    val data = QueryHandler.executeQuery(SelectQueries.getWebIdData(), model).head
 
-    val mandatory = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model).head
+    this.url = data.getResource("webid").toString
+    this.maker = data.getResource("maker").toString
+    this.name = data.getLiteral("name").getLexicalForm
 
-    this.url = mandatory.getResource("?webid").toString
-    this.name = mandatory.getLiteral("?name").getLexicalForm
-    this.maker = mandatory.getResource("?maker").toString
-
-
-    try{
-      val userUploadData = QueryHandler.executeQuery(SelectQueries.getUploadData(), model).head
-      //    println("jetzt")
-      //    println(userUploadData)
-      //    println(userUploadData.getLiteral("numUploads"))
-      this.account = userUploadData.getResource("account").toString
-      this.account = this.account.splitAt(this.account.lastIndexOf("/")+1)._2
-      //    println(account)
-      this.numUploads = userUploadData.getLiteral("numUploads").getLexicalForm.toInt
-      this.uploadSize = userUploadData.getLiteral("uploadSize").getLexicalForm.toLong
-    } catch {
-      case noSuchElementException: NoSuchElementException => println(s"no user data stored for $url")
+    Option(data.getResource("img")) match {
+      case Some(value) => this.img = value.toString
+      case None => ""
     }
 
+    Option(data.getLiteral("geekcode")) match {
+      case Some(value) => this.geekCode = value.getLexicalForm
+      case None => ""
+    }
 
-//    println(this.uploadSize)
+    Option(data.getResource("account")) match {
+      case Some(value) =>
+        this.account = value.toString.splitAt(value.toString.lastIndexOf("/")+1)._2
+        this.numVersions = data.getLiteral("numVersions").getLexicalForm.toInt
+        this.numArtifacts = data.getLiteral("numArtifacts").getLexicalForm.toInt
+        this.uploadSize = data.getLiteral("uploadSize").getLexicalForm.toLong
+      case None => ""
+    }
 
-    var optional = QueryHandler.executeQuery(SelectOptionalQueries.queryImg(), model)
-    if (optional.nonEmpty) this.img = optional.head.getResource("?img").toString
-
-    optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGeekCode(), model)
-    if (optional.nonEmpty) this.geekCode = optional.head.getLiteral("?geekcode").getLexicalForm
   }
 
 }

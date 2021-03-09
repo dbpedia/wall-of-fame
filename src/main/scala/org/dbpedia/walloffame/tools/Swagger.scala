@@ -1,4 +1,4 @@
-package org.dbpedia.walloffame
+package org.dbpedia.walloffame.tools
 
 import org.springframework.context.annotation.{Bean, Configuration}
 import org.springframework.http.HttpMethod

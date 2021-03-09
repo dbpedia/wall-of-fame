@@ -1,12 +1,12 @@
-package org.dbpedia.walloffame.validation
+package org.dbpedia.walloffame.webid
 
 import better.files.File
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
+import org.dbpedia.walloffame.sparql.QueryHandler
+import org.dbpedia.walloffame.sparql.queries.SelectQueries
 import org.dbpedia.walloffame.spring.model.Result
-import org.dbpedia.walloffame.uniform.QueryHandler
-import org.dbpedia.walloffame.uniform.queries.SelectQueries
 
 import java.io.ByteArrayOutputStream
 
@@ -44,8 +44,8 @@ object WebIdValidator {
     result
   }
 
-  def validate(webId:Model, shapesURL:String):Result = {
-//    val shapes = RDFDataMgr.loadModel("./src/main/resources/shacl/shapes.ttl")
+  def validate(webId: Model, shapesURL: String): Result = {
+    //    val shapes = RDFDataMgr.loadModel("./src/main/resources/shacl/shapes.ttl")
     val shapes = RDFDataMgr.loadModel(shapesURL)
     validate(webId, shapes)
   }

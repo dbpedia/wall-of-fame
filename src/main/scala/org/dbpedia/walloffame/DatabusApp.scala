@@ -10,15 +10,15 @@ import org.springframework.context.annotation.{ComponentScan, Configuration, Fil
 @ComponentScan(
   basePackages = Array("org.dbpedia.walloffame"),
   useDefaultFilters = false,
-  includeFilters = Array(new ComponentScan.Filter(`type` = FilterType.REGEX, pattern = Array("org.dbpedia.walloffame.Config", "org.dbpedia.walloffame.InitRunnerDatabus")))
+  includeFilters = Array(new ComponentScan.Filter(`type` = FilterType.REGEX, pattern = Array("org.dbpedia.walloffame.Config", "org.dbpedia.walloffame.DatabusInitRunner")))
  )
-class DatabusApplication {
+class DatabusApp {
 }
 
 
-object DatabusApplication {
+object DatabusApp {
   def main(args: Array[String]): Unit = {
-    val app = new SpringApplicationBuilder(classOf[DatabusApplication])
+    val app = new SpringApplicationBuilder(classOf[DatabusApp])
     app.web(WebApplicationType.NONE)
     app.run(args: _*)
     //    SpringApplication.exit(app)

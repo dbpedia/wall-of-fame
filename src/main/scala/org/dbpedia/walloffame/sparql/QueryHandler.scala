@@ -1,4 +1,4 @@
-package org.dbpedia.walloffame.uniform
+package org.dbpedia.walloffame.sparql
 
 import org.apache.jena.JenaRuntime
 import org.apache.jena.query._

@@ -1,11 +1,11 @@
-package org.dbpedia.walloffame.logging
+package org.dbpedia.walloffame.tools
 
 import org.apache.jena.rdf.model.{ModelFactory, ResourceFactory, Statement}
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 
 import java.io.FileOutputStream
 
-class JsonLDLogger(logFile: String) {
+object JsonLDLogger {
 
 //  val logFile = "./tmp/errors.jsonld"
   val model = ModelFactory.createDefaultModel()
@@ -14,13 +14,13 @@ class JsonLDLogger(logFile: String) {
     model.removeAll()
   }
 
-  def writeOut():Unit ={
+  def writeOut(logFile:String):Unit ={
 
 //    val stmts = model.listStatements()
 //    while (stmts.hasNext) println(stmts.nextStatement())
 
     val fos = new FileOutputStream(logFile)
-    RDFDataMgr.write(fos, model, Lang.RDFJSON)
+    RDFDataMgr.write(fos, model, Lang.JSONLD)
   }
 
   def add(stmt: Statement):Unit ={

@@ -11,19 +11,19 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableAutoConfiguration
 @ComponentScan(
   basePackages = Array("org.dbpedia.walloffame"),
-  excludeFilters = Array(new ComponentScan.Filter(`type` = FilterType.REGEX, pattern = Array("org.dbpedia.walloffame.DatabusApplication", "org.dbpedia.walloffame.InitRunnerDatabus")))
+  excludeFilters = Array(new ComponentScan.Filter(`type` = FilterType.REGEX, pattern = Array("org.dbpedia.walloffame.DatabusApp", "org.dbpedia.walloffame.DatabusInitRunner")))
 )
 @EnableScheduling
-class Application extends SpringBootServletInitializer{
+class WofApp extends SpringBootServletInitializer{
   @Override
   protected override def configure(application:SpringApplicationBuilder):SpringApplicationBuilder ={
-    application.sources(Application.getClass)
+    application.sources(WofApp.getClass)
   }
 }
 
 
-object Application {
+object WofApp {
   def main(args: Array[String]): Unit = {
-    SpringApplication.run(classOf[Application], args: _ *)
+    SpringApplication.run(classOf[WofApp], args: _ *)
   }
 }

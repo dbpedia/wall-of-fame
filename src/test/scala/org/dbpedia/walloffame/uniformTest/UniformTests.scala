@@ -1,32 +1,71 @@
 package org.dbpedia.walloffame.uniformTest
 
 import org.apache.jena.riot.{Lang, RDFDataMgr}
-import org.dbpedia.walloffame.uniform.queries.SelectQueries
-import org.dbpedia.walloffame.uniform.{QueryHandler, WebIdUniformer}
+import org.dbpedia.walloffame.webid.WebIdHandler
 import org.junit.jupiter.api.Test
+
+import java.io.{File, FileOutputStream}
 
 class UniformTests {
 
-
   @Test
-  def shouldUniformCorrect:Unit ={
+  def testWEbID:Unit ={
+    val str =
+      """
+        |@base <https://yum-yab.github.io/webid.ttl> .
+        |@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+        |@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+        |@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+        |@prefix rdfs: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+        |@prefix dbo: <http://dbpedia.org/ontology/> .
+        |
+        |<> a foaf:PersonalProfileDocument ;
+        |   foaf:maker <#this> ;
+        |   foaf:primaryTopic <#this> .
+        |
+        |
+        |<#onto> a foaf:Person, dbo:DBpedian ;
+        |   foaf:name "DBpedia Archivo";
+        |   foaf:homepage <http://archivo.dbpedia.org/>;
+        |   foaf:status "DBpedia Archivo - A Web-Scale Interface for Ontology Archiving under Consumer-oriented Aspects";
+        |   foaf:img <https://yum-yab.github.io/logos/archivo_logo_quader.png> ;
+        |   cert:key [
+        |       a cert:RSAPublicKey;
+        |       rdfs:label "user for publishing vocabularies for DBpedia Archivo";
+        |       cert:modulus "BA0B555219B172ADBFC929D4054AC7B90F22753440280048F25667073C5147EFFEA2B40B0E4645AACAF40358F4B7609F4B46AF4644829C0EDBCE9CE0356F428009B623BE1B07269BB3E729B63D536EB2E2A46891960DF9436C468CCE83366341863111A1C89E1017C9CC41FF1E35BA86240C842935238B92A09755A137443E579743710FFB7DF4D8CC2C316FF301626E44666E218932807476C08C16FAEBAFABAD638A35AB7BB90BCF7B97BF5F5048FB1A0FCE1985C0892E661EFC0A98BBD1C566B360880ADF5B4F12D46B85B5C038C2ED75CD05306E887AD632111B45F552A8ED6D7863EF97C2CE9669960D35C33F1A5EAE4F2DF6CC55EA42C3748E8E0692D7"^^xsd:hexBinary;
+        |       cert:exponent "65537"^^xsd:nonNegativeInteger
+        |      ] .
+        |
+        |
+        |
+        |<#this> a foaf:Person, dbo:DBpedian ;
+        |   foaf:name "Denis Streitmatter";
+        |   foaf:geekcode "GCS d? s+ a-- C+ L++ PS+++ PE- b+ G";
+        |   foaf:firstname "Denis";
+        |   foaf:gender "♂";
+        |   cert:key [
+        |       a cert:RSAPublicKey;
+        |       rdfs:label "13.11.2018, first WebID";
+        |       cert:modulus "BE0680A09394707E18D5E6FE2A6477272DE7D45AACD8F2B094EF7D865E28357D39F64D1275170CF14EB641562A21DE5BB13F61BA7520BCA1000FDD2B482F441CCCFCFA51A3F1B713EF2189ABE2F30478FBFFD678D06B5B9C0B8340F0151165E5280330F57EBA022F3A0027CC8EBE8F41C3C2DB62254C196411F8F3E3E27C82F28F704ACD7BD3E1FE6283E70304FFC246322E774AE5E5B27E3900AB4397206820B36D6C17A773F3F7DFB4D4A957D2A5F33D3F28CA379C5801342A427332B291F27D1743BFE63E6AEC104BDA6E9E179D25EE3F4DB94503AC86065985C3355CA16CFA403C43D530C7F5C4F2604D065D50DEAE555C67B6B8716BEF2B6B663C7DFCD3"^^xsd:hexBinary;
+        |       cert:exponent "65537"^^xsd:nonNegativeInteger
+        |      ] .
+        |""".stripMargin
 
-    val model = RDFDataMgr.loadModel("./src/test/resources/denis.ttl")
+    val webIdHandler = new WebIdHandler()
+    val result = webIdHandler.validateWebId(str)
 
-    val uniModel = WebIdUniformer.uniform(model)
+    println(result._2.result)
 
-    RDFDataMgr.write(System.out, uniModel, Lang.TTL)
+    val uniModel = result._1
+
+    RDFDataMgr.write(new FileOutputStream(new File("yumyab.ttl")), uniModel, Lang.TURTLE )
+    val stmts = uniModel.listStatements()
+    while(stmts.hasNext) println(stmts.nextStatement())
   }
 
-
   @Test
-  def stringTest:Unit ={
-    val model = RDFDataMgr.loadModel("https://yum-yab.github.io/webid.ttl")
-    try{
-      QueryHandler.executeQuery(SelectQueries.checkIfIsPerson("https://yum-yab.github.io/webid.ttl#this"),model).head
-      println("ja")
-    } catch {
-      case noSuchElementException: NoSuchElementException => println("no")
-    }
+  def ralf()={
+    val str = "yumnyab#thj"
+    println(str.split("#").head)
   }
 }

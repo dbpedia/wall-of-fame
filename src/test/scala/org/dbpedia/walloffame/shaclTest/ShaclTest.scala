@@ -4,9 +4,9 @@ import better.files.File
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
+import org.dbpedia.walloffame.sparql.QueryHandler
+import org.dbpedia.walloffame.sparql.queries.SelectQueries
 import org.dbpedia.walloffame.spring.model.Result
-import org.dbpedia.walloffame.uniform.QueryHandler
-import org.dbpedia.walloffame.uniform.queries.SelectQueries
 import org.junit.jupiter.api.Test
 
 import java.io.ByteArrayOutputStream

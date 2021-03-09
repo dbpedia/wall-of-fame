@@ -1,8 +1,11 @@
 package org.dbpedia.walloffame
 
-import org.apache.jena.rdf.model.ModelFactory
-import org.dbpedia.walloffame.uniform.QueryHandler
-import org.dbpedia.walloffame.uniform.queries.{ConstructOptionalQueries, SelectQueries}
+import com.google.gson.Gson
+import org.apache.jena.riot.{Lang, RDFDataMgr}
+import org.dbpedia.walloffame.sparql.QueryHandler
+import org.dbpedia.walloffame.sparql.queries.SelectQueries
+import org.dbpedia.walloffame.spring.model.WebId
+import org.dbpedia.walloffame.webid.WebIdUniformer
 import org.junit.jupiter.api.Test
 
 class QueryTest {
@@ -16,6 +19,22 @@ class QueryTest {
 //    println(optional.getLiteral("?geekcode").getLexicalForm)
 //  }
 
+
+  @Test
+  def createWebIdObject={
+    println(this.getClass.getSimpleName)
+    val model = RDFDataMgr.loadModel("./src/main/resources/yumyab.ttl", Lang.TURTLE)
+    val uniModel = WebIdUniformer.uniform(model)
+    val stmts = uniModel.listStatements()
+    while(stmts.hasNext) println(stmts.nextStatement())
+    val result = QueryHandler.executeQuery(SelectQueries.getWebIdData(), model).head
+    if (!(result.get("img") == null || result.get("img").isResource)) println("kacka")
+    else println("kleine kacka")
+
+    val webId = new WebId(uniModel)
+
+    println(new Gson().toJson(webId))
+  }
 
 
 }

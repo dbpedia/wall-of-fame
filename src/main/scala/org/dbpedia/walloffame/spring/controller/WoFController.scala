@@ -28,34 +28,27 @@ class WoFController {
     "about"
   }
 
-  @RequestMapping(value = Array("/logs"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/logs"), method = Array(RequestMethod.GET), produces = Array("application/ld+json; charset=utf-8"))
   def logs(response: HttpServletResponse): Unit = {
+    response.setHeader("Content-Type","application/ld+json")
 
     val os = response.getOutputStream
     val source = Source.fromFile(File(config.log.file).toJava)
-
-//    os.write("<html>".getBytes(StandardCharsets.UTF_8))
     source.getLines().foreach({line =>
       os.write(s"$line".getBytes(StandardCharsets.UTF_8))
     })
-//    os.write("</html>".getBytes(StandardCharsets.UTF_8))
 
-    response.setHeader("Content-Type","application/ld+json")
     response.setStatus(200)
-
     source.close()
   }
 
   @RequestMapping(value = Array("/webids.json"), method = Array(RequestMethod.GET), produces = Array("application/json; charset=utf-8"))
   @ResponseBody
   def getJson(response: HttpServletResponse): Unit = {
-
     val vos = new VirtuosoHandler(config.virtuoso)
     val json = vos.getAllWebIdsAsJson()
 
     if (json.nonEmpty) {
-      println(json)
-
       val os = response.getOutputStream
       os.write(json.getBytes(StandardCharsets.UTF_8))
       os.close()

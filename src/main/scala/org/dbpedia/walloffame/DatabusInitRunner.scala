@@ -13,7 +13,7 @@ import java.nio.file.NoSuchFileException
 import java.util.zip.GZIPOutputStream
 
 @Component
-class InitRunnerDatabus extends CommandLineRunner {
+class DatabusInitRunner extends CommandLineRunner {
 
   @Autowired
   private var config: Config = _

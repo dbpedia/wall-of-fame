@@ -1,15 +1,15 @@
 package org.dbpedia.walloffame
 
 import better.files.File
-import org.dbpedia.walloffame.crawling.WebIdFetcher
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
+import org.dbpedia.walloffame.webid.WebIdFetcher
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
-class InitRunner extends CommandLineRunner {
+class WofInitRunner extends CommandLineRunner {
 
   @Autowired
   private var config: Config = _
@@ -18,6 +18,8 @@ class InitRunner extends CommandLineRunner {
 
     File("./tmp/").delete(true)
     File("./tmp/").createDirectory()
+    File(config.log.file).delete(true)
+
     val vos = new VirtuosoHandler(config.virtuoso)
     vos.deleteAllGraphs()
 

@@ -14,6 +14,8 @@ case class Config() {
   var shacl: ShaclConfig = new ShaclConfig
   @BeanProperty
   var log: LogConfig = new LogConfig
+
+  val foo = "bar"
 }
 
 case class VosConfig() {

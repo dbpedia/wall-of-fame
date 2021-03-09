@@ -1,34 +1,7 @@
-package org.dbpedia.walloffame.uniform.queries
+package org.dbpedia.walloffame.sparql.queries
 
 object ConstructOptionalQueries {
 
-  def constructGeekCode():String={
-    s"""
-       |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-       |
-       |CONSTRUCT {
-       |  ?maker foaf:geekcode ?geekcode .
-       |  }
-       |WHERE {
-       |  ?maker foaf:geekcode ?geekcode .
-       |  }
-       |""".stripMargin
-  }
-
-  def constructImg():String={
-    s"""
-       |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-       |PREFIX dbo: <http://dbpedia.org/ontology/>
-       |
-       |CONSTRUCT {
-       |  ?maker foaf:img ?img .
-       |  }
-       |WHERE {
-       |  ?maker a foaf:Person, dbo:DBpedian .
-       |  ?maker foaf:img ?img .
-       |  }
-       |""".stripMargin
-  }
 
 
 
