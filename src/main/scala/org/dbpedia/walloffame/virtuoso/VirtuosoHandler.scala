@@ -87,8 +87,6 @@ class VirtuosoHandler(vosConfig: VosConfig) {
               val s = rs.get("g")
               graphs=graphs:+s.toString
             }
-
-      graphs.foreach(println(_))
       graphs
     }
 
@@ -122,7 +120,6 @@ class VirtuosoHandler(vosConfig: VosConfig) {
       val gson = new Gson()
 
       graphs.foreach(graph => {
-        println(graph)
         val webid = new WebId(ModelFactory.createModelForGraph(graph))
 //        webid.setAccount(graph.getGraphName.splitAt(graph.getGraphName.lastIndexOf("/")+1)._2)
         json += s"${gson.toJson(webid)},\n"

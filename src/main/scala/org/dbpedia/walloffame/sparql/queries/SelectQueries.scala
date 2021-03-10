@@ -22,6 +22,7 @@ object SelectQueries {
        |      ?maker foaf:img ?img .
        |    }
        |  }
+       |
        |  OPTIONAL {
        |    SELECT * WHERE {
        |      ?maker foaf:geekcode ?geekcode .

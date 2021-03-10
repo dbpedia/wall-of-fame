@@ -42,7 +42,8 @@ class ValidationController(config: Config) {
            |${src.mkString}
            |""".stripMargin
       src.close()
-      newWebId.setTurtle(turtle)
+      newWebId.setMaker(webid)
+      newWebId.setTurtle(turtle.trim)
     } catch {
       case malformedURLException: MalformedURLException => {
         //if webId is send as plain text
@@ -84,7 +85,6 @@ class ValidationController(config: Config) {
 //
   def handleException(webId:WebId, response: HttpServletResponse, exception: Exception): Unit = {
     val result = new Result
-    println(exception.toString)
     result.addViolation("Exception", exception.toString)
     webId.setValidation(result)
 

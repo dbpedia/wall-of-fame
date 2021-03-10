@@ -1,6 +1,7 @@
 app.controller('validateController', function($scope, $http, $filter) {
     $scope.webId = {
-        url: "https://eisenbahnplatte.github.io/webid.ttl",
+        maker: "https://eisenbahnplatte.github.io/webid.ttl#this",
+        url: "",
         account: "",
         turtle: "",
         name: "",
@@ -15,7 +16,7 @@ app.controller('validateController', function($scope, $http, $filter) {
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("webid")) {
-        $scope.webId.url = urlParams.get("webid");
+        $scope.webId.maker = urlParams.get("webid");
     }
 
     $scope.validateWebId = function (param = $scope.webId.turtle) {
@@ -26,12 +27,13 @@ app.controller('validateController', function($scope, $http, $filter) {
             params: {'webid': param}
         }).then(function (response){
             $scope.webId = angular.fromJson(response.data);
+            console.log($scope.webId);
         });
     };
 
     $scope.fetchAndValidateWebId = function() {
-        if (validateURL($scope.webId.url).valueOf()) {
-            $scope.validateWebId($scope.webId.url);
+        if (validateURL($scope.webId.maker).valueOf()) {
+            $scope.validateWebId($scope.webId.maker);
         }
     };
 

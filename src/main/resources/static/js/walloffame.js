@@ -6,13 +6,13 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
     $scope.filterOptions = [
         {
             title: "img",
-            type: "hasField",
-            options: ["yes", "no"]
+            type: "boolean",
+            values: []
         },
         {
             title: "geekCode",
-            type: "hasField",
-            options: ["yes", "no"]
+            type: "boolean",
+            values: []
         }
     ];
     $scope.selectedOptions=[];
@@ -23,7 +23,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
 
     $scope.request = $http.get("/webids.json", {headers: { 'Accept': 'application/json'}}).then(function(response) {
         $scope.webids = response.data.webIds;
-
+        console.log($scope.webids);
         let options = [];
         angular.forEach($scope.webids, function(webid){
             angular.forEach(Object.keys(webid), function(key){
@@ -43,7 +43,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
                 let optionObject = {
                     title : option ,
                     type: "options",
-                    options: optionList
+                    values: optionList
                 };
 
                 switch (typeof optionList[0]){
@@ -51,7 +51,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
                     case "number": optionObject ={
                         title : option ,
                         type: "range",
-                        options: getMinAndMax(optionList)
+                        values: getMinAndMax(optionList)
                     };
                         break;
                 }
@@ -62,7 +62,6 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         });
 
         $scope.selectedOptions = angular.copy($scope.filterOptions);
-
         $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
     });
 
@@ -98,23 +97,18 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         angular.forEach($scope.webids, function (webid){
             let valid = true;
             angular.forEach($scope.selectedOptions, function (option){
-                if (option.type==="hasField"){
-                    if (option.options.length===1) {
-                        if (option.options.includes("no")) {
-                            if(!(webid[option.title]===undefined)) valid = false;
-                        }
-                        if (option.options.includes("yes")) {
-                            if(webid[option.title]===undefined) valid = false;
-                        }
+                if (option.type==="boolean"){
+                    if (option.values.includes("true")) {
+                        if(webid[option.title]===undefined) valid = false;
                     }
                 } else if(option.type==="range") {
-                    if (option.options.length>0) {
-                        if(webid[option.title] < option.options[0] || webid[option.title] > option.options[1]) valid = false;
+                    if (option.values.length>0) {
+                        if(webid[option.title] < option.values[0] || webid[option.title] > option.values[1]) valid = false;
                     }
                 }
                 else {
-                    if (option.options.length>0) {
-                        if (!option.options.includes(webid[option.title])) valid = false;
+                    if (option.values.length>0) {
+                        if (!option.values.includes(webid[option.title])) valid = false;
                     }
                 }
             });
@@ -129,14 +123,16 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
     $scope.toggle = function (toggledOption, item) {
         angular.forEach($scope.selectedOptions, function(option){
            if (option.title===toggledOption){
-               if(option.options.includes(item)){
-                   let index = option.options.indexOf(item);
-                    option.options.splice(index,1);
+               if(option.values.includes(item)){
+                   let index = option.values.indexOf(item);
+                    option.values.splice(index,1);
                }else{
-                   option.options.push(item);
+                   option.values.push(item);
                }
            }
         });
+
+        console.log($scope.selectedOptions);
 
         $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
     };
@@ -244,6 +240,10 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         $mdPanel.open(config);
     };
 
+    $scope.childClick = function($event) {
+        $event.stopPropagation();
+    }
+
 });
 
 
@@ -297,6 +297,14 @@ app.filter('unique', function () {
 app.filter('escape', function() {
     return window.encodeURIComponent;
 });
+
+app.filter('sortSelectors', function() {
+    return function (array) {
+        array.sort((a,b)=> a.title.localeCompare(b.title));
+        return array.sort((a,b)=> b.type.localeCompare(a.type));
+    };
+});
+
 
 // app.filter('filterWebIds', function ($filter) {
 //    return function (input, filterArray){

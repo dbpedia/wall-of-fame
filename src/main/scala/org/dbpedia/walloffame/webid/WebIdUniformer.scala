@@ -26,10 +26,17 @@ object WebIdUniformer {
       val stmt = constructedModel.getProperty(optionals.getResource("maker"), ResourceFactory.createProperty("http://xmlns.com/foaf/0.1/img"))
       constructedModel.remove(stmt)
     }
-    if (!(optionals.get("geekcode") == null)) {
+    if (optionals.get("geekcode") != null) {
       val stmt = constructedModel.getProperty(optionals.getResource("maker"), ResourceFactory.createProperty("http://xmlns.com/foaf/0.1/geekcode"))
-      if(!stmt.getObject.isLiteral) constructedModel.remove(stmt)
-      else if(stmt.getObject.asLiteral().getDatatypeURI != "http://www.w3.org/2001/XMLSchema#string") constructedModel.remove(stmt)
+      if(!stmt.getObject.isLiteral) {
+        constructedModel.remove(stmt)
+      }
+      else {
+        val dataType = stmt.getObject.asLiteral().getDatatypeURI
+        if(dataType != "http://www.w3.org/2001/XMLSchema#string" && dataType != null) {
+          constructedModel.remove(stmt)
+        }
+      }
     }
 
     enrichModelWithDatabusData(constructedModel)
@@ -38,7 +45,7 @@ object WebIdUniformer {
   def enrichModelWithDatabusData(model:Model):Model={
 
     val maker = QueryHandler.executeQuery(SelectQueries.getMakerURL(), model).head.getResource("maker").toString
-
+//    println(s"MAKER: $maker")
     checkForRelatedDatabusAccount(maker) match {
       case None => logger.warn(s"No Dbpedia-Databus account found for $maker")
       case Some(account) =>

@@ -44,9 +44,8 @@ object WebIdFetcher {
     while (stmts.hasNext) {
       val stmt = stmts.nextStatement()
       val webid = stmt.getSubject.toString
-      println(webid)
-
       val accountURL = stmt.getObject.toString
+      println(accountURL)
       //clear former graph of this account
       vos.clearGraph(accountURL)
       allCurrentGraphs = allCurrentGraphs.filter(!_.contains(accountURL))

@@ -46,12 +46,11 @@ class WebId() {
 
   def this(model: Model) {
     this()
-    fetchFieldsWithModel(model)
+    if(!model.isEmpty) fetchFieldsWithModel(model)
   }
 
   def fetchFieldsWithModel(model: Model): Unit = {
     val data = QueryHandler.executeQuery(SelectQueries.getWebIdData(), model).head
-
     this.url = data.getResource("webid").toString
     this.maker = data.getResource("maker").toString
     this.name = data.getLiteral("name").getLexicalForm

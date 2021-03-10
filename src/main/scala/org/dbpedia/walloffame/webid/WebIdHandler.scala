@@ -29,6 +29,7 @@ class WebIdHandler() {
         validateAndUniformModel(model, log)
       else {
         val result = new Result
+        result.addViolation(str, "is not a Person or no dbo:DBpedian", "https://example.org/hasViolation")
         JsonLDLogger.add(str, "https://example.org/hasViolation", "URI is not a Person and dbo:DBpedian")
         (ModelFactory.createDefaultModel(), result)
       }
@@ -94,6 +95,8 @@ class WebIdHandler() {
       results.foreach(x => modelAttributes= modelAttributes :+ x.getResource("type").toString)
     }
     toBeChecked.foreach(entry=> if(!modelAttributes.contains(entry)) isPerson=false)
+
+//    println(s"$uri is person: $isPerson")
     isPerson
   }
 

@@ -12,7 +12,7 @@
     <div class="container">
 
         <a class="navbar-brand" href="https://www.dbpedia.org/" target="_blank">
-            <img class="dbpedia" src="/images/DBpedia.png"/>
+            <img id="dbpedia" src="/images/DBpedia.png"/>
         </a>
 
         <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
@@ -57,7 +57,7 @@
 
             <button class="btn btn-primary" type="submit" style="float: right; width: 200px" ng-click="fetchAndValidateWebId()">Fetch and Validate</button>
             <div style="overflow: hidden; padding-right: .5em;">
-            <input class="form-control" type="text" style="width: 100%;" ng-model="webId.url">
+            <input class="form-control" type="text" style="width: 100%;" ng-model="webId.maker">
             </div>
             <div id="url_ok" class="alert alert-danger" style="display: none">
                 URL should contain HTTPS
@@ -82,15 +82,27 @@
 
         <div class="col-sm">
             Your WebId:
-            <md-card class="webid-card" ng-model="webId" ng-controller="webIdController as ctrl">
+            <md-card class="webid-card">
                 <img id="big-img" class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline" style="text-align: center">
-                            <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>
+                        <span class="md-headline blueFont" style="text-align: center">
+                            {{webId.account.charAt(0).toUpperCase() + webId.account.slice(1);}}
                         </span>
                     </md-card-title-text>
                 </md-card-title>
+                <md-card-actions layout="row" layout-align="center">
+                    <a class="md-icon-button" ng-href="{{webId.url}}">
+                        <md-icon md-svg-icon="images/icons/download-24px.svg"></md-icon>
+                    </a>
+                    <a class="md-icon-button" ng-href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">
+                        Databus Account
+                    </a>
+                    <a class="md-icon-button" ng-href="https://github.com/" target="_blank">
+                        <md-icon md-svg-icon="images/icons/GitHub.svg"></md-icon>
+                    </a>
+                </md-card-actions>
+                <md-divider></md-divider>
                 <md-card-content>
                     <table>
                         <tbody>
@@ -98,38 +110,30 @@
                             <td valign="top">Name:</td>
                             <td>{{webId.name}}</td>
                         </tr>
-                        <tr ng-if="webId.gender">
-                            <td valign="top">Gender:</td>
-                            <td>{{webId.gender}}</td>
+                        <tr ng-if="webId.numArtifacts">
+                            <td valign="top">Databus Artifacts:</td>
+                            <td>{{webId.numArtifacts}}</td>
+                        </tr>
+                        <tr ng-if="webId.numVersions">
+                            <td valign="top">Databus Versions:</td>
+                            <td>{{webId.numVersions}}</td>
+                        </tr>
+                        <tr ng-if="webId.uploadSize">
+                            <td valign="top">Uploaded Data:</td>
+                            <td>{{webId.uploadSize}} MB</td>
                         </tr>
                         <tr ng-if="webId.geekCode">
-                            <td valign="top">GeekCode:</td>
+                            <td valign="top">foaf:geekcode:</td>
                             <td>{{webId.geekCode}}</td>
                         </tr>
                         </tbody>
                     </table>
                 </md-card-content>
+                <md-divider></md-divider>
                 <md-card-actions layout="column" layout-align="start">
-                    <md-button ng-click="ctrl.showToolbarMenu($event, webId)">
-                        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-                    </md-button>
+                    <a class="md-button" ng-href="/validator?webid={{webId.maker | escape}}" target="_blank">Validate Foaf/WebId</a>
                 </md-card-actions>
             </md-card>
-<!--            <div class="card" style="width: 24rem;" ng-model="webId">-->
-<!--                <img alt="Card image cap" class="card-img-top" src="{{webId.img}}">-->
-<!--                <div class="card-body">-->
-<!--                    <h5 class="card-title">-->
-<!--                        Account: <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>-->
-<!--                    </h5>-->
-<!--                    Name: {{webId.name}}-->
-<!--                    <br>-->
-<!--                    Gender: {{webId.gender}}-->
-<!--                    <br>-->
-<!--                    Geekcode: {{webId.geekCode}}-->
-<!--                    </p>-->
-<!--                    <a class="btn btn-primary" href="{{webId.maker}}">Go to WebId</a>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
 
     </div>

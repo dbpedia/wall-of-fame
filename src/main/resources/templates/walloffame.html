@@ -11,7 +11,7 @@
     <div class="container">
 
         <a class="navbar-brand" href="https://www.dbpedia.org/" target="_blank">
-            <img class="dbpedia" src="/images/DBpedia.png"/>
+            <img id="dbpedia" src="/images/DBpedia.png"/>
         </a>
 
         <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
@@ -76,37 +76,45 @@
                 </div>
 
                 <br>
+                <hr>
 
                 <div ng-model="filterOptions">
-                    <div ng-repeat="option in filterOptions">
+                    <div ng-repeat="option in filterOptions | sortSelectors">
 
-                        <hr>
+                        <div ng-model="selectedOptions" ng-if="option.type=='range'" ng-init="">
 
-                        <fieldset ng-if="option.type=='hasField'||option.type=='options'">
-                            <legend><h4>{{option.title.charAt(0).toUpperCase() + option.title.slice(1);}}</h4></legend>
+                            <legend><h5>{{option.title.charAt(0).toUpperCase() + option.title.slice(1);}}</h5></legend>
+                            <fieldset>
+                                <rzslider class="custom-slider"
+                                        rz-slider-model="selectedOptions[getIndexOfStrInSelectedOptions(option.title)].values[0]"
+                                        rz-slider-high="selectedOptions[getIndexOfStrInSelectedOptions(option.title)].values[1]"
+                                        rz-slider-options="{onEnd:updateShownWebIds}">
+                                </rzslider>
+                            </fieldset>
+                            <hr>
+                        </div>
+
+                        <fieldset ng-if="option.type=='options'">
+                            <legend><h5>{{option.title.charAt(0).toUpperCase() + option.title.slice(1);}}</h5></legend>
                             <md-checkbox aria-label="Select All"
                                          ng-checked="isChecked(option)"
                                          md-indeterminate="isIndeterminate(option)"
                                          ng-click="toggleAll(option)">
                                 <span ng-if="isChecked(option)">Un-</span>Select All
                             </md-checkbox>
-                            <div class="select-all-checkboxes" ng-repeat="item in option.options">
+                            <div class="select-all-checkboxes" ng-repeat="item in option.values">
                                 <md-checkbox ng-checked="exists(option.title, item)" ng-click="toggle(option.title, item)">
                                     {{ item || "undefined" }}
                                 </md-checkbox>
                             </div>
+                            <hr>
                         </fieldset>
 
-                        <div ng-model="selectedOptions" ng-if="option.type=='range'" ng-init="">
-                            <legend><h4>{{option.title.charAt(0).toUpperCase() + option.title.slice(1);}}</h4></legend>
-                            <fieldset>
-                                <rzslider
-                                        rz-slider-model="selectedOptions[getIndexOfStrInSelectedOptions(option.title)].options[0]"
-                                        rz-slider-high="selectedOptions[getIndexOfStrInSelectedOptions(option.title)].options[1]"
-                                        rz-slider-options="{onEnd:updateShownWebIds}">
-                                </rzslider>
-                            </fieldset>
-                        </div>
+                        <fieldset ng-if="option.type=='boolean'">
+                            <md-checkbox ng-click="toggle(option.title, 'true')">
+                                <h5 class="blueFont">{{option.title.charAt(0).toUpperCase() + option.title.slice(1);}}</h5>
+                            </md-checkbox>
+                        </fieldset>
 
                     </div>
                 </div>
@@ -116,44 +124,43 @@
 
             <!-- DBPEDIA ACCOUNTS -->
             <div class="col-sm">
-                    <md-content layout-xs="column" layout="row" layout-wrap>
-<!--                        <div class="card" style="width: 24rem;" ng-repeat="webId in filteredWebIds | filter:model.searchString">-->
-<!--                            <img class="card-img-top" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}" alt="" style="width: 100%; max-height:200px; object-fit: contain;">-->
-<!--                            <div class="card-body">-->
-<!--                                <h5 class="card-title">-->
-<!--                                    <a href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">{{webId.account}}</a>-->
-<!--                                </h5>-->
-<!--                                Name: {{webId.name}}-->
-<!--                                <br>-->
-<!--                                Gender: {{webId.gender}}-->
-<!--                                <br>-->
-<!--                                Geekcode: {{webId.geekCode}}-->
-<!--                                </p>-->
-<!--                                <a class="btn btn-primary" href="{{webId.url}}">Go to WebId</a> <a class="btn btn-primary" href="/validate?str={{x.url}}" target="_blank">Validate</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-                        <md-card class="webid-card-small" ng-repeat="webId in shownWebIds | filter:model.searchString">
-                            <div class="md-card-image-wrapper" ng-click="showFullCard(webId)">
-                                <img id="small-img" class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
-                            </div>
-                            <md-card-actions layout="column" layout-align="start">
-                                {{webId.account}}
-                                <a class="md-button" ng-href="/validator?webid={{webId.url | escape}}" target="_blank">Validate</a>
-                            </md-card-actions>
-                        </md-card>
-                    </md-content>
+                <md-content layout-xs="column" layout="row" layout-wrap>
+                    <md-card class="webid-card-small" ng-repeat="webId in shownWebIds | filter:model.searchString" ng-click="showFullCard(webId)">
+                        <img id="small-img" class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
+                        <md-card-actions layout="column" layout-align="start">
+                            <div class="webid-accountName">{{webId.account.charAt(0).toUpperCase() + webId.account.slice(1);}}</div>
+                            <md-divider></md-divider>
+                            <a class="md-button" ng-href="/validator?webid={{webId.maker | escape}}" target="_blank" ng-click="childClick($event)">Validate</a>
+                        </md-card-actions>
+                    </md-card>
+                </md-content>
             </div>
+
+
+
             <div id="full_webid_container" ng-model="activeWebId">
                 <div id="opaque" ng-click="hideFullCard()"></div>
                 <md-card id="webid-card-wof" class="webid-card">
                     <img id="big-img" class="md-card-image" ng-src="{{activeWebId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
                     <md-card-title>
                         <md-card-title-text>
-                <span class="md-headline" style="text-align: center">
-                    <a href="https://databus.dbpedia.org/{{activeWebId.account}}" target="_blank">{{activeWebId.account}}</a>
-                </span>
+                            <span class="md-headline blueFont" style="text-align: center">
+                                {{activeWebId.account.charAt(0).toUpperCase() + activeWebId.account.slice(1);}}
+                            </span>
                         </md-card-title-text>
                     </md-card-title>
+                    <md-card-actions layout="row" layout-align="center">
+                        <a class="md-icon-button" ng-href="{{activeWebId.url}}">
+                            <md-icon md-svg-icon="images/icons/download-24px.svg"></md-icon>
+                        </a>
+                        <a class="md-icon-button" ng-href="https://databus.dbpedia.org/{{activeWebId.account}}" target="_blank">
+                            Databus Account
+                        </a>
+                        <a class="md-icon-button" ng-href="https://github.com/" target="_blank">
+                            <md-icon md-svg-icon="images/icons/GitHub.svg"></md-icon>
+                        </a>
+                    </md-card-actions>
+                    <md-divider></md-divider>
                     <md-card-content>
                         <table>
                             <tbody>
@@ -162,69 +169,33 @@
                                 <td>{{activeWebId.name}}</td>
                             </tr>
                             <tr ng-if="activeWebId.numArtifacts">
-                                <td valign="top">Artifacts:</td>
+                                <td valign="top">Databus Artifacts:</td>
                                 <td>{{activeWebId.numArtifacts}}</td>
                             </tr>
                             <tr ng-if="activeWebId.numVersions">
-                                <td valign="top">Versions:</td>
+                                <td valign="top">Databus Versions:</td>
                                 <td>{{activeWebId.numVersions}}</td>
                             </tr>
                             <tr ng-if="activeWebId.uploadSize">
-                                <td valign="top">Upload Data:</td>
+                                <td valign="top">Uploaded Data:</td>
                                 <td>{{activeWebId.uploadSize}} MB</td>
                             </tr>
                             <tr ng-if="activeWebId.geekCode">
-                                <td valign="top">GeekCode:</td>
+                                <td valign="top">foaf:geekcode:</td>
                                 <td>{{activeWebId.geekCode}}</td>
                             </tr>
                             </tbody>
                         </table>
                     </md-card-content>
+                    <md-divider></md-divider>
                      <md-card-actions layout="column" layout-align="start">
-                         <md-button ng-click="ctrl.showToolbarMenu($event, activeWebId)">
-                             <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-                         </md-button>
+                         <a class="md-button" ng-href="/validator?webid={{activeWebId.maker | escape}}" target="_blank">Validate Foaf/WebId</a>
                      </md-card-actions>
                 </md-card>
             </div>
         </div>
     </div>
 </div>
-
-<!--'<div id="opaque" ng-click="panelCtrl.closeMenu()"></div>' +-->
-<!--'<md-card class="webid-card" style="z-index: 1">\n' +-->
-<!--    `    <img id="big-img" class="md-card-image" ng-src=${img}>\n` +-->
-<!--    '    <md-card-title>\n' +-->
-<!--        '        <md-card-title-text>\n' +-->
-<!--            '           <span class="md-headline" style="text-align: center">\n' +-->
-<!--            `             <a href="https://databus.dbpedia.org/${webId.account}" target="_blank">${webId.account}</a>\n` +-->
-<!--            '           </span>\n' +-->
-<!--            '        </md-card-title-text>\n' +-->
-<!--        '    </md-card-title>\n' +-->
-<!--    '    <md-card-content>\n' +-->
-<!--        '        <table>\n' +-->
-<!--            '            <tbody>\n' +-->
-<!--            '            <tr>\n' +-->
-<!--                '                <td valign="top">Name:</td>\n' +-->
-<!--                `                <td>${webId.name}</td>\n` +-->
-<!--                '            </tr>\n' +-->
-<!--            `            <tr ng-if="${!!webId.gender}">\n` +-->
-<!--                `                <td valign="top">Gender:</td>\n` +-->
-<!--                `                <td>${webId.gender}</td>\n` +-->
-<!--                '            </tr>\n' +-->
-<!--            `            <tr ng-if=${!!webId.geekCode}>\n` +-->
-<!--                '                <td valign="top">GeekCode:</td>\n' +-->
-<!--                `                <td>${webId.geekCode}</td>\n` +-->
-<!--                '            </tr>\n' +-->
-<!--            '            </tbody>\n' +-->
-<!--            '        </table>\n' +-->
-<!--        '    </md-card-content>\n' +-->
-<!--    '     <md-card-actions layout="column" layout-align="start">' +-->
-<!--        `         <md-button className="md-icon-button" aria-label="Settings" > ` + //ng-click=${this.showToolbarMenu($event, webId)}-->
-<!--            '            <md-icon style="text-align: center" md-svg-icon="img/icons/menu.svg"></md-icon>' +-->
-<!--            '         </md-button>' +-->
-<!--        '     </md-card-actions>' +-->
-<!--    </md-card>-->
 
 </body>
 </html>

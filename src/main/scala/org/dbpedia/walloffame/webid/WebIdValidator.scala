@@ -1,6 +1,5 @@
 package org.dbpedia.walloffame.webid
 
-import better.files.File
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
@@ -12,37 +11,37 @@ import java.io.ByteArrayOutputStream
 
 object WebIdValidator {
 
-  def validate(webId: Model): Result = {
-
-    import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-    val resolver = new PathMatchingResourcePatternResolver
-    val resources = resolver.getResources("classpath:shacl/*.ttl")
-
-    var result = new Result
-
-    //iterate over all shapeFiles and validate for each
-    val tmpShapeFile = File("./tmp/tmpShapeFile.ttl")
-    tmpShapeFile.parent.createDirectoryIfNotExists()
-    for (resource <- resources) {
-      //write shacl file out of jar, because Jena can't handle stream
-      val is = resource.getInputStream
-      val in = scala.io.Source.fromInputStream(is)
-      val out = new java.io.PrintWriter(tmpShapeFile.toJava)
-      try {
-        in.getLines().foreach(out.println(_))
-      }
-      finally {
-        out.close
-      }
-
-      val partResult = validate(webId, RDFDataMgr.loadModel(tmpShapeFile.pathAsString))
-
-      tmpShapeFile.delete()
-      result = partResult
-    }
-
-    result
-  }
+//  def validate(webId: Model): Result = {
+//
+//    import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+//    val resolver = new PathMatchingResourcePatternResolver
+//    val resources = resolver.getResources("classpath:shacl/*.ttl")
+//
+//    var result = new Result
+//
+//    //iterate over all shapeFiles and validate for each
+//    val tmpShapeFile = File("./tmp/tmpShapeFile.ttl")
+//    tmpShapeFile.parent.createDirectoryIfNotExists()
+//    for (resource <- resources) {
+//      //write shacl file out of jar, because Jena can't handle stream
+//      val is = resource.getInputStream
+//      val in = scala.io.Source.fromInputStream(is)
+//      val out = new java.io.PrintWriter(tmpShapeFile.toJava)
+//      try {
+//        in.getLines().foreach(out.println(_))
+//      }
+//      finally {
+//        out.close
+//      }
+//
+//      val partResult = validate(webId, RDFDataMgr.loadModel(tmpShapeFile.pathAsString))
+//
+//      tmpShapeFile.delete()
+//      result = partResult
+//    }
+//
+//    result
+//  }
 
   def validate(webId: Model, shapesURL: String): Result = {
     //    val shapes = RDFDataMgr.loadModel("./src/main/resources/shacl/shapes.ttl")
