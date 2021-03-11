@@ -30,7 +30,7 @@ class WebIdHandler() {
       else {
         val result = new Result
         result.addViolation(str, "is not a Person or no dbo:DBpedian", "https://example.org/hasViolation")
-        JsonLDLogger.add(str, "https://example.org/hasViolation", "URI is not a Person and dbo:DBpedian")
+        JsonLDLogger.add(str, "https://example.org/hasViolation", "URI is not a Person or no dbo:DBpedian")
         (ModelFactory.createDefaultModel(), result)
       }
     } catch {
