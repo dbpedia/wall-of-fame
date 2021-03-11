@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{RequestMapping, RequestMethod, ResponseBody}
 
+import java.io.FileNotFoundException
 import java.nio.charset.StandardCharsets
 import javax.servlet.http.HttpServletResponse
 import scala.io.Source
@@ -33,13 +34,17 @@ class WoFController {
     response.setHeader("Content-Type","application/ld+json")
 
     val os = response.getOutputStream
-    val source = Source.fromFile(File(config.log.file).toJava)
-    source.getLines().foreach({line =>
-      os.write(s"$line".getBytes(StandardCharsets.UTF_8))
-    })
+    try{
+      val source = Source.fromFile(File(config.log.file).toJava)
+      source.getLines().foreach({line =>
+        os.write(s"$line".getBytes(StandardCharsets.UTF_8))
+      })
+      source.close()
+    } catch {
+      case fileNotFoundException: FileNotFoundException => println("logfile not ready yet")
+    }
 
     response.setStatus(200)
-    source.close()
   }
 
   @RequestMapping(value = Array("/webids.json"), method = Array(RequestMethod.GET), produces = Array("application/json; charset=utf-8"))

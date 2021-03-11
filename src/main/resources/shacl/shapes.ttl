@@ -9,47 +9,64 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dbo: <http://dbpedia.org/ontology/> .
 
-
-#===WebIdShape===#
 <#PersonalProfileDocumentCount> a sh:NodeShape ;
-    sh:targetNode foaf:PersonalProfileDocument ;
-    sh:path [ sh:inversePath rdf:type ];
-    sh:minCount 1 ;
-    sh:message "class foaf:PersonalProfileDocument MUST occur once."@en.
+	sh:targetNode foaf:PersonalProfileDocument ;
+	sh:property <#personalProfileCount>.
+
+<#KeyShape> a sh:NodeShape ;
+    sh:targetClass cert:RSAPublicKey ;
+	sh:property <#keyType> ;
+	sh:property <#label> ;
+	sh:property <#cert-modulus> ;
+	sh:property <#cert-exponent> .
+
+<#PersonShape> a sh:NodeShape ;
+    sh:targetClass foaf:Person ;
+	sh:property <#personType> ;
+	sh:property <#dbpedia-support-info> ;
+	sh:property <#name> ;
+	sh:property <#key> .
+    # NOT USED BECAUSE THESE OPTIONAL PROPERTIES CAUSE sh:Violation, due <#PersonShape> is always checked completely in <#maker> PropertyShape. There is no possibility to explicitly see that these are only sh:Infos
+    # sh:property <#img> ;
+    # sh:property <#geekcode> .
 
 <#WebIdShape> a sh:NodeShape ;
 	sh:targetClass foaf:PersonalProfileDocument ;
 	sh:property <#maker> ;
 	sh:property <#primaryTopic> .
 
-<#maker> a sh:PropertyShape ;
-	sh:path foaf:maker ;
-	sh:nodeKind sh:IRI ;
+#===KeyShape-Properties===#
+<#keyType> a sh:PropertyShape ;
+	sh:path rdf:type ;
 	sh:severity sh:Violation ;
-	sh:node <#PersonShape> ;
-	sh:minCount 1 ;
-	sh:maxCount 1 .
+	sh:hasValue cert:RSAPublicKey ;
+	sh:message "Key must be of type cert:RSAPublicKey."@en .
 
-<#primaryTopic> a sh:PropertyShape;
+<#label> a sh:PropertyShape ;
+	sh:path rdf:label ;
 	sh:severity sh:Violation ;
-	sh:path foaf:primaryTopic  ;
-	sh:nodeKind sh:IRI ;
+	sh:dataType xsd:string ;
+	sh:minCount 1 ;
+	sh:message "Required property rdf:label MUST occur once at least in Key."@en .
+
+<#cert-modulus> a sh:PropertyShape ;
+	sh:path cert:modulus ;
+	sh:severity sh:Violation ;
+	sh:dataType xsd:hexBinary ;
 	sh:minCount 1 ;
 	sh:maxCount 1 ;
-	sh:message "Required property foaf:primaryTopic MUST occur once."@en .
-#===WebIdShape===#
+	sh:message "Required property cert:modulus MUST occur once in Key."@en .
 
-#===PersonShape===#
-<#PersonShape> a sh:NodeShape ;
-	sh:property <#personType> ;
-    sh:property <#dbpedia-support-info> ;
-	sh:property <#name> ;
-	sh:property <#key> .
+<#cert-exponent> a sh:PropertyShape ;
+	sh:path cert:exponent ;
+	sh:severity sh:Violation ;
+	sh:dataType xsd:nonNegativeInteger ;
+	sh:minCount 1 ;
+	sh:maxCount 1;
+	sh:message "Required property cert:exponent MUST occur once in Key."@en .
+#===KeyShape-Properties===#
 
-# NOT USED BECAUSE THESE OPTIONAL PROPERTIES CAUSE sh:Violation, due <#PersonShape> is always checked completely in <#maker> PropertyShape. There is no possibility to explicitly see that these are only sh:Infos
-#	sh:property <#img> ;
-#	sh:property <#geekcode> .
-
+#===PersonShape-Properties===#
 <#personType> a sh:PropertyShape ;
 	sh:path rdf:type ;
 	sh:severity sh:Violation ;
@@ -73,9 +90,9 @@
 <#key> a sh:PropertyShape ;
 	sh:path cert:key ;
 	sh:severity sh:Violation ;
-    sh:node <#KeyShape> ;
+	sh:node <#KeyShape> ;
 	sh:minCount 1 ;
-	sh:message "Required property cert:key MUST occur at least once."@en .
+	sh:message "Required property cert:key MUST occur at least once. It needs to be of type cert:RSAPublicKey"@en .
 
 <#img> a sh:PropertyShape ;
 	sh:path foaf:img ;
@@ -86,47 +103,36 @@
 	sh:message "Optional property foaf:img is missing."@en .
 
 <#geekcode> a sh:PropertyShape ;
-    sh:path foaf:geekcode ;
-    sh:severity sh:Info ;
-    sh:dataType xsd:string ;
-    sh:minCount 1 ;
-    sh:maxCount 1 ;
-    sh:message "Optional property foaf:geekcode is missing."@en .
-#===PersonShape===#
-
-#===KeyShape===#
-<#KeyShape> a sh:NodeShape ;
-    sh:property <#keyType> ;
-	sh:property <#label> ;
-	sh:property <#cert-modulus> ;
-	sh:property <#cert-exponent> .
-
-<#keyType> a sh:PropertyShape ;
-	sh:path rdf:type ;
-	sh:severity sh:Violation ;
-	sh:hasValue cert:RSAPublicKey ;
-	sh:message "Key must be of type cert:RSAPublicKey."@en .
-
-<#label> a sh:PropertyShape ;
-	sh:path rdf:label ;
-	sh:severity sh:Violation ;
+	sh:path foaf:geekcode ;
+	sh:severity sh:Info ;
 	sh:dataType xsd:string ;
 	sh:minCount 1 ;
-	sh:message "Required property rdf:label MUST occur once at least."@en .
+	sh:maxCount 1 ;
+	sh:message "Optional property foaf:geekcode is missing."@en .
+#===PersonShape-Properties===#
 
-<#cert-modulus> a sh:PropertyShape ;
-	sh:path cert:modulus ;
+
+#===WebIdShape-Properties===#
+<#personalProfileCount> a sh:PropertyShape;
+	sh:path [ sh:inversePath rdf:type ];
 	sh:severity sh:Violation ;
-	sh:dataType xsd:hexBinary ;
+	sh:minCount 1 ;
+	sh:message "class foaf:PersonalProfileDocument MUST occur once."@en.
+
+<#primaryTopic> a sh:PropertyShape;
+	sh:severity sh:Violation ;
+	sh:path foaf:primaryTopic  ;
+	sh:nodeKind sh:IRI ;
 	sh:minCount 1 ;
 	sh:maxCount 1 ;
-	sh:message "Required property cert:modulus MUST occur once."@en .
+	sh:message "Required property foaf:primaryTopic MUST occur once."@en .
 
-<#cert-exponent> a sh:PropertyShape ;
-	sh:path cert:exponent ;
+<#maker> a sh:PropertyShape ;
+	sh:path foaf:maker ;
+	sh:nodeKind sh:IRI ;
 	sh:severity sh:Violation ;
-	sh:dataType xsd:nonNegativeInteger ;
+	sh:node <#PersonShape> ;
 	sh:minCount 1 ;
-	sh:maxCount 1;
-	sh:message "Required property cert:exponent MUST occur once."@en .
-#===KeyShape===#
+	sh:maxCount 1 ;
+    sh:message "Required property foaf:maker MUST occur once and needs to be of type foaf:Person."@en .
+#===WebIdShape-Properties===#
