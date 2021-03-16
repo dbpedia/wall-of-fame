@@ -26,7 +26,7 @@ class WebIdHandler() {
       new URL(str)
       val model = RDFDataMgr.loadModel(str)
       if(checkIfURIisDBPedianPerson(str, model))
-        validateAndUniformModel(model, log)
+        validateAndUniformModel(model, str, log)
       else {
         val result = new Result
         result.addViolation(str, "is not a Person or no dbo:DBpedian", "https://example.org/hasViolation")
@@ -37,7 +37,7 @@ class WebIdHandler() {
       case malformedURLException: MalformedURLException => //if webId is send as plain text
         try{
           val model: Model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(str, "UTF-8"), "", "TURTLE")
-          validateAndUniformModel(model, log)
+          validateAndUniformModel(model, "", log)
         } catch {
           case riotException: RiotException => handleException(str, riotException, log)
         }
@@ -65,13 +65,13 @@ class WebIdHandler() {
    * @param webid webid URL
    * @return
    */
-  def validateAndUniformModel(model:Model, log:Boolean=true):(Model, Result)={
+  def validateAndUniformModel(model:Model, personURL:String, log:Boolean=true):(Model, Result)={
 
 //    val result = WebIdValidator.validate(model, config.shacl.url)
     val result = WebIdValidator.validate(model, "./src/main/resources/shacl/shapes.ttl")
 
     if (result.conforms()) {
-      val uniformedModel = WebIdUniformer.uniform(model)
+      val uniformedModel = WebIdUniformer.uniform(model, personURL)
       return (uniformedModel, result)
     } else {
       if(log){

@@ -10,7 +10,7 @@ object WebIdUniformer {
 
   val logger: Logger = LoggerFactory.getLogger(this.getClass.getSimpleName.dropRight(1))
 
-  def uniform(model: Model): Model = {
+  def uniform(model: Model, personURL:String): Model = {
     val constructedModel = ModelFactory.createDefaultModel()
 
     QueryHandler.executeConstructQuery(
@@ -39,21 +39,20 @@ object WebIdUniformer {
       }
     }
 
-    enrichModelWithDatabusData(constructedModel)
+    enrichModelWithDatabusData(constructedModel, personURL)
   }
 
-  def enrichModelWithDatabusData(model:Model):Model={
+  def enrichModelWithDatabusData(model:Model, personURL:String):Model={
 
-    val maker = QueryHandler.executeQuery(SelectQueries.getMakerURL(), model).head.getResource("maker").toString
 //    println(s"MAKER: $maker")
-    checkForRelatedDatabusAccount(maker) match {
-      case None => logger.warn(s"No Dbpedia-Databus account found for $maker")
+    checkForRelatedDatabusAccount(personURL) match {
+      case None => logger.warn(s"No Dbpedia-Databus account found for $personURL")
       case Some(account) =>
-        val result = QueryHandler.executeQuery(SelectQueries.getDatabusUserData(maker)).head
+        val result = QueryHandler.executeQuery(SelectQueries.getDatabusUserData(personURL)).head
 
         model.add(
           ResourceFactory.createStatement(
-            ResourceFactory.createResource(maker),
+            ResourceFactory.createResource(personURL),
             ResourceFactory.createProperty("http://xmlns.com/foaf/0.1/account"),
             ResourceFactory.createResource(account)
           )

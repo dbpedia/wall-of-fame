@@ -42,12 +42,12 @@ class ValidationController(config: Config) {
            |${src.mkString}
            |""".stripMargin
       src.close()
-      newWebId.setMaker(webid)
-      newWebId.setTurtle(turtle.trim)
+      newWebId.general.setMaker(webid)
+      newWebId.general.setTurtle(turtle.trim)
     } catch {
       case malformedURLException: MalformedURLException => {
         //if webId is send as plain text
-        newWebId.setTurtle(webid.trim)
+        newWebId.general.setTurtle(webid.trim)
       }
       case e: Exception => ""
     }

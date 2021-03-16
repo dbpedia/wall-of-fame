@@ -13,11 +13,12 @@ object ConstructQueries {
       |  ?webid a foaf:PersonalProfileDocument .
       |  ?webid foaf:maker ?maker .
       |  ?webid foaf:primaryTopic ?primaryTopic .
-      |  ?maker a foaf:Person, dbo:DBpedian.
-      |  ?maker foaf:name ?makerName .
-      |  ?maker foaf:geekcode ?geekcode .
-      |  ?maker foaf:img ?img .
-      |  ?maker cert:key ?key .
+      |  ?person a foaf:Person, dbo:DBpedian.
+      |  ?person foaf:name ?makerName .
+      |  ?person foaf:geekcode ?geekcode .
+      |  ?person foaf:img ?img .
+      |  ?person foaf:account ?githubAccount .
+      |  ?person cert:key ?key .
       |  ?key a cert:RSAPublicKey .
       |  ?key rdf:label ?label .
       |  ?key cert:modulus ?modulus.
@@ -27,18 +28,21 @@ object ConstructQueries {
       |  ?webid a foaf:PersonalProfileDocument .
       |  ?webid foaf:maker ?maker .
       |  ?webid foaf:primaryTopic ?primaryTopic .
-      |  ?maker a foaf:Person, dbo:DBpedian .
-      |  ?maker foaf:name ?makerName .
-      |  ?maker cert:key ?key .
+      |  ?person a foaf:Person, dbo:DBpedian .
+      |  ?person foaf:name ?makerName .
+      |  ?person cert:key ?key .
       |  ?key a cert:RSAPublicKey .
       |  ?key rdf:label ?label .
       |  ?key cert:modulus ?modulus.
       |  ?key cert:exponent ?exponent .
       |  OPTIONAL {
-      |     ?maker foaf:geekcode ?geekcode .
+      |     ?person foaf:geekcode ?geekcode .
       |  }
       |  OPTIONAL {
-      |     ?maker foaf:img ?img .
+      |     ?person foaf:img ?img .
+      |  }
+      |  OPTIONAL {
+      |     ?person foaf:account ?githubAccount .
       |  }
       |}
       |""".stripMargin

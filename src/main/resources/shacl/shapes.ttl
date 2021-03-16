@@ -13,6 +13,10 @@
 	sh:targetNode foaf:PersonalProfileDocument ;
 	sh:property <#personalProfileCount>.
 
+<#PersonCount> a sh:NodeShape;
+    sh:targetNode foaf:Person ;
+    sh:property <#personCount> .
+
 <#KeyShape> a sh:NodeShape ;
     sh:targetClass cert:RSAPublicKey ;
 	sh:property <#keyType> ;
@@ -25,10 +29,10 @@
 	sh:property <#personType> ;
 	sh:property <#dbpedia-support-info> ;
 	sh:property <#name> ;
-	sh:property <#key> .
-    # NOT USED BECAUSE THESE OPTIONAL PROPERTIES CAUSE sh:Violation, due <#PersonShape> is always checked completely in <#maker> PropertyShape. There is no possibility to explicitly see that these are only sh:Infos
-    # sh:property <#img> ;
-    # sh:property <#geekcode> .
+	sh:property <#key> ;
+    sh:property <#img> ;
+sh:property <#account> ;
+    sh:property <#geekcode> .
 
 <#WebIdShape> a sh:NodeShape ;
 	sh:targetClass foaf:PersonalProfileDocument ;
@@ -67,6 +71,11 @@
 #===KeyShape-Properties===#
 
 #===PersonShape-Properties===#
+<#personCount> a sh:PropertyShape;
+	sh:path [ sh:inversePath rdf:type ];
+	sh:severity sh:Violation ;
+	sh:minCount 1 .
+
 <#personType> a sh:PropertyShape ;
 	sh:path rdf:type ;
 	sh:severity sh:Violation ;
@@ -86,6 +95,13 @@
 	sh:minCount 1 ;
 	sh:maxCount 1 ;
 	sh:message "Required property foaf:name MUST occur once."@en .
+
+<#account> a sh:PropertyShape ;
+	sh:path foaf:account ;
+	sh:severity sh:Info ;
+	sh:nodeKind sh:IRI ;
+	sh:minCount 1 ;
+	sh:message "Optional property foaf:account (link to your Github account) is missing."@en .
 
 <#key> a sh:PropertyShape ;
 	sh:path cert:key ;
@@ -131,7 +147,6 @@
 	sh:path foaf:maker ;
 	sh:nodeKind sh:IRI ;
 	sh:severity sh:Violation ;
-	sh:node <#PersonShape> ;
 	sh:minCount 1 ;
 	sh:maxCount 1 ;
     sh:message "Required property foaf:maker MUST occur once and needs to be of type foaf:Person."@en .

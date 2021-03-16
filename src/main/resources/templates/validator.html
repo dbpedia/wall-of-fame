@@ -57,7 +57,7 @@
 
             <button class="btn btn-primary" type="submit" style="float: right; width: 200px" ng-click="fetchAndValidateWebId()">Fetch and Validate</button>
             <div style="overflow: hidden; padding-right: .5em;">
-            <input class="form-control" type="text" style="width: 100%;" ng-model="webId.maker">
+            <input class="form-control" type="text" style="width: 100%;" ng-model="activeWebId.general.person">
             </div>
             <div id="url_ok" class="alert alert-danger" style="display: none">
                 URL should contain HTTPS
@@ -73,7 +73,7 @@
         <div class="col-sm" >
             Or you can paste the content of your WebId here:
             <br/>
-            <yate-text query="webId.turtle"></yate-text>
+            <yate-text query="activeWebId.general.turtle"></yate-text>
             <br>
 
             <button class="btn btn-primary" type="submit" ng-click="validateWebId()">Validate</button>
@@ -83,22 +83,22 @@
         <div class="col-sm">
             Your WebId:
             <md-card class="webid-card">
-                <img id="big-img" class="md-card-image" ng-src="{{webId.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
+                <img id="big-img" class="md-card-image" ng-src="{{activeWebId.others.img || 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png'}}">
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline blueFont" style="text-align: center">
-                            {{webId.account.charAt(0).toUpperCase() + webId.account.slice(1);}}
-                        </span>
+                            <span class="md-headline blueFont" style="text-align: center">
+                                {{activeWebId.databus.account.charAt(0).toUpperCase() + activeWebId.databus.account.slice(1);}}
+                            </span>
                     </md-card-title-text>
                 </md-card-title>
                 <md-card-actions layout="row" layout-align="center">
-                    <a class="md-icon-button" ng-href="{{webId.url}}">
+                    <a class="md-icon-button" ng-href="{{activeWebId.general.url}}">
                         <md-icon md-svg-icon="images/icons/download-24px.svg"></md-icon>
                     </a>
-                    <a class="md-icon-button" ng-href="https://databus.dbpedia.org/{{webId.account}}" target="_blank">
+                    <a class="md-icon-button" ng-href="https://databus.dbpedia.org/{{activeWebId.databus.account}}" target="_blank">
                         Databus Account
                     </a>
-                    <a class="md-icon-button" ng-href="https://github.com/" target="_blank">
+                    <a class="md-icon-button" ng-href="{{activeWebId.github.account}}" target="_blank">
                         <md-icon md-svg-icon="images/icons/GitHub.svg"></md-icon>
                     </a>
                 </md-card-actions>
@@ -108,30 +108,30 @@
                         <tbody>
                         <tr>
                             <td valign="top">Name:</td>
-                            <td>{{webId.name}}</td>
+                            <td>{{activeWebId.general.name}}</td>
                         </tr>
-                        <tr ng-if="webId.numArtifacts">
+                        <tr ng-if="activeWebId.databus.numArtifacts">
                             <td valign="top">Databus Artifacts:</td>
-                            <td>{{webId.numArtifacts}}</td>
+                            <td>{{activeWebId.databus.numArtifacts}}</td>
                         </tr>
-                        <tr ng-if="webId.numVersions">
+                        <tr ng-if="activeWebId.databus.numVersions">
                             <td valign="top">Databus Versions:</td>
-                            <td>{{webId.numVersions}}</td>
+                            <td>{{activeWebId.databus.numVersions}}</td>
                         </tr>
-                        <tr ng-if="webId.uploadSize">
+                        <tr ng-if="activeWebId.databus.uploadSize">
                             <td valign="top">Uploaded Data:</td>
-                            <td>{{webId.uploadSize}} MB</td>
+                            <td>{{activeWebId.databus.uploadSize}} MB</td>
                         </tr>
-                        <tr ng-if="webId.geekCode">
+                        <tr ng-if="activeWebId.geekCode">
                             <td valign="top">foaf:geekcode:</td>
-                            <td>{{webId.geekCode}}</td>
+                            <td>{{activeWebId.others.geekCode}}</td>
                         </tr>
                         </tbody>
                     </table>
                 </md-card-content>
                 <md-divider></md-divider>
                 <md-card-actions layout="column" layout-align="start">
-                    <a class="md-button" ng-href="/validator?webid={{webId.maker | escape}}" target="_blank">Validate Foaf/WebId</a>
+                    <a class="md-button" ng-href="/validator?webid={{activeWebId.maker | escape}}" target="_blank">Validate Foaf/WebId</a>
                 </md-card-actions>
             </md-card>
         </div>
@@ -140,13 +140,13 @@
 
     <br>
 
-    <div id="result" class="content" ng-if="webId.validation.result.length>0 || webId.validation.violations.length>0">
+    <div id="result" class="content" ng-if="activeWebId.validation.result.length>0 || activeWebId.validation.violations.length>0">
 
-        <div id="violations" class="violations" ng-if="webId.validation.violations.length>0">
+        <div id="violations" class="violations" ng-if="activeWebId.validation.violations.length>0">
             <strong> Violations: </strong>
             <br>
             <ul>
-                <li ng-repeat="violation in webId.validation.violations">
+                <li ng-repeat="violation in activeWebId.validation.violations">
                     <p>
                         Conflicting Node: {{violation._1}}
                         <br>
@@ -156,11 +156,11 @@
             </ul>
         </div>
 
-        <div id="warnings" class="warnings"  ng-if="webId.validation.infos.length>0">
+        <div id="warnings" class="warnings"  ng-if="activeWebId.validation.infos.length>0">
             <strong> Warnings: </strong>
             <br>
             <ul>
-                <li ng-repeat="warning in webId.validation.infos">
+                <li ng-repeat="warning in activeWebId.validation.infos">
                     <p>
                         Conflicting Node: {{warning._1}}
                         <br>
@@ -173,9 +173,9 @@
         </div>
 
 
-        <div id="shaclResult" class="shaclResult" ng-if="webId.validation.result.length>0">
+        <div id="shaclResult" class="shaclResult" ng-if="activeWebId.validation.result.length>0">
             <strong>Full Shacl Result: </strong>
-            <div class="form-control" id="fineGrainedResult" style="white-space: pre-wrap">{{webId.validation.result.trim()}}</div>
+            <div class="form-control" id="fineGrainedResult" style="white-space: pre-wrap">{{activeWebId.validation.result.trim()}}</div>
         </div>
 
     </div>

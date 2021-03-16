@@ -3,67 +3,140 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
     $scope.model={};
     $scope.model.searchString = "";
 
-    $scope.filterOptions = [
-        {
-            title: "img",
-            type: "boolean",
-            values: []
-        },
-        {
-            title: "geekCode",
-            type: "boolean",
-            values: []
-        }
-    ];
-    $scope.selectedOptions=[];
+    $scope.filterOptions = {
+        databus: [],
+        others: [
+            {
+                title: "img",
+                type: "boolean",
+                values: []
+            },
+            {
+                title: "geekCode",
+                type: "boolean",
+                values: []
+            }
+        ]
+    };
+
+    let labelMap ={
+        "img": "Image",
+        "geekCode": "Geek Code",
+        "numArtifacts": "Artifacts",
+        "numVersions" : "Versions",
+        "uploadSize": "Upload Size (MB)"
+    }
+
+    $scope.selectedOptions={};
 
     $scope.shownWebIds = undefined;
     $scope.activeWebId = undefined;
-
+    $scope.currentCategory = undefined;
 
     $scope.request = $http.get("/webids.json", {headers: { 'Accept': 'application/json'}}).then(function(response) {
         $scope.webids = response.data.webIds;
         console.log($scope.webids);
-        let options = [];
+
+        let optionsToBeIgnored = ["account", "url", "name", "maker", "person", "img", "geekCode"];
+        // let options = [];
+
         angular.forEach($scope.webids, function(webid){
-            angular.forEach(Object.keys(webid), function(key){
-                if(options.indexOf(key) < 0) options.push(key);
-            })
+                angular.forEach(Object.keys(webid), function (category){
+                    angular.forEach(Object.keys(webid[category]), function (property){
+                        if(!optionsToBeIgnored.includes(property)) {
+                            // insert select option, if does not exist yet.
+                            if(!$scope.filterOptions[category]){
+                                $scope.filterOptions[category] = [];
+                            }
+                            if(!$scope.filterOptions[category].some(e => e.title === property)) {
+                                let thisType;
+                                switch (typeof webid[category][property]) {
+                                    case "bigint":
+                                    case "number":
+                                        thisType = "range";
+                                        break;
+                                    default:
+                                        thisType = "options";
+                                }
+
+                                $scope.filterOptions[category].push({
+                                    title: property,
+                                    type: thisType,
+                                    values: []
+                                });
+                            }
+
+                            // insert all values that dont exist yet
+                            let index = $scope.filterOptions[category].findIndex(x => x.title === property)
+                            if(!$scope.filterOptions[category][index].values.includes(webid[category][property])){
+                                $scope.filterOptions[category][index].values.push(webid[category][property]);
+                            }
+                        }
+                    });
+                });
         });
-        let optionsToBeIgnored = ["account", "url", "name", "maker", "img", "geekCode"];
-        options = options.filter(item => !optionsToBeIgnored.includes(item));
 
-        angular.forEach(options, function (option){
-            let optionList = $filter('unique')($scope.webids, option);
 
-            console.log(optionList);
-
-            if (typeof optionList !== 'undefined' && optionList.length > 0) {
-                // the array is defined and has at least one element
-                let optionObject = {
-                    title : option ,
-                    type: "options",
-                    values: optionList
-                };
-
-                switch (typeof optionList[0]){
-                    case "bigint":
-                    case "number": optionObject ={
-                        title : option ,
-                        type: "range",
-                        values: getMinAndMax(optionList)
-                    };
-                        break;
+        //sort options and only leave highest and lowest value of options of type "range"
+        angular.forEach(Object.keys($scope.filterOptions), function(category){
+            $filter('sortSelectors')($scope.filterOptions[category]);
+            angular.forEach($scope.filterOptions[category], function (option){
+                if (option.type === "range") {
+                    option.values = getMinAndMax(option.values)
                 }
-
-                $scope.filterOptions.push(optionObject);
-            }
-
+                option.label = labelMap[option.title];
+            });
         });
+
+        console.log("FilterOptions")
+        console.log($scope.filterOptions);
 
         $scope.selectedOptions = angular.copy($scope.filterOptions);
         $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
+
+        // console.log("hallo");
+        // options = options.filter(item => !optionsToBeIgnored.includes(item));
+
+        // angular.forEach(options, function (option){
+        //     console.log("JETZT")
+        //     console.log(option.category)
+        //     let values = $filter('unique')($scope.webids.map(a => a[option.category]), + option.title);
+        //
+        //
+        //     console.log(values);
+        //
+        //     if (typeof values !== 'undefined' && values.length > 0) {
+        //         // the array is defined and has at least one element
+        //         let optionObject = {
+        //             title : option.title ,
+        //             category: option.category,
+        //             type: "options",
+        //             values: values
+        //         };
+        //
+        //         switch (typeof values[0]){
+        //             case "bigint":
+        //             case "number": optionObject ={
+        //                 title : option ,
+        //                 category: option.category,
+        //                 type: "range",
+        //                 values: getMinAndMax(values)
+        //             };
+        //                 break;
+        //         }
+        //
+        //         $scope.filterOptions.push(optionObject);
+        //     }
+        //
+        // });
     });
+
+    $scope.checkIfCategoryChanged = function(category, title) {
+        let same = category.localeCompare($scope.currentCategory);
+        console.log(title + " " + category + " is " + (same !== 0) + " of " + $scope.currentCategory)
+        if(same !==0) $scope.currentCategory = category;
+        return same !== 0;
+    };
 
     $scope.showFullCard = function (webid) {
         $scope.activeWebId = webid;
@@ -76,8 +149,8 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
     };
 
 
-    $scope.getIndexOfStrInSelectedOptions = function(str) {
-        return $scope.selectedOptions.map(function (e){return e.title;}).indexOf(str);
+    $scope.getIndexOfStrInSelectedOptions = function(category, str) {
+        return $scope.selectedOptions[category].map(function (e){return e.title;}).indexOf(str);
     };
 
     function getMinAndMax(arr) {
@@ -96,21 +169,23 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
 
         angular.forEach($scope.webids, function (webid){
             let valid = true;
-            angular.forEach($scope.selectedOptions, function (option){
-                if (option.type==="boolean"){
-                    if (option.values.includes("true")) {
-                        if(webid[option.title]===undefined) valid = false;
+            angular.forEach(Object.keys($scope.selectedOptions), function (category){
+                angular.forEach($scope.selectedOptions[category],function (option){
+                    if (option.type==="boolean"){
+                        if (option.values.includes("true")) {
+                            if(webid[category][option.title]===undefined) valid = false;
+                        }
+                    } else if(option.type==="range") {
+                        if (option.values.length>0) {
+                            if(webid[category][option.title] < option.values[0] || webid[category][option.title] > option.values[1]) valid = false;
+                        }
                     }
-                } else if(option.type==="range") {
-                    if (option.values.length>0) {
-                        if(webid[option.title] < option.values[0] || webid[option.title] > option.values[1]) valid = false;
+                    else {
+                        if (option.values.length>0) {
+                            if (!option.values.includes(webid[category][option.title])) valid = false;
+                        }
                     }
-                }
-                else {
-                    if (option.values.length>0) {
-                        if (!option.values.includes(webid[option.title])) valid = false;
-                    }
-                }
+                });
             });
 
             if (valid) filtered.push(webid);
@@ -120,8 +195,8 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
     };
 
 
-    $scope.toggle = function (toggledOption, item) {
-        angular.forEach($scope.selectedOptions, function(option){
+    $scope.toggle = function (category, toggledOption, item) {
+        angular.forEach($scope.selectedOptions[category], function(option){
            if (option.title===toggledOption){
                if(option.values.includes(item)){
                    let index = option.values.indexOf(item);
@@ -190,56 +265,6 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
     };
 
-
-    this.showToolbarMenu = function($event, webId) {
-
-        function PanelMenuCtrl(mdPanelRef) {
-            this.closeMenu = function() {
-                mdPanelRef && mdPanelRef.close();
-            };
-        }
-
-        let escapedURL = escape(webId.url);
-
-        let template = ''+
-            '<div class="menu-panel" md-whiteframe="4" ng-mouseleave="panelCtrl.closeMenu()">' +
-            '  <div class="menu-content">' +
-            '    <div class="menu-item">' +
-            `      <a class="md-button" ng-href="/validator?webid=${escapedURL}" target="_blank">Validate</a>` +
-            '    </div>' +
-            '    <md-divider></md-divider>' +
-            '    <div class="menu-item">' +
-            `      <a class="md-button" ng-href="${webId.url}" target="_blank">Download</a>` +
-            '    </div>' +
-            '  </div>' +
-            '</div>';
-
-        let position = $mdPanel.newPanelPosition()
-            .relativeTo($event.target)
-            .addPanelPosition(
-                $mdPanel.xPosition.ALIGN_START,
-                $mdPanel.yPosition.BELOW
-            );
-
-        let config = {
-            id: 'toolbar',
-            attachTo: angular.element(document.body),
-            controller: PanelMenuCtrl,
-            controllerAs: 'panelCtrl',
-            template: template,
-            position: position,
-            panelClass: 'menu-panel-container',
-            locals: {} ,
-            openFrom: $event,
-            focusOnOpen: false,
-            zIndex: 100,
-            propagateContainerEvents: true,
-            groupName: ['toolbar', 'menus']
-        };
-
-        $mdPanel.open(config);
-    };
-
     $scope.childClick = function($event) {
         $event.stopPropagation();
     }
@@ -265,6 +290,8 @@ app.filter('unique', function () {
 
         if ((filterOn || angular.isUndefined(filterOn)) && angular.isArray(items)) {
             let hashCheck = {}, newItems = [];
+            console.log("NOW")
+            console.log(filterOn)
 
             let extractValueToCompare = function (item) {
                 if (angular.isObject(item) && angular.isString(filterOn)) {
@@ -300,11 +327,34 @@ app.filter('escape', function() {
 
 app.filter('sortSelectors', function() {
     return function (array) {
-        array.sort((a,b)=> a.title.localeCompare(b.title));
-        return array.sort((a,b)=> b.type.localeCompare(a.type));
+        return array.sort((a,b)=> b.type.localeCompare(a.type) || a.title.localeCompare(b.title));
     };
 });
 
+(function() {
+    let start = new Date;
+    start.setHours(8, 0, 0); // 11pm
+
+    function pad(num) {
+        return ("0" + parseInt(num)).substr(-2);
+    }
+
+    function tick() {
+        let now = new Date;
+        if (now > start) { // too late, go to tomorrow
+            start.setDate(start.getDate() + 1);
+        }
+        let remain = ((start - now) / 1000);
+        let hh = pad((remain / 60 / 60) % 60);
+        let mm = pad((remain / 60) % 60);
+        let ss = pad(remain % 60);
+        document.getElementById('time').innerHTML =
+            hh + "h " + mm + "m " + ss + "s";
+        setTimeout(tick, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', tick);
+})();
 
 // app.filter('filterWebIds', function ($filter) {
 //    return function (input, filterArray){
@@ -331,3 +381,53 @@ app.filter('sortSelectors', function() {
 //         return $filter('unique')(output);
 //     };
 // });
+
+
+// this.showToolbarMenu = function($event, webId) {
+//
+//     function PanelMenuCtrl(mdPanelRef) {
+//         this.closeMenu = function() {
+//             mdPanelRef && mdPanelRef.close();
+//         };
+//     }
+//
+//     let escapedURL = escape(webId.url);
+//
+//     let template = ''+
+//         '<div class="menu-panel" md-whiteframe="4" ng-mouseleave="panelCtrl.closeMenu()">' +
+//         '  <div class="menu-content">' +
+//         '    <div class="menu-item">' +
+//         `      <a class="md-button" ng-href="/validator?webid=${escapedURL}" target="_blank">Validate</a>` +
+//         '    </div>' +
+//         '    <md-divider></md-divider>' +
+//         '    <div class="menu-item">' +
+//         `      <a class="md-button" ng-href="${webId.url}" target="_blank">Download</a>` +
+//         '    </div>' +
+//         '  </div>' +
+//         '</div>';
+//
+//     let position = $mdPanel.newPanelPosition()
+//         .relativeTo($event.target)
+//         .addPanelPosition(
+//             $mdPanel.xPosition.ALIGN_START,
+//             $mdPanel.yPosition.BELOW
+//         );
+//
+//     let config = {
+//         id: 'toolbar',
+//         attachTo: angular.element(document.body),
+//         controller: PanelMenuCtrl,
+//         controllerAs: 'panelCtrl',
+//         template: template,
+//         position: position,
+//         panelClass: 'menu-panel-container',
+//         locals: {} ,
+//         openFrom: $event,
+//         focusOnOpen: false,
+//         zIndex: 100,
+//         propagateContainerEvents: true,
+//         groupName: ['toolbar', 'menus']
+//     };
+//
+//     $mdPanel.open(config);
+// };

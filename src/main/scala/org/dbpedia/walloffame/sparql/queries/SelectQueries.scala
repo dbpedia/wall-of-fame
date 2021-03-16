@@ -10,31 +10,38 @@ object SelectQueries {
        |PREFIX cert:  <http://www.w3.org/ns/auth/cert#>
        |PREFIX rdfs:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
        |
-       |SELECT ?webid ?maker ?name ?img ?geekcode ?account ?numVersions ?numArtifacts ?uploadSize
+       |SELECT  ?webid ?maker ?person ?name ?img ?geekcode ?dbpediaAccount ?numVersions ?numArtifacts ?uploadSize ?githubAccount
        |WHERE {
        |  ?webid a foaf:PersonalProfileDocument ;
        |      foaf:maker ?maker .
-       |  ?maker a dbo:DBpedian, foaf:Person ;
-       |      foaf:name ?name ;
+       |  ?person a dbo:DBpedian, foaf:Person ;
+       |      foaf:name ?name .
        |
        |  OPTIONAL {
        |    SELECT * WHERE {
-       |      ?maker foaf:img ?img .
+       |      ?person foaf:img ?img .
        |    }
        |  }
        |
        |  OPTIONAL {
        |    SELECT * WHERE {
-       |      ?maker foaf:geekcode ?geekcode .
+       |      ?person foaf:geekcode ?geekcode .
        |    }
        |  }
        |
        |  OPTIONAL {
        |    SELECT * WHERE {
-       |      ?maker foaf:account ?account .
+       |      ?person foaf:account ?dbpediaAccount .
        |      ?account dbo:numVersions ?numVersions ;
        |        dbo:numArtifacts ?numArtifacts ;
        |        dbo:uploadSize ?uploadSize .
+       |    }
+       |  }
+       |
+       |  OPTIONAL {
+       |    SELECT * WHERE {
+       |      ?person foaf:account ?githubAccount .
+       |      FILTER regex(str(?githubAccount), "https://github.com/") .
        |    }
        |  }
        |}

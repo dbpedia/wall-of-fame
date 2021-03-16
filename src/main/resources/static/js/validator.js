@@ -1,45 +1,39 @@
 app.controller('validateController', function($scope, $http, $filter) {
-    $scope.webId = {
-        maker: "https://eisenbahnplatte.github.io/webid.ttl#this",
-        url: "",
-        account: "",
-        turtle: "",
-        name: "",
-        img: "",
-        gender: "",
-        geekCode: "",
-        validation: {}
+    $scope.activeWebId = {
+        general : {
+            person: "https://eisenbahnplatte.github.io/webid.ttl#this",
+            turtle: ""
+        }
     };
+
     $scope.result={
         result: ""
     };
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("webid")) {
-        $scope.webId.maker = urlParams.get("webid");
+        $scope.activeWebId.general.person = urlParams.get("webid");
     }
 
-    $scope.validateWebId = function (param = $scope.webId.turtle) {
+    $scope.validateWebId = function (param = $scope.activeWebId.general.turtle) {
         $http({
             url: "/validate",
             method: "GET",
             headers: {'Content-Type': 'application/json'},
             params: {'webid': param}
         }).then(function (response){
-            $scope.webId = angular.fromJson(response.data);
-            console.log($scope.webId);
+            $scope.activeWebId = angular.fromJson(response.data);
+            console.log($scope.activeWebId);
         });
     };
 
     $scope.fetchAndValidateWebId = function() {
-        if (validateURL($scope.webId.maker).valueOf()) {
-            $scope.validateWebId($scope.webId.maker);
+        if (validateURL($scope.activeWebId.general.person).valueOf()) {
+            $scope.validateWebId($scope.activeWebId.general.person);
         }
     };
 
     $scope.fetchAndValidateWebId();
-
-    console.log($scope.webId.account);
 
     // $scope.fetchAndValidateWebId = function(url) {
     //

@@ -14,6 +14,17 @@
 legend, .blueFont, .webid-accountName{
     color: #315eb0;}
 
+.SelectOption{
+    color: #315eb0;
+    font-size: 1em;
+    margin: 1.67em 0;
+    font-weight: bold;
+}
+
+#time{
+    color: orange;
+    /*color: #fd7e14;*/
+}
 
 fieldset {
     border-style: solid;
@@ -26,7 +37,6 @@ fieldset {
 /* WEBID STYLE */
 .webid-card-small{
     width: 198px;
-    background-color: #f5f3f0
 }
 
 #small-img{
