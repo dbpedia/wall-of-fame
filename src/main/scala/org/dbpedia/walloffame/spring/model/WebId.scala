@@ -61,6 +61,12 @@ class WebId() {
       case None => ""
     }
 
+    Option(data.getLiteral("gitHubCommits")) match {
+      case Some(value) =>
+        this.github.commits = value.getInt
+      case None => ""
+    }
+
   }
 
 //  def fetchFieldsWithModel(model: Model): Unit = {
@@ -137,4 +143,6 @@ class DatabusInfo(){
 class GithubInfo(){
   @BeanProperty
   var account:String = _
+  @BeanProperty
+  var commits:Int=_
 }

@@ -24,7 +24,8 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         "geekCode": "Geek Code",
         "numArtifacts": "Artifacts",
         "numVersions" : "Versions",
-        "uploadSize": "Upload Size (MB)"
+        "uploadSize": "Upload Size (MB)",
+        "commits": "Commits"
     }
 
     $scope.selectedOptions={};
@@ -41,39 +42,39 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         // let options = [];
 
         angular.forEach($scope.webids, function(webid){
-                angular.forEach(Object.keys(webid), function (category){
-                    angular.forEach(Object.keys(webid[category]), function (property){
-                        if(!optionsToBeIgnored.includes(property)) {
-                            // insert select option, if does not exist yet.
-                            if(!$scope.filterOptions[category]){
-                                $scope.filterOptions[category] = [];
-                            }
-                            if(!$scope.filterOptions[category].some(e => e.title === property)) {
-                                let thisType;
-                                switch (typeof webid[category][property]) {
-                                    case "bigint":
-                                    case "number":
-                                        thisType = "range";
-                                        break;
-                                    default:
-                                        thisType = "options";
-                                }
-
-                                $scope.filterOptions[category].push({
-                                    title: property,
-                                    type: thisType,
-                                    values: []
-                                });
-                            }
-
-                            // insert all values that dont exist yet
-                            let index = $scope.filterOptions[category].findIndex(x => x.title === property)
-                            if(!$scope.filterOptions[category][index].values.includes(webid[category][property])){
-                                $scope.filterOptions[category][index].values.push(webid[category][property]);
-                            }
+            angular.forEach(Object.keys(webid), function (category){
+                angular.forEach(Object.keys(webid[category]), function (property){
+                    if(!optionsToBeIgnored.includes(property)) {
+                        // insert select option, if does not exist yet.
+                        if(!$scope.filterOptions[category]){
+                            $scope.filterOptions[category] = [];
                         }
-                    });
+                        if(!$scope.filterOptions[category].some(e => e.title === property)) {
+                            let thisType;
+                            switch (typeof webid[category][property]) {
+                                case "bigint":
+                                case "number":
+                                    thisType = "range";
+                                    break;
+                                default:
+                                    thisType = "options";
+                            }
+
+                            $scope.filterOptions[category].push({
+                                title: property,
+                                type: thisType,
+                                values: []
+                            });
+                        }
+
+                        // insert all values that dont exist yet
+                        let index = $scope.filterOptions[category].findIndex(x => x.title === property)
+                        if(!$scope.filterOptions[category][index].values.includes(webid[category][property])){
+                            $scope.filterOptions[category][index].values.push(webid[category][property]);
+                        }
+                    }
                 });
+            });
         });
 
 

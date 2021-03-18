@@ -9,8 +9,9 @@ object SelectQueries {
        |PREFIX dbo:   <http://dbpedia.org/ontology/>
        |PREFIX cert:  <http://www.w3.org/ns/auth/cert#>
        |PREFIX rdfs:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+       |PREFIX ex: <http://example.org/>
        |
-       |SELECT  ?webid ?maker ?person ?name ?img ?geekcode ?dbpediaAccount ?numVersions ?numArtifacts ?uploadSize ?githubAccount
+       |SELECT  ?webid ?maker ?person ?name ?img ?geekcode ?dbpediaAccount ?numVersions ?numArtifacts ?uploadSize ?githubAccount ?gitHubCommits
        |WHERE {
        |  ?webid a foaf:PersonalProfileDocument ;
        |      foaf:maker ?maker .
@@ -44,8 +45,28 @@ object SelectQueries {
        |      FILTER regex(str(?githubAccount), "https://github.com/") .
        |    }
        |  }
+       |
+       |  OPTIONAL {
+       |    SELECT * WHERE {
+       |      ?person ex:gitHubCommits ?gitHubCommits
+       |    }
+       |  }
        |}
     """.stripMargin
+
+  def getGitHubAccount(personURL:String):String =
+    s"""
+       |PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
+       |
+       |SELECT ?githubAccount
+       |WHERE {
+       |  OPTIONAL {
+       |    SELECT * WHERE {
+       |      <$personURL> foaf:account ?githubAccount .
+       |      FILTER regex(str(?githubAccount), "https://github.com/") .
+       |    }
+       |  }
+       |}""".stripMargin
 
   def getMakerURL(): String =
     s"""

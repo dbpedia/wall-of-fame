@@ -15,6 +15,8 @@ object WebIdFetcher {
     val vos = new VirtuosoHandler(config.virtuoso)
     val webIdHandler = new WebIdHandler()
 
+    val gitHubMap = Enricher.countAllGithubCommitsPerUser()
+
     //get all webIds already stored in Virtuoso
     var allCurrentGraphs = Seq.empty[String]
     var wait = true
@@ -52,7 +54,12 @@ object WebIdFetcher {
 
       try {
         val uniformedModel = webIdHandler.validateWebId(webid)._1
-        if(!uniformedModel.isEmpty) vos.insertModel(uniformedModel, accountURL)
+        if(!uniformedModel.isEmpty) {
+
+          Enricher.enrichModelWithDatabusData(uniformedModel, webid)
+          Enricher.enrichModelWithGithubData(uniformedModel, gitHubMap, webid)
+          vos.insertModel(uniformedModel, accountURL)
+        }
       } catch {
         case noSuchElementException: NoSuchElementException => ""
       }

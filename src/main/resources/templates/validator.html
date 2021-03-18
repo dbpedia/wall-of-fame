@@ -122,7 +122,7 @@
                             <td valign="top">Uploaded Data:</td>
                             <td>{{activeWebId.databus.uploadSize}} MB</td>
                         </tr>
-                        <tr ng-if="activeWebId.geekCode">
+                        <tr ng-if="activeWebId.others.geekCode">
                             <td valign="top">foaf:geekcode:</td>
                             <td>{{activeWebId.others.geekCode}}</td>
                         </tr>
@@ -131,7 +131,7 @@
                 </md-card-content>
                 <md-divider></md-divider>
                 <md-card-actions layout="column" layout-align="start">
-                    <a class="md-button" ng-href="/validator?webid={{activeWebId.maker | escape}}" target="_blank">Validate Foaf/WebId</a>
+                    <a class="md-button" ng-href="/validator?webid={{activeWebId.general.person | escape}}" target="_blank">Validate Foaf/WebId</a>
                 </md-card-actions>
             </md-card>
         </div>

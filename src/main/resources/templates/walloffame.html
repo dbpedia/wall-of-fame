@@ -124,7 +124,7 @@
                         <md-card-actions layout="column" layout-align="start">
                             <div class="webid-accountName">{{webId.databus.account.charAt(0).toUpperCase() + webId.databus.account.slice(1);}}</div>
                             <md-divider></md-divider>
-                            <a class="md-button" ng-href="/validator?webid={{webId.general.maker | escape}}" target="_blank" ng-click="childClick($event)">Validate</a>
+                            <a class="md-button" ng-href="/validator?webid={{webId.general.person | escape}}" target="_blank" ng-click="childClick($event)">Validate</a>
                         </md-card-actions>
                     </md-card>
                 </md-content>
@@ -174,16 +174,20 @@
                                 <td valign="top">Uploaded Data:</td>
                                 <td>{{activeWebId.databus.uploadSize}} MB</td>
                             </tr>
-                            <tr ng-if="activeWebId.geekCode">
+                            <tr ng-if="activeWebId.others.geekCode">
                                 <td valign="top">foaf:geekcode:</td>
                                 <td>{{activeWebId.others.geekCode}}</td>
+                            </tr>
+                            <tr>
+                                <td valign="top">Extraction-Framework commits:</td>
+                                <td>{{activeWebId.github.commits}}</td>
                             </tr>
                             </tbody>
                         </table>
                     </md-card-content>
                     <md-divider></md-divider>
                      <md-card-actions layout="column" layout-align="start">
-                         <a class="md-button" ng-href="/validator?webid={{activeWebId.maker | escape}}" target="_blank">Validate Foaf/WebId</a>
+                         <a class="md-button" ng-href="/validator?webid={{activeWebId.general.person | escape}}" target="_blank">Validate Foaf/WebId</a>
                      </md-card-actions>
                 </md-card>
             </div>
