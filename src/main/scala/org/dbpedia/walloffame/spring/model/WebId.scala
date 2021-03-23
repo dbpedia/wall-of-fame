@@ -30,7 +30,6 @@ class WebId() {
 
   def fetchFieldsWithModel(model: Model): Unit = {
     val data = QueryHandler.executeQuery(SelectQueries.getWebIdData(), model).head
-    println(data)
     this.general.url = data.getResource("webid").toString
     this.general.maker = data.getResource("maker").toString
     this.general.person = data.getResource("person").toString
@@ -66,9 +65,6 @@ class WebId() {
         this.github.commits = value.getInt
       case None => ""
     }
-
-    println("commits")
-    println(this.github.commits)
   }
 
 }

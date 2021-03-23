@@ -2,7 +2,8 @@ package org.dbpedia.walloffame.webid.enrich
 
 import com.google.gson.Gson
 import org.apache.http.HttpHeaders
-import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
+import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet, HttpPost}
+import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
 import org.apache.http.message.BasicHeader
 import org.apache.jena.rdf.model.{Model, ResourceFactory}
@@ -10,15 +11,90 @@ import org.dbpedia.walloffame.sparql.QueryHandler
 import org.dbpedia.walloffame.sparql.queries.SelectQueries
 
 import java.io.File
+import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 import scala.beans.BeanProperty
 import scala.collection.JavaConversions._
 
 object GitHubEnricher {
 
-  val gitHubToken = "6f7654b2f4e816f2f0a1fa500cca58ea468c2480"
+  var gitHubToken = ""
+
+  def setToken():Unit={
+    val client_id="4b7a8dc331564a418882"
+
+    val httpclient:CloseableHttpClient = HttpClients.createDefault()
+    val response_DeviceCode = requestVerification(httpclient,client_id)
+
+    println(s"""
+         |Github Verification:
+         |
+         |Please enter the following Code here: ${response_DeviceCode.verification_uri}
+         |Code: ${response_DeviceCode.user_code}
+         |""".stripMargin)
+
+    var access = new Response_AccessToken()
+    val executor = new ScheduledThreadPoolExecutor(20)
+
+    val runnable = new Runnable {
+      def run():Unit = {
+        val time = System.currentTimeMillis()
+        access = requestToken(httpclient,client_id,response_DeviceCode.device_code)
+        Option(access.access_token) match {
+          case Some(token) =>
+            executor.shutdownNow()
+          case None =>
+            println("Still waiting for the verification.")
+            executor.schedule(this, response_DeviceCode.interval - (System.currentTimeMillis() - time)/1000, TimeUnit.SECONDS)
+        }
+      }
+    }
+    executor.schedule(runnable, response_DeviceCode.interval, TimeUnit.SECONDS)
+
+    executor.awaitTermination(5, TimeUnit.MINUTES)
+
+    gitHubToken = access.access_token
+  }
+
+  def requestToken(httpclient:CloseableHttpClient, client_id:String, deviceCode: String)={
+    val url = "https://github.com/login/oauth/access_token"
+    val json =
+      s"""
+         |{"client_id":"$client_id",
+         |"device_code":"$deviceCode",
+         |"grant_type":"urn:ietf:params:oauth:grant-type:device_code"}
+         |""".stripMargin
+
+    val responseBody = postRequest(httpclient, url, json)
+    new Gson().fromJson(responseBody, classOf[Response_AccessToken])
+  }
+
+  def requestVerification(httpclient:CloseableHttpClient,client_id:String):Response_DeviceCode={
+    val url="https://github.com/login/device/code"
+    val json =
+      s"""
+         |{"client_id":"$client_id"}
+         |""".stripMargin
+
+    val responseBody = postRequest(httpclient, url, json)
+    new Gson().fromJson(responseBody, classOf[Response_DeviceCode])
+  }
+
+  def postRequest(httpclient:CloseableHttpClient, url:String, jsonHeader:String):String={
+    val httpPost = new HttpPost(url)
+    httpPost.setHeader("Content-type", "application/json")
+    httpPost.setHeader("Accept", "application/json")
+
+    httpPost.setEntity(new StringEntity(jsonHeader))
+
+    val response = httpclient.execute(httpPost)
+    val responseBody = scala.io.Source.fromInputStream(response.getEntity.getContent, "UTF-8").mkString
+    response.close()
+    responseBody
+  }
+
+
 
   def countAllGithubCommitsPerUser(owner:String="dbpedia", repo:String="extraction-framework"):collection.mutable.Map[String,Int]={
-
     val authorCount = collection.mutable.Map[String, Int]().withDefaultValue(0)
 
     try{
@@ -99,4 +175,26 @@ class Author(){
   var login:String = _
   @BeanProperty
   var html_url:String =_
+}
+
+class Response_DeviceCode(){
+  @BeanProperty
+  var device_code:String=_
+  @BeanProperty
+  var user_code:String=_
+  @BeanProperty
+  var verification_uri:String=_
+  @BeanProperty
+  var expires_in:Int=_
+  @BeanProperty
+  var interval:Int=_
+}
+
+class Response_AccessToken(){
+  @BeanProperty
+  var access_token:String=_
+  @BeanProperty
+  var token_type:String=_
+  @BeanProperty
+  var scope:String=_
 }
