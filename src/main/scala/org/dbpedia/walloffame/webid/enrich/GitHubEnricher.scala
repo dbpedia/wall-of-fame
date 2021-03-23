@@ -18,35 +18,42 @@ object GitHubEnricher {
   val gitHubToken = "6f7654b2f4e816f2f0a1fa500cca58ea468c2480"
 
   def countAllGithubCommitsPerUser(owner:String="dbpedia", repo:String="extraction-framework"):collection.mutable.Map[String,Int]={
-    val url = s"https://api.github.com/repos/$owner/$repo/commits"
-    val header = new BasicHeader(HttpHeaders.AUTHORIZATION, s"token $gitHubToken")
-    val httpclient:CloseableHttpClient = HttpClients.custom().setDefaultHeaders(List(header)).build()
-
-    def getRequest(httpClient: CloseableHttpClient, url:String):CloseableHttpResponse={
-      val httpget:HttpGet = new HttpGet(url)
-      httpClient.execute(httpget)
-    }
-
-    val httpResponse = getRequest(httpclient, url)
-    val lastPage = httpResponse.getFirstHeader("Link").getElements.last.toString.split(">").head.split("=").last.toInt
-    httpResponse.close()
 
     val authorCount = collection.mutable.Map[String, Int]().withDefaultValue(0)
-    for(page <- 1 to lastPage) {
-      val httpResponse = getRequest(httpclient, s"$url?page=$page&per_page=100")
-      val partResult = scala.io.Source.fromInputStream(httpResponse.getEntity.getContent).mkString
+
+    try{
+      val url = s"https://api.github.com/repos/$owner/$repo/commits"
+      val header = new BasicHeader(HttpHeaders.AUTHORIZATION, s"token $gitHubToken")
+      val httpclient:CloseableHttpClient = HttpClients.custom().setDefaultHeaders(List(header)).build()
+
+      def getRequest(httpClient: CloseableHttpClient, url:String):CloseableHttpResponse={
+        val httpget:HttpGet = new HttpGet(url)
+        httpClient.execute(httpget)
+      }
+
+      val httpResponse = getRequest(httpclient, url)
+      val lastPage = httpResponse.getFirstHeader("Link").getElements.last.toString.split(">").head.split("=").last.toInt
       httpResponse.close()
-      val commits = new Gson().fromJson(partResult, classOf[Array[GithubCommit]])
-      commits.foreach(commit => {
-        Option(commit.author) match {
-          case Some(author) => authorCount(author.html_url) +=1
-          case None => println(s"${commit.url} has no Author")
-        }
-      })
+
+      for(page <- 1 to lastPage) {
+        val httpResponse = getRequest(httpclient, s"$url?page=$page&per_page=100")
+        val partResult = scala.io.Source.fromInputStream(httpResponse.getEntity.getContent).mkString
+        httpResponse.close()
+        val commits = new Gson().fromJson(partResult, classOf[Array[GithubCommit]])
+        commits.foreach(commit => {
+          Option(commit.author) match {
+            case Some(author) => authorCount(author.html_url) +=1
+            case None => println(s"${commit.url} has no Author")
+          }
+        })
+      }
+
+      writeMapToFile(authorCount)
+      authorCount
+    } catch {
+      case nullPointerException: NullPointerException => authorCount
     }
 
-    writeMapToFile(authorCount)
-    authorCount
   }
 
   def enrichModelWithGithubData(model: Model, gitHubMap:collection.mutable.Map[String,Int], personURL:String):Model={
