@@ -4,9 +4,10 @@ import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.tools.JsonLDLogger
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
+import org.dbpedia.walloffame.webid.enrich.{DatabusEnricher, GitHubEnricher}
 import org.slf4j.LoggerFactory
 
-object WebIdFetcher {
+object DatabusWebIdsFetcher {
 
   var logger = LoggerFactory.getLogger("WebIdFetcher")
 
@@ -15,8 +16,9 @@ object WebIdFetcher {
     val vos = new VirtuosoHandler(config.virtuoso)
     val webIdHandler = new WebIdHandler()
 
-    val gitHubMap = Enricher.countAllGithubCommitsPerUser()
+    val gitHubMap = GitHubEnricher.countAllGithubCommitsPerUser()
 
+//    val gitHubMap = collection.mutable.Map[String, Int]().withDefaultValue(0)
     //get all webIds already stored in Virtuoso
     var allCurrentGraphs = Seq.empty[String]
     var wait = true
@@ -56,8 +58,8 @@ object WebIdFetcher {
         val uniformedModel = webIdHandler.validateWebId(webid)._1
         if(!uniformedModel.isEmpty) {
 
-          Enricher.enrichModelWithDatabusData(uniformedModel, webid)
-          Enricher.enrichModelWithGithubData(uniformedModel, gitHubMap, webid)
+          DatabusEnricher.enrichModelWithDatabusData(uniformedModel, webid)
+          GitHubEnricher.enrichModelWithGithubData(uniformedModel, gitHubMap, webid)
           vos.insertModel(uniformedModel, accountURL)
         }
       } catch {

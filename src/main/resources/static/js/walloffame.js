@@ -1,5 +1,14 @@
 app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $mdDialog) {
 
+    let labelMap ={
+        "img": "Image",
+        "geekCode": "Geek Code",
+        "numArtifacts": "Artifacts",
+        "numVersions" : "Versions",
+        "uploadSize": "Upload Size (MB)",
+        "commits": "Commits"
+    }
+
     $scope.model={};
     $scope.model.searchString = "";
 
@@ -19,14 +28,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         ]
     };
 
-    let labelMap ={
-        "img": "Image",
-        "geekCode": "Geek Code",
-        "numArtifacts": "Artifacts",
-        "numVersions" : "Versions",
-        "uploadSize": "Upload Size (MB)",
-        "commits": "Commits"
-    }
+
 
     $scope.selectedOptions={};
 
@@ -39,7 +41,6 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         console.log($scope.webids);
 
         let optionsToBeIgnored = ["account", "url", "name", "maker", "person", "img", "geekCode"];
-        // let options = [];
 
         angular.forEach($scope.webids, function(webid){
             angular.forEach(Object.keys(webid), function (category){
@@ -89,47 +90,11 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
             });
         });
 
-        console.log("FilterOptions")
+        console.log("FilterOptions:")
         console.log($scope.filterOptions);
 
         $scope.selectedOptions = angular.copy($scope.filterOptions);
         $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
-
-        // console.log("hallo");
-        // options = options.filter(item => !optionsToBeIgnored.includes(item));
-
-        // angular.forEach(options, function (option){
-        //     console.log("JETZT")
-        //     console.log(option.category)
-        //     let values = $filter('unique')($scope.webids.map(a => a[option.category]), + option.title);
-        //
-        //
-        //     console.log(values);
-        //
-        //     if (typeof values !== 'undefined' && values.length > 0) {
-        //         // the array is defined and has at least one element
-        //         let optionObject = {
-        //             title : option.title ,
-        //             category: option.category,
-        //             type: "options",
-        //             values: values
-        //         };
-        //
-        //         switch (typeof values[0]){
-        //             case "bigint":
-        //             case "number": optionObject ={
-        //                 title : option ,
-        //                 category: option.category,
-        //                 type: "range",
-        //                 values: getMinAndMax(values)
-        //             };
-        //                 break;
-        //         }
-        //
-        //         $scope.filterOptions.push(optionObject);
-        //     }
-        //
-        // });
     });
 
     $scope.checkIfCategoryChanged = function(category, title) {
@@ -270,6 +235,12 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         $event.stopPropagation();
     }
 
+    $scope.resetFilers = function () {
+        $scope.selectedOptions = angular.copy($scope.filterOptions);
+        $scope.model.searchString = "";
+        $scope.shownWebIds = $scope.filterWebIdsBySelectedOptions();
+    }
+
 });
 
 
@@ -356,6 +327,9 @@ app.filter('sortSelectors', function() {
 
     document.addEventListener('DOMContentLoaded', tick);
 })();
+
+
+// document.getElementById('resetFilters').style.width=document.getElementById('horizontalLine').style.width;
 
 // app.filter('filterWebIds', function ($filter) {
 //    return function (input, filterArray){

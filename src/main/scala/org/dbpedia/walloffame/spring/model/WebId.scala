@@ -30,7 +30,7 @@ class WebId() {
 
   def fetchFieldsWithModel(model: Model): Unit = {
     val data = QueryHandler.executeQuery(SelectQueries.getWebIdData(), model).head
-
+    println(data)
     this.general.url = data.getResource("webid").toString
     this.general.maker = data.getResource("maker").toString
     this.general.person = data.getResource("person").toString
@@ -67,34 +67,9 @@ class WebId() {
       case None => ""
     }
 
+    println("commits")
+    println(this.github.commits)
   }
-
-//  def fetchFieldsWithModel(model: Model): Unit = {
-//    val data = QueryHandler.executeQuery(SelectQueries.getWebIdData(), model).head
-//    this.url = data.getResource("webid").toString
-//    this.maker = data.getResource("maker").toString
-//    this.name = data.getLiteral("name").getLexicalForm
-//
-//    Option(data.getResource("img")) match {
-//      case Some(value) => this.img = value.toString
-//      case None => ""
-//    }
-//
-//    Option(data.getLiteral("geekcode")) match {
-//      case Some(value) => this.geekCode = value.getLexicalForm
-//      case None => ""
-//    }
-//
-//    Option(data.getResource("account")) match {
-//      case Some(value) =>
-//        this.account = value.toString.splitAt(value.toString.lastIndexOf("/")+1)._2
-//        this.numVersions = data.getLiteral("numVersions").getLexicalForm.toInt
-//        this.numArtifacts = data.getLiteral("numArtifacts").getLexicalForm.toInt
-//        this.uploadSize = data.getLiteral("uploadSize").getLexicalForm.toLong
-//      case None => ""
-//    }
-//
-//  }
 
 }
 
@@ -144,5 +119,5 @@ class GithubInfo(){
   @BeanProperty
   var account:String = _
   @BeanProperty
-  var commits:Int=_
+  var commits:Int= _
 }

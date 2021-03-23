@@ -1,28 +1,21 @@
-package org.dbpedia.walloffame
+package org.dbpedia.walloffame.webid.enrich
 
 import com.google.gson.Gson
 import org.apache.http.HttpHeaders
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
 import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
 import org.apache.http.message.BasicHeader
-import org.junit.jupiter.api.Test
+import org.apache.jena.rdf.model.{Model, ResourceFactory}
+import org.dbpedia.walloffame.sparql.QueryHandler
+import org.dbpedia.walloffame.sparql.queries.SelectQueries
 
 import java.io.File
 import scala.beans.BeanProperty
 import scala.collection.JavaConversions._
 
-class GithubTest {
+object GitHubEnricher {
 
   val gitHubToken = "6f7654b2f4e816f2f0a1fa500cca58ea468c2480"
-  @Test
-  def testest():Unit={
-    println("start")
-    val map = countAllGithubCommitsPerUser()
-    val pw = new java.io.PrintWriter(new File("github.csv"))
-
-    map.foreach(tuple => pw.write(s"${tuple._1},${tuple._2}\n"))
-    pw.close()
-  }
 
   def countAllGithubCommitsPerUser(owner:String="dbpedia", repo:String="extraction-framework"):collection.mutable.Map[String,Int]={
     val url = s"https://api.github.com/repos/$owner/$repo/commits"
@@ -51,7 +44,37 @@ class GithubTest {
         }
       })
     }
+
+    writeMapToFile(authorCount)
     authorCount
+  }
+
+  def enrichModelWithGithubData(model: Model, gitHubMap:collection.mutable.Map[String,Int], personURL:String):Model={
+    val results = QueryHandler.executeQuery(SelectQueries.getGitHubAccount(personURL),model)
+    if (results.nonEmpty) {
+      Option(results.head.getResource("githubAccount")) match {
+        case Some(githubAccount) =>
+          if (gitHubMap.exists(_._1 == githubAccount.getURI)) {
+            model.add(
+              ResourceFactory.createStatement(
+                ResourceFactory.createResource(personURL),
+                ResourceFactory.createProperty("http://example.org/gitHubCommits"),
+                ResourceFactory.createTypedLiteral(gitHubMap(githubAccount.getURI))
+              )
+            )
+          }
+        case None => println("no github account")
+      }
+    }
+    model
+  }
+
+  def writeMapToFile(map:collection.mutable.Map[String, Int]):Unit={
+    val file = new File("github.csv")
+    if (file.exists()) file.delete()
+    val pw = new java.io.PrintWriter(file)
+    map.foreach(tuple => pw.write(s"${tuple._1},${tuple._2}\n"))
+    pw.close()
   }
 }
 

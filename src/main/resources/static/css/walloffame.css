@@ -21,6 +21,15 @@ legend, .blueFont, .webid-accountName{
     font-weight: bold;
 }
 
+#resetFilters{
+    margin: auto;
+    width: 100%;
+}
+
+md-checkbox{
+    min-height: 35px;
+}
+
 #time{
     color: orange;
     /*color: #fd7e14;*/

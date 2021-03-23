@@ -34,24 +34,6 @@ app.controller('validateController', function($scope, $http, $filter) {
     };
 
     $scope.fetchAndValidateWebId();
-
-    // $scope.fetchAndValidateWebId = function(url) {
-    //
-    //     if (validateURL(url).valueOf()) {
-    //         $http({
-    //             url: "/validate",
-    //             method: "GET",
-    //             headers: {'Content-Type': 'application/json'},
-    //             params: {'webid': url}
-    //         }).then(function (response){
-    //             console.log(response.data);
-    //             $scope.webId = angular.fromJson(response.data.WebId);
-    //             $scope.result = angular.fromJson(response.data.Result);
-    //         });
-    //     }
-    // }
-
-
 });
 
 

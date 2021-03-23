@@ -2,7 +2,7 @@ package org.dbpedia.walloffame
 
 import better.files.File
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
-import org.dbpedia.walloffame.webid.WebIdFetcher
+import org.dbpedia.walloffame.webid.DatabusWebIdsFetcher
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.scheduling.annotation.Scheduled
@@ -30,6 +30,6 @@ class WofInitRunner extends CommandLineRunner {
   @Scheduled(cron = "0 0 8 * * ?", zone = "GMT+1:00")
   def prepareWallOfFame() = {
     //fetch databus-registered webIds to virtuoso of wall of fame
-    WebIdFetcher.fetchRegisteredWebIds(config)
+    DatabusWebIdsFetcher.fetchRegisteredWebIds(config)
   }
 }

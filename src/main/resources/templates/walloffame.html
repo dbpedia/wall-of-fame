@@ -67,8 +67,6 @@
                     <input type="text" class="search" ng-model="model.searchString" />
                 </div>
 
-                <br>
-
                 <div ng-model="filterOptions">
                     <div ng-repeat="(category, options) in filterOptions">
 
@@ -104,14 +102,16 @@
                                 </div>
                             </fieldset>
 
-                            <fieldset ng-if="option.type=='boolean'">
-                                <md-checkbox ng-click="toggle(category, option.title, 'true')">
-                                    <span class="SelectOption">{{option.label}}</span>
-                                </md-checkbox>
-                            </fieldset>
+                            <md-checkbox ng-if="option.type=='boolean'" ng-click="toggle(category, option.title, 'true')">
+                                <span class="SelectOption">{{option.label}}</span>
+                            </md-checkbox>
                         </div>
                     </div>
                 </div>
+
+                <hr>
+                <md-button id ="resetFilters" class="md-raised md-primary" ng-click="resetFilers()">reset filters</md-button>
+                <br>
 
             </div>
 
@@ -174,13 +174,13 @@
                                 <td valign="top">Uploaded Data:</td>
                                 <td>{{activeWebId.databus.uploadSize}} MB</td>
                             </tr>
+                            <tr ng-if="activeWebId.github.commits>0">
+                                <td valign="top">Extraction-Framework commits:</td>
+                                <td>{{activeWebId.github.commits}}</td>
+                            </tr>
                             <tr ng-if="activeWebId.others.geekCode">
                                 <td valign="top">foaf:geekcode:</td>
                                 <td>{{activeWebId.others.geekCode}}</td>
-                            </tr>
-                            <tr>
-                                <td valign="top">Extraction-Framework commits:</td>
-                                <td>{{activeWebId.github.commits}}</td>
                             </tr>
                             </tbody>
                         </table>
