@@ -17,8 +17,6 @@ class WofInitRunner extends CommandLineRunner {
 
   override def run(args: String*): Unit = {
 
-    println("jetz")
-    println(config.shacl.url)
     File("./tmp/").delete(swallowIOExceptions = true)
     File("./tmp/").createDirectory()
     File(config.log.file).delete(swallowIOExceptions = true)
