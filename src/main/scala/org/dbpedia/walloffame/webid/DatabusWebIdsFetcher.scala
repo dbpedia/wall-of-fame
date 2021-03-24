@@ -4,19 +4,20 @@ import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.tools.JsonLDLogger
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
-import org.dbpedia.walloffame.webid.enrich.{DatabusEnricher, GitHubEnricher}
-import org.slf4j.LoggerFactory
+import org.dbpedia.walloffame.webid.enrich.DatabusEnricher
+import org.dbpedia.walloffame.webid.enrich.github.GitHubEnricher
+import org.slf4j.{Logger, LoggerFactory}
 
 object DatabusWebIdsFetcher {
 
-  var logger = LoggerFactory.getLogger("WebIdFetcher")
+  var logger:Logger = LoggerFactory.getLogger("WebIdFetcher")
 
   def fetchRegisteredWebIds(config: Config): Unit = {
 
     val vos = new VirtuosoHandler(config.virtuoso)
     val webIdHandler = new WebIdHandler(config.shacl.url)
 
-    val gitHubMap = GitHubEnricher.countAllGithubCommitsPerUser()
+    val gitHubMap = GitHubEnricher.countAllGithubCommitsPerUser(config.github.githubToken)
 
 //    val gitHubMap = collection.mutable.Map[String, Int]().withDefaultValue(0)
     //get all webIds already stored in Virtuoso

@@ -16,8 +16,6 @@ case class Config() {
   var log: LogConfig = new LogConfig
   @BeanProperty
   var github: GithubConfig = new GithubConfig
-
-  val foo = "bar"
 }
 
 case class VosConfig() {
@@ -44,4 +42,8 @@ case class LogConfig(){
 case class GithubConfig(){
   @BeanProperty
   var client_id:String =_
+
+//  don't set this property in application.yml!
+  @BeanProperty
+  var githubToken:String =_
 }
