@@ -2,8 +2,8 @@ package org.dbpedia.walloffame.sparql.queries
 
 object ConstructQueries {
 
-  def constructWebIdWithOptionals():String={
-    """
+  def constructWebIdWithOptionals(personURL:String):String={
+    s"""
       |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
       |PREFIX cert: <http://www.w3.org/ns/auth/cert#>
       |PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -13,12 +13,12 @@ object ConstructQueries {
       |  ?webid a foaf:PersonalProfileDocument .
       |  ?webid foaf:maker ?maker .
       |  ?webid foaf:primaryTopic ?primaryTopic .
-      |  ?person a foaf:Person, dbo:DBpedian.
-      |  ?person foaf:name ?makerName .
-      |  ?person foaf:geekcode ?geekcode .
-      |  ?person foaf:img ?img .
-      |  ?person foaf:account ?githubAccount .
-      |  ?person cert:key ?key .
+      |  <$personURL> a foaf:Person, dbo:DBpedian.
+      |  <$personURL> foaf:name ?personName .
+      |  <$personURL> foaf:geekcode ?geekcode .
+      |  <$personURL> foaf:img ?img .
+      |  <$personURL> foaf:account ?githubAccount .
+      |  <$personURL> cert:key ?key .
       |  ?key a cert:RSAPublicKey .
       |  ?key rdf:label ?label .
       |  ?key cert:modulus ?modulus.
@@ -28,21 +28,21 @@ object ConstructQueries {
       |  ?webid a foaf:PersonalProfileDocument .
       |  ?webid foaf:maker ?maker .
       |  ?webid foaf:primaryTopic ?primaryTopic .
-      |  ?person a foaf:Person, dbo:DBpedian .
-      |  ?person foaf:name ?makerName .
-      |  ?person cert:key ?key .
+      |  <$personURL> a foaf:Person, dbo:DBpedian .
+      |  <$personURL> foaf:name ?personName .
+      |  <$personURL> cert:key ?key .
       |  ?key a cert:RSAPublicKey .
       |  ?key rdf:label ?label .
       |  ?key cert:modulus ?modulus.
       |  ?key cert:exponent ?exponent .
       |  OPTIONAL {
-      |     ?person foaf:geekcode ?geekcode .
+      |     <$personURL> foaf:geekcode ?geekcode .
       |  }
       |  OPTIONAL {
-      |     ?person foaf:img ?img .
+      |     <$personURL> foaf:img ?img .
       |  }
       |  OPTIONAL {
-      |     ?person foaf:account ?githubAccount .
+      |     <$personURL> foaf:account ?githubAccount .
       |  }
       |}
       |""".stripMargin

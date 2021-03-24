@@ -12,6 +12,7 @@
 <#this> a foaf:Person ;
    foaf:name "Jan Forberg";
    foaf:img "https://holycrab13.github.io/me.png";
+   foaf:account <asd>;
    a dbo:DBpedian;
    cert:key [ 
        a cert:RSAPublicKey;

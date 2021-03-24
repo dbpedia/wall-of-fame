@@ -10,6 +10,8 @@ shacl:
   url: "https://raw.githubusercontent.com/dbpedia/wall-of-fame/master/src/main/resources/shacl/shapes.ttl"
 log:
   file: "./errorLog.jsonld"
+github:
+  client_id: "4b7a8dc331564a418882"
 spring:
   main:
     banner-mode: "log"

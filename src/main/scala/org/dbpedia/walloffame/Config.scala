@@ -14,6 +14,8 @@ case class Config() {
   var shacl: ShaclConfig = new ShaclConfig
   @BeanProperty
   var log: LogConfig = new LogConfig
+  @BeanProperty
+  var github: GithubConfig = new GithubConfig
 
   val foo = "bar"
 }
@@ -37,4 +39,9 @@ case class ShaclConfig() {
 case class LogConfig(){
   @BeanProperty
   var file: String =_
+}
+
+case class GithubConfig(){
+  @BeanProperty
+  var client_id:String =_
 }

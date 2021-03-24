@@ -1,4 +1,4 @@
-package org.dbpedia.walloffame.uniformTest
+package org.dbpedia.walloffame
 
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.dbpedia.walloffame.webid.WebIdHandler
@@ -8,8 +8,11 @@ import java.io.{File, FileOutputStream}
 
 class UniformTests {
 
+  val testResourceDir = "./src/test/resources/"
+  val shaclFile = "./src/main/resources/shacl/shapes.tll"
+
   @Test
-  def testWEbID:Unit ={
+  def validateString:Unit ={
     val str =
       """
         |@base <https://yum-yab.github.io/webid.ttl> .
@@ -36,8 +39,6 @@ class UniformTests {
         |       cert:exponent "65537"^^xsd:nonNegativeInteger
         |      ] .
         |
-        |
-        |
         |<#this> a foaf:Person, dbo:DBpedian ;
         |   foaf:name "Denis Streitmatter";
         |   foaf:geekcode "GCS d? s+ a-- C+ L++ PS+++ PE- b+ G";
@@ -51,7 +52,7 @@ class UniformTests {
         |      ] .
         |""".stripMargin
 
-    val webIdHandler = new WebIdHandler()
+    val webIdHandler = new WebIdHandler(shaclFile)
     val result = webIdHandler.validateWebId(str)
 
     println(result._2.result)
@@ -64,8 +65,15 @@ class UniformTests {
   }
 
   @Test
-  def ralf()={
-    val str = "yumnyab#thj"
-    println(str.split("#").head)
+  def validateWebWithWrongOptionalType()={
+    val webIdModel = RDFDataMgr.loadModel(testResourceDir.concat("jan.ttl"))
+
+    val handler = new WebIdHandler(shaclFile)
+     val uniModel = handler.validateAndUniformModel(webIdModel,"https://holycrab13.github.io/webid.ttl#this")._1
+//    val uniModel = WebIdUniformer.uniform(webIdModel, "https://holycrab13.github.io/webid.ttl#this", Seq("http://xmlns.com/foaf/0.1/geekcode","http://xmlns.com/foaf/0.1/img"))
+
+    val stmts = uniModel.listStatements()
+    while(stmts.hasNext) println(stmts.nextStatement())
   }
+
 }

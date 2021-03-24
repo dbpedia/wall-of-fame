@@ -14,7 +14,7 @@ object DatabusWebIdsFetcher {
   def fetchRegisteredWebIds(config: Config): Unit = {
 
     val vos = new VirtuosoHandler(config.virtuoso)
-    val webIdHandler = new WebIdHandler()
+    val webIdHandler = new WebIdHandler(config.shacl.url)
 
     val gitHubMap = GitHubEnricher.countAllGithubCommitsPerUser()
 

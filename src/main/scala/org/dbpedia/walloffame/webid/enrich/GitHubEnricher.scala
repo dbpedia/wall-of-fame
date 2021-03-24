@@ -19,8 +19,10 @@ object GitHubEnricher {
 
   var gitHubToken = ""
 
-  def setToken():Unit={
-    val client_id="4b7a8dc331564a418882"
+  /**
+   * get Token of Github (necessary for multiple Requests)
+   */
+  def setToken(client_id:String):Unit={
 
     val httpclient:CloseableHttpClient = HttpClients.createDefault()
     val response_DeviceCode = requestVerification(httpclient,client_id)
@@ -146,14 +148,14 @@ object GitHubEnricher {
               )
             )
           }
-        case None => println("no github account")
+        case None => ""
       }
     }
     model
   }
 
   def writeMapToFile(map:collection.mutable.Map[String, Int]):Unit={
-    val file = new File("github.csv")
+    val file = new File("./tmp/github.csv")
     if (file.exists()) file.delete()
     val pw = new java.io.PrintWriter(file)
     map.foreach(tuple => pw.write(s"${tuple._1},${tuple._2}\n"))

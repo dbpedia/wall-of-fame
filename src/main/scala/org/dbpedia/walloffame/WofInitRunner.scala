@@ -24,7 +24,7 @@ class WofInitRunner extends CommandLineRunner {
     val vos = new VirtuosoHandler(config.virtuoso)
     vos.deleteAllGraphs()
 
-    GitHubEnricher.setToken()
+    GitHubEnricher.setToken(config.github.client_id)
 
     prepareWallOfFame()
   }

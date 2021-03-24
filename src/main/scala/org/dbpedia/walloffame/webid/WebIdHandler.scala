@@ -17,7 +17,7 @@ import java.net.{ConnectException, MalformedURLException, SocketException, URL}
  *
  * @param shacl URL of Shacl file
  */
-class WebIdHandler() {
+class WebIdHandler(shaclURL:String) {
 
   var logger = LoggerFactory.getLogger("WebIdHandler")
 
@@ -67,11 +67,12 @@ class WebIdHandler() {
    */
   def validateAndUniformModel(model:Model, personURL:String, log:Boolean=true):(Model, Result)={
 
-//    val result = WebIdValidator.validate(model, config.shacl.url)
-    val result = WebIdValidator.validate(model, "./src/main/resources/shacl/shapes.ttl")
+    val result = WebIdValidator.validate(model, shaclURL)
+//    val result = WebIdValidator.validate(model, "./src/main/resources/shacl/shapes.ttl")
 
     if (result.conforms()) {
-      val uniformedModel = WebIdUniformer.uniform(model, personURL)
+      val excludeOptionals = result.infos.map(triple => triple._3)
+      val uniformedModel = WebIdUniformer.uniform(model, personURL, excludeOptionals)
       return (uniformedModel, result)
     } else {
       if(log){

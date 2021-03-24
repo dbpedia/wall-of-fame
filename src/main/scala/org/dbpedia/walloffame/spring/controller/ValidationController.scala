@@ -27,7 +27,7 @@ class ValidationController(config: Config) {
 
     response.setHeader("Content-Type","application/json")
 
-    val webIdHandler = new WebIdHandler
+    val webIdHandler = new WebIdHandler(config.shacl.url)
     val result = webIdHandler.validateWebId(webid, false)
 
     val newWebId = new WebId(result._1)
