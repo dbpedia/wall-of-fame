@@ -24,7 +24,8 @@ class WofInitRunner extends CommandLineRunner {
     val vos = new VirtuosoHandler(config.virtuoso)
     vos.deleteAllGraphs()
 
-    config.github.setGithubToken(GithubTokenHandler.setToken(config.github.client_id))
+    //warum wird diese funktion ohne if abfrage erneut ausgefuehrt?
+    if(config.github.githubToken==null) config.github.setGithubToken(GithubTokenHandler.setToken(config.github.client_id))
 
     prepareWallOfFame()
   }

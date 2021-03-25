@@ -10,6 +10,8 @@ import org.dbpedia.walloffame.sparql.QueryHandler
 import org.dbpedia.walloffame.sparql.queries.SelectQueries
 
 import java.io.File
+import java.net.SocketException
+import javax.net.ssl.SSLException
 import scala.beans.BeanProperty
 import scala.collection.JavaConversions._
 
@@ -49,8 +51,9 @@ object GitHubEnricher {
       writeMapToFile(authorCount)
       authorCount
     } catch {
-      case nullPointerException: NullPointerException =>
-        authorCount
+      case nullPointerException: NullPointerException => authorCount
+      case sslException: SSLException => authorCount
+      case socketException: SocketException => authorCount
     }
 
   }

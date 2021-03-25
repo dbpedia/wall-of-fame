@@ -77,7 +77,7 @@
                         <div ng-repeat="option in options">
                             <div ng-model="selectedOptions" ng-if="option.type=='range'" ng-init="">
 
-                                <span class="SelectOption">{{option.label}}</span>
+                                <span id="{{option.title}}" class="SelectOption">{{option.label}}</span>
                                 <fieldset>
                                     <rzslider class="custom-slider"
                                             rz-slider-model="selectedOptions[category][getIndexOfStrInSelectedOptions(category, option.title)].values[0]"

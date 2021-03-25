@@ -6,7 +6,7 @@ app.controller('webIdController', function($scope, $http, $filter, $mdPanel, $md
         "numArtifacts": "Artifacts",
         "numVersions" : "Versions",
         "uploadSize": "Upload Size (MB)",
-        "commits": "Commits"
+        "commits": "Extraction-Framework Commits"
     }
 
     $scope.model={};
@@ -329,8 +329,6 @@ app.filter('sortSelectors', function() {
 })();
 
 
-// document.getElementById('resetFilters').style.width=document.getElementById('horizontalLine').style.width;
-
 // app.filter('filterWebIds', function ($filter) {
 //    return function (input, filterArray){
 //        if(filterArray.length===0){
@@ -406,3 +404,7 @@ app.filter('sortSelectors', function() {
 //
 //     $mdPanel.open(config);
 // };
+
+// document.getElementById('commits').innerHTML += '<a class="md-icon-button" ng-href="{{activeWebId.general.url}}">\n' +
+//     '                            <md-icon md-svg-icon="images/icons/download-24px.svg"></md-icon>\n' +
+//     '                        </a>'
