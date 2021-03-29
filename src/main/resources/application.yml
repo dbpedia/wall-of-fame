@@ -1,19 +1,33 @@
+wof:
+  virtuoso:
+    url: "jdbc:virtuoso://localhost:1111/charset=UTF-8/log_enable=2"
+    usr: "dba"
+    psw: "dba"
+    #  url: "jdbc:virtuoso://db:1111/charset=UTF-8/log_enable=2"
+    #  graph: "https://webids/"
+  shacl:
+    url: "https://raw.githubusercontent.com/dbpedia/wall-of-fame/master/src/main/resources/shacl/shapes.ttl"
+  log:
+    file: "logs/errors.jsonld"
+  github:
+    client_id: "4b7a8dc331564a418882"
+
+spring:
+  application:
+    name: "DBpedia's Wall of Fame"
+
 server:
   port: 21288
-virtuoso:
-  url: "jdbc:virtuoso://localhost:1111/charset=UTF-8/log_enable=2"
-#  url: "jdbc:virtuoso://db:1111/charset=UTF-8/log_enable=2"
-  usr: "dba"
-  psw: "dba"
-#  graph: "https://webids/"
-shacl:
-  url: "https://raw.githubusercontent.com/dbpedia/wall-of-fame/master/src/main/resources/shacl/shapes.ttl"
-log:
-  file: "./errorLog.jsonld"
-github:
-  client_id: "4b7a8dc331564a418882"
-spring:
-  main:
-    banner-mode: "log"
 
+logging:
+  level:
+    org.dbpedia.walloffame: debug
+  pattern:
+    console: "%d{yy-MM-dd HH:mm:ss} -- %level -- %logger{1.} : %msg%n"
+    file: "%d{yy-MM-dd HH:mm:ss} -- %level -- %logger{1.} : %msg%n"
+  file:
+    name: "logs/wof.log"
+    clean-history-on-start: true
+    max-history: 1
+    max-size: "1MB"
 

@@ -1,47 +1,61 @@
 package org.dbpedia.walloffame.webid
 
 import org.apache.jena.riot.{Lang, RDFDataMgr}
+import org.apache.juli.logging.{Log, LogFactory}
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.tools.JsonLDLogger
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.dbpedia.walloffame.webid.enrich.DatabusEnricher
 import org.dbpedia.walloffame.webid.enrich.github.GitHubEnricher
-import org.slf4j.{Logger, LoggerFactory}
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Component
 
-object DatabusWebIdsFetcher {
+@Component
+class DatabusWebIdsFetcher(config: Config){
 
-  var logger:Logger = LoggerFactory.getLogger("WebIdFetcher")
+  val logger: Log = LogFactory.getLog(getClass)
 
-  def fetchRegisteredWebIds(config: Config): Unit = {
+  @Scheduled(cron = "0 0 0/2 * * ?", zone = "GMT+1:00")
+  def fetchRegisteredWebIds(): Unit = {
+
+    println("DBpedia Databus Webid Fetcher:")
 
     val vos = new VirtuosoHandler(config.virtuoso)
     val webIdHandler = new WebIdHandler(config.shacl.url)
 
-    val gitHubMap = GitHubEnricher.countAllGithubCommitsPerUser(config.github.githubToken)
-
-//    val gitHubMap = collection.mutable.Map[String, Int]().withDefaultValue(0)
     //get all webIds already stored in Virtuoso
     var allCurrentGraphs = Seq.empty[String]
     var wait = true
-    var time = 0
+    var time = 10
     while (wait) {
       try {
-        allCurrentGraphs = vos.getAllGraphURIs()
+        allCurrentGraphs = vos.getAllGraphURIs
         wait = false
       } catch {
         case e: Exception =>
-          time += 1
-          println(s"Waiting since $time seconds for Virtuoso to start up.")
+          if(time <= 0) {
+            println("")
+            logger.error(e)
+            return
+          }
+
+          time -= 1
+
+          print('\r')
+          print(s"Wait $time more seconds for Virtuoso to start up.")
           Thread.sleep(1000)
       }
     }
 
+    val gitHubMap = GitHubEnricher.countAllGithubCommitsPerUser(config.github.githubToken)
+    //    val gitHubMap = collection.mutable.Map[String, Int]().withDefaultValue(0)
+
+    //get all registered webIds
     println(
       """
         |Download, validate, and uniform all registered WebIds on the DBpedia Databus.
         |Accounts:""".stripMargin)
 
-    //get all registered webIds
     val url = "https://databus.dbpedia.org/system/api/accounts"
     val model = RDFDataMgr.loadModel(url, Lang.NTRIPLES)
 
@@ -58,13 +72,12 @@ object DatabusWebIdsFetcher {
       try {
         val uniformedModel = webIdHandler.validateWebId(webid)._1
         if(!uniformedModel.isEmpty) {
-
           DatabusEnricher.enrichModelWithDatabusData(uniformedModel, webid)
           GitHubEnricher.enrichModelWithGithubData(uniformedModel, gitHubMap, webid)
           vos.insertModel(uniformedModel, accountURL)
         }
       } catch {
-        case noSuchElementException: NoSuchElementException => ""
+        case noSuchElementException: NoSuchElementException => logger.error(s"$webid not valid.")
       }
     }
 
@@ -78,64 +91,4 @@ object DatabusWebIdsFetcher {
 
     JsonLDLogger.writeOut(config.log.file)
   }
-
-  //
-  //  def collectAdditionalData(webidURL:String, account:String):Model={
-  //    val model = ModelFactory.createDefaultModel()
-  //    val result = QueryHandler.executeQuery(SelectQueries.getDatabusUserData(webidURL)).head
-  //
-  //    val ontology = "http://dbpedia.org/ontology/"
-  //    val numUploads = "numUploads"
-  //    val uploadSize = "uploadSize"
-  //
-  //    model.add(
-  //      ResourceFactory.createStatement(
-  //        ResourceFactory.createResource(webidURL),
-  //        ResourceFactory.createProperty("http://xmlns.com/foaf/0.1/account"),
-  //        ResourceFactory.createResource(account)
-  //      )
-  //    )
-  //
-  //    def addDecimalLiteralToModel(prop:String, value:Literal) ={
-  //      model.add(
-  //        ResourceFactory.createStatement(
-  //          ResourceFactory.createResource(account),
-  //          ResourceFactory.createProperty(ontology+prop),
-  //          value
-  //        )
-  //      )
-  //    }
-  //
-  //    val value = {
-  //      if (result.getLiteral(numUploads) != null) result.getLiteral(numUploads)
-  //      else ResourceFactory.createTypedLiteral(0)
-  //    }
-  //    addDecimalLiteralToModel(numUploads, value)
-  //
-  //    val value2 = {
-  //      if(result.getLiteral(uploadSize) != null) {
-  //        val uploadSizeAsMB = result.getLiteral(uploadSize).getLong  / 1024 / 1024
-  //        println("UPLOADSIZE")
-  //        println(webidURL)
-  //        println(uploadSizeAsMB)
-  //        ResourceFactory.createTypedLiteral(uploadSizeAsMB)
-  //      } else {
-  //        ResourceFactory.createTypedLiteral(0)
-  //      }
-  //    }
-  //    addDecimalLiteralToModel(uploadSize, value2)
-  //
-  //    val stmts = model.listStatements()
-  //    while (stmts.hasNext) println(stmts.nextStatement())
-  //    model
-  //  }
-  //
-  //  def isPerson(model: Model, webidURI:String):Boolean={
-  //    try{
-  //      QueryHandler.executeQuery(SelectQueries.checkIfIsPerson(webidURI),model).head
-  //      true
-  //    } catch {
-  //      case noSuchElementException: NoSuchElementException => false
-  //    }
-  //  }
 }

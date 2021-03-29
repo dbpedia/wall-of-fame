@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration
 import scala.beans.BeanProperty
 
 @Configuration
-@ConfigurationProperties
+@ConfigurationProperties(prefix = "wof")
 case class Config() {
   @BeanProperty
   var virtuoso: VosConfig = new VosConfig

@@ -6,6 +6,7 @@ import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
 import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
 import org.apache.http.message.BasicHeader
 import org.apache.jena.rdf.model.{Model, ResourceFactory}
+import org.apache.juli.logging.{Log, LogFactory}
 import org.dbpedia.walloffame.sparql.QueryHandler
 import org.dbpedia.walloffame.sparql.queries.SelectQueries
 
@@ -14,10 +15,19 @@ import java.net.SocketException
 import javax.net.ssl.SSLException
 import scala.beans.BeanProperty
 import scala.collection.JavaConversions._
+import scala.collection.mutable
 
 object GitHubEnricher {
 
+  val logger: Log = LogFactory.getLog(getClass)
+
   def countAllGithubCommitsPerUser(gitHubToken:String, owner:String="dbpedia", repo:String="extraction-framework"):collection.mutable.Map[String,Int]={
+
+    println(s"""
+               |Github Commit Counter:
+               |Count all commits of Repo: https://github.com/$owner/$repo
+               |""".stripMargin)
+
     val authorCount = collection.mutable.Map[String, Int]().withDefaultValue(0)
 
     try{
@@ -33,8 +43,8 @@ object GitHubEnricher {
       val httpResponse = getRequest(httpclient, url)
       val lastPage = httpResponse.getFirstHeader("Link").getElements.last.toString.split(">").head.split("=").last.toInt
       httpResponse.close()
-
 //      println(s"LASTPAGE:$lastPage")
+
       for(page <- 1 to lastPage) {
         val httpResponse = getRequest(httpclient, s"$url?page=$page&per_page=100")
         val partResult = scala.io.Source.fromInputStream(httpResponse.getEntity.getContent).mkString
@@ -43,7 +53,9 @@ object GitHubEnricher {
         commits.foreach(commit => {
           Option(commit.author) match {
             case Some(author) => authorCount(author.html_url) +=1
-            case None => println(s"${commit.url} has no Author")
+            case None =>
+              println(s"${commit.url} has no Author")
+              logger.debug(s"${commit.url} has no Author")
           }
         })
       }
@@ -51,11 +63,16 @@ object GitHubEnricher {
       writeMapToFile(authorCount)
       authorCount
     } catch {
-      case nullPointerException: NullPointerException => authorCount
-      case sslException: SSLException => authorCount
-      case socketException: SocketException => authorCount
+      case nullPointerException: NullPointerException => catchCommitCountExceptions(nullPointerException)
+      case sslException: SSLException => catchCommitCountExceptions(sslException)
+      case socketException: SocketException => catchCommitCountExceptions(socketException)
     }
 
+  }
+
+  def catchCommitCountExceptions(e:Exception):mutable.Map[String, Int] ={
+    logger.error(e)
+    collection.mutable.Map[String, Int]().withDefaultValue(0)
   }
 
   def enrichModelWithGithubData(model: Model, gitHubMap:collection.mutable.Map[String,Int], personURL:String):Model={

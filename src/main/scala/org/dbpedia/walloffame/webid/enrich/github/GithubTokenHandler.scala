@@ -1,6 +1,7 @@
 package org.dbpedia.walloffame.webid.enrich.github
 
 import com.google.gson.Gson
+import org.apache.commons.logging.{Log, LogFactory}
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
@@ -10,10 +11,14 @@ import scala.beans.BeanProperty
 
 object GithubTokenHandler {
 
+  val logger: Log = LogFactory.getLog(getClass)
+
   /**
    * get Token of Github (necessary for multiple Requests)
    */
-  def setToken(client_id:String):String={
+  def getToken(client_id:String):String={
+    logger.info("Request Github Access Token.")
+
 
     val httpclient:CloseableHttpClient = HttpClients.createDefault()
     val response_DeviceCode = requestVerification(httpclient,client_id)
@@ -21,12 +26,14 @@ object GithubTokenHandler {
     println(s"""
                |Github Verification:
                |
-               |Please enter the following Code here: ${response_DeviceCode.verification_uri}
                |Code: ${response_DeviceCode.user_code}
+               |Please enter the Code here: ${response_DeviceCode.verification_uri}
                |""".stripMargin)
 
     var access = new Response_AccessToken()
     val executor = new ScheduledThreadPoolExecutor(20)
+
+    var counter = response_DeviceCode.expires_in
 
     val runnable = new Runnable {
       def run():Unit = {
@@ -36,14 +43,28 @@ object GithubTokenHandler {
           case Some(token) =>
             executor.shutdownNow()
           case None =>
-            println("Still waiting for the verification.")
-            executor.schedule(this, response_DeviceCode.interval - (System.currentTimeMillis() - time)/1000, TimeUnit.SECONDS)
+            if (counter<=0) {
+              executor.shutdownNow()
+            }
+            else {
+              print("\r")
+              print(s"Wait $counter more seconds for the verification.")
+              counter -= response_DeviceCode.interval
+              executor.schedule(this, response_DeviceCode.interval - (System.currentTimeMillis() - time)/1000, TimeUnit.SECONDS)
+            }
         }
       }
     }
-    executor.schedule(runnable, response_DeviceCode.interval, TimeUnit.SECONDS)
+    executor.schedule(runnable, 0, TimeUnit.SECONDS)
+    executor.awaitTermination(counter, TimeUnit.SECONDS)
+    println("\n") //for pretty print
 
-    executor.awaitTermination(5, TimeUnit.MINUTES)
+    Option(access.access_token) match {
+      case Some(token) =>
+        logger.info("Successfully set Github Access Token.")
+      case None =>
+        logger.error("Github Verification failed.")
+    }
 
     access.access_token
   }

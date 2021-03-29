@@ -1,12 +1,13 @@
 package org.dbpedia.walloffame.virtuoso
 
 import better.files.File
+import org.apache.commons.logging.{Log, LogFactory}
 import org.apache.jena.query.{Query, QueryFactory}
 import org.apache.jena.rdf.model.{Model, ModelFactory}
+import org.apache.jena.shared.JenaException
 import org.apache.jena.util.FileManager
 import org.dbpedia.walloffame.VosConfig
 import org.dbpedia.walloffame.spring.model.WebId
-import org.slf4j.LoggerFactory
 import virtuoso.jdbc4.VirtuosoException
 import virtuoso.jena.driver.{VirtGraph, VirtModel, VirtuosoQueryExecution, VirtuosoQueryExecutionFactory}
 
@@ -14,11 +15,11 @@ import java.io.{InputStream, InputStreamReader}
 
 class VirtuosoHandler(vosConfig: VosConfig) {
 
-  val logger = LoggerFactory.getLogger(classOf[VirtuosoHandler])
+  val logger: Log = LogFactory.getLog(getClass)
   val mainGraph = "https://databus.dbpedia.org/"
 
   def deleteAllGraphs(): Unit ={
-    getAllGraphURIs().foreach(clearGraph)
+    getAllGraphURIs.foreach(clearGraph)
   }
 
   def insertFile(file: File, subGraph: String): Unit = {
@@ -51,18 +52,24 @@ class VirtuosoHandler(vosConfig: VosConfig) {
     virtGraph
   }
 
-  def getAllGraphURIs():Seq[String] ={
-
-    val virt =
-      try{
-        val newVirt = new VirtGraph(mainGraph, vosConfig.url, vosConfig.usr, vosConfig.psw)
-        Option(newVirt)
-      } catch {
-        case virtuosoException: VirtuosoException => {
-        LoggerFactory.getLogger("Virtuoso").error("Connection refused")
+  def getOptionGraph:Option[VirtGraph] = {
+    try{
+      val newVirt = new VirtGraph(mainGraph, vosConfig.url, vosConfig.usr, vosConfig.psw)
+      Option(newVirt)
+    } catch {
+      case virtuosoException: VirtuosoException =>
+        logger.error(virtuosoException)
         None
-      }
+      case jenaException: JenaException =>
+        logger.error(jenaException)
+        None
     }
+  }
+
+
+  def getAllGraphURIs:Seq[String] ={
+
+    val virt = getOptionGraph
 
     if (virt.isEmpty) Seq.empty[String]
     else {
@@ -71,7 +78,7 @@ class VirtuosoHandler(vosConfig: VosConfig) {
            |SELECT  DISTINCT ?g
            |WHERE  {
            |   GRAPH ?g {?s ?p ?o}
-           |   FILTER regex(?g, "^${mainGraph}")
+           |   FILTER regex(?g, "^$mainGraph")
            |}
            |ORDER BY  ?g
       """.stripMargin)
@@ -92,24 +99,17 @@ class VirtuosoHandler(vosConfig: VosConfig) {
 
   }
 
-  def getAllWebIdGraphs(): Seq[VirtGraph] = {
-    try {
+  def getAllWebIdGraphs: Seq[VirtGraph] = {
       var graphs = Seq.empty[VirtGraph]
 
-      this.getAllGraphURIs().foreach(graph =>
+      this.getAllGraphURIs.foreach(graph =>
         graphs = graphs :+ this.getGraph(graph)
       )
       graphs
-    } catch {
-      case virtuosoException: VirtuosoException => {
-        logger.error(s"Connection to Virtuoso DB failed. ${virtuosoException.toString}")
-        Seq.empty[VirtGraph]
-      }
-    }
   }
 
-  def getAllWebIdsAsJson(): String = {
-    val graphs = this.getAllWebIdGraphs()
+  def getAllWebIdsAsJson: String = {
+    val graphs = this.getAllWebIdGraphs
 
     if (graphs.isEmpty) {
       ""
@@ -130,16 +130,7 @@ class VirtuosoHandler(vosConfig: VosConfig) {
   }
 
   def getAccountOfWebId(url:String): Option[String] ={
-    val virt =
-      try{
-        val newVirt = new VirtGraph(mainGraph, vosConfig.url, vosConfig.usr, vosConfig.psw)
-        Option(newVirt)
-      } catch {
-        case virtuosoException: VirtuosoException => {
-          LoggerFactory.getLogger("Virtuoso").error("Connection refused")
-          None
-        }
-      }
+    val virt = getOptionGraph
 
     if (virt.isDefined) {
       val sparql: Query = QueryFactory.create(
