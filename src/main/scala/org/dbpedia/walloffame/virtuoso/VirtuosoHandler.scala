@@ -19,7 +19,7 @@ class VirtuosoHandler(vosConfig: VosConfig) {
   val mainGraph = "https://databus.dbpedia.org/"
 
   def deleteAllGraphs(): Unit ={
-    getAllGraphURIs.foreach(clearGraph)
+    getAllGraphURIs().foreach(graph => this.clearGraph(graph))
   }
 
   def insertFile(file: File, subGraph: String): Unit = {
@@ -52,7 +52,7 @@ class VirtuosoHandler(vosConfig: VosConfig) {
     virtGraph
   }
 
-  def getOptionGraph:Option[VirtGraph] = {
+  def getOptionGraph():Option[VirtGraph] = {
     try{
       val newVirt = new VirtGraph(mainGraph, vosConfig.url, vosConfig.usr, vosConfig.psw)
       Option(newVirt)
@@ -67,9 +67,9 @@ class VirtuosoHandler(vosConfig: VosConfig) {
   }
 
 
-  def getAllGraphURIs:Seq[String] ={
+  def getAllGraphURIs():Seq[String] ={
 
-    val virt = getOptionGraph
+    val virt = getOptionGraph()
 
     if (virt.isEmpty) Seq.empty[String]
     else {
@@ -99,17 +99,17 @@ class VirtuosoHandler(vosConfig: VosConfig) {
 
   }
 
-  def getAllWebIdGraphs: Seq[VirtGraph] = {
+  def getAllWebIdGraphs(): Seq[VirtGraph] = {
       var graphs = Seq.empty[VirtGraph]
 
-      this.getAllGraphURIs.foreach(graph =>
+      this.getAllGraphURIs().foreach(graph =>
         graphs = graphs :+ this.getGraph(graph)
       )
       graphs
   }
 
-  def getAllWebIdsAsJson: String = {
-    val graphs = this.getAllWebIdGraphs
+  def getAllWebIdsAsJson(): String = {
+    val graphs = this.getAllWebIdGraphs()
 
     if (graphs.isEmpty) {
       ""
@@ -120,7 +120,7 @@ class VirtuosoHandler(vosConfig: VosConfig) {
       val gson = new Gson()
 
       graphs.foreach(graph => {
-        val webid = new WebId(ModelFactory.createModelForGraph(graph))
+        val webid: WebId = new WebId(ModelFactory.createModelForGraph(graph))
 //        webid.setAccount(graph.getGraphName.splitAt(graph.getGraphName.lastIndexOf("/")+1)._2)
         json += s"${gson.toJson(webid)},\n"
       })
@@ -130,7 +130,7 @@ class VirtuosoHandler(vosConfig: VosConfig) {
   }
 
   def getAccountOfWebId(url:String): Option[String] ={
-    val virt = getOptionGraph
+    val virt = getOptionGraph()
 
     if (virt.isDefined) {
       val sparql: Query = QueryFactory.create(
