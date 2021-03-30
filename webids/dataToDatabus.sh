@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd "$(dirname "$0")/.."
-mvn spring-boot:run -Dstart-class=org.dbpedia.walloffame.DatabusApp -Dspring-boot.run.arguments=webids/uniformedWebIds/$(date +%y-%m-%d)
+java -cp wof.jar -Dloader.main=org.dbpedia.walloffame.DatabusApp org.springframework.boot.loader.PropertiesLauncher webids/uniformedWebIds/$(date +%y-%m-%d)
 cd webids/
 mvn versions:set -DnewVersion=$(date +%y-%m-%d)
 mvn prepare-package

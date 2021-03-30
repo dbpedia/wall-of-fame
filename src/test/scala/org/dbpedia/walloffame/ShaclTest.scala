@@ -12,28 +12,19 @@ import java.io.ByteArrayOutputStream
 
 class ShaclTest {
 
-  val shapeModel = RDFDataMgr.loadModel("./src/main/resources/shacl/shapes.ttl")
+  val shapeModel:Model = RDFDataMgr.loadModel("./src/main/resources/shacl/shapes.ttl")
   val testResourceDir = "./src/test/resources/"
 
   @Test
-  def shaclTest: Unit = {
+  def shaclTest(): Unit = {
     val webIdModel = RDFDataMgr.loadModel(testResourceDir.concat("jan.ttl"))
-
     val result = validate(webIdModel, shapeModel)
 
-
-    println(s"Conforms: ${result.conforms}")
-
+    println(s"Conforms: ${result.conforms()}")
     println("Violations:")
     result.violations.foreach(println(_))
     println("Infos:")
     result.infos.foreach(println(_))
-  }
-
-  def validate(webId: Model, shapesURL: String): Result = {
-    val shapes = RDFDataMgr.loadModel("./src/main/resources/shacl/shapes.ttl")
-//    val shapes = RDFDataMgr.loadModel(shapesURL)
-    validate(webId, shapes)
   }
 
   def validate(webId: Model, shapesModel: Model): Result = {
@@ -52,7 +43,7 @@ class ShaclTest {
     out.close()
 
     //set infos and violations
-    QueryHandler.executeQuery(SelectQueries.resultSeverity, report.getModel).foreach(
+    QueryHandler.executeQuery(SelectQueries.resultSeverity(), report.getModel).foreach(
       solution => {
         if (solution.getResource("severity").getURI == "http://www.w3.org/ns/shacl#Violation") {
           result.addViolation(solution.getResource("focusNode").getURI, solution.getLiteral("message").getLexicalForm, solution.getResource("property").getURI)
@@ -62,7 +53,6 @@ class ShaclTest {
         }
       }
     )
-
     result
   }
 

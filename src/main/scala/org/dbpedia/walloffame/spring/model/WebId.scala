@@ -37,12 +37,12 @@ class WebId() {
 
     Option(data.getResource("img")) match {
       case Some(value) => this.others.img = value.toString
-      case None => ""
+      case None =>
     }
 
     Option(data.getLiteral("geekcode")) match {
       case Some(value) => this.others.geekCode = value.getLexicalForm
-      case None => ""
+      case None =>
     }
 
     Option(data.getResource("dbpediaAccount")) match {
@@ -51,19 +51,19 @@ class WebId() {
         this.databus.numVersions = data.getLiteral("numVersions").getLexicalForm.toInt
         this.databus.numArtifacts = data.getLiteral("numArtifacts").getLexicalForm.toInt
         this.databus.uploadSize = data.getLiteral("uploadSize").getLexicalForm.toLong
-      case None => ""
+      case None =>
     }
 
     Option(data.getResource("githubAccount")) match {
       case Some(value) =>
         this.github.account = value.toString
-      case None => ""
+      case None =>
     }
 
     Option(data.getLiteral("gitHubCommits")) match {
       case Some(value) =>
         this.github.commits = value.getInt
-      case None => ""
+      case None =>
     }
   }
 

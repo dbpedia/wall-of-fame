@@ -3,6 +3,7 @@ package org.dbpedia.walloffame
 import better.files.File
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.riot.{Lang, RDFDataMgr}
+import org.apache.juli.logging.{Log, LogFactory}
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
@@ -18,19 +19,21 @@ class DatabusInitRunner extends CommandLineRunner {
   @Autowired
   private var config: Config = _
 
+  val logger: Log = LogFactory.getLog(getClass)
+
   override def run(args: String*): Unit = {
 
     if (args.isEmpty) {
       println("Please set the target directory, where the WebId files need to be written to.")
-      return 1
+      return
     }
 
     val targetDir = File(args.head)
     targetDir.createDirectoryIfNotExists()
-    getWebIdsFromWallOfFame(targetDir)
+    writeOutWebIdsFromWoF(targetDir)
   }
 
-  def getWebIdsFromWallOfFame(targetDir: File) = {
+  def writeOutWebIdsFromWoF(targetDir: File):Unit = {
 
     val aggregatedModel = ModelFactory.createDefaultModel()
     val vos = new VirtuosoHandler(config.virtuoso)
@@ -63,9 +66,9 @@ class DatabusInitRunner extends CommandLineRunner {
     //write log file
     val logFile = targetDir / targetDir.parent.name.concat("_errorLog.jsonld")
     try{
-      File(config.log.file).copyTo(logFile, true)
+      File(config.log.file).copyTo(logFile, overwrite = true)
     } catch {
-      case noSuchFileException: NoSuchFileException => println("log file not found")
+      case noSuchFileException: NoSuchFileException => logger.error(noSuchFileException)
     }
   }
 }

@@ -9,11 +9,11 @@ import java.io.{File, FileOutputStream}
 class UniformTests {
 
   val testResourceDir = "./src/test/resources/"
-  val shaclFile = "./src/main/resources/shacl/shapes.tll"
+  val shaclFile = "./src/main/resources/shacl/shapes.ttl"
 
   @Test
-  def validateString:Unit ={
-    val str =
+  def validateString():Unit ={
+    val webIdStr =
       """
         |@base <https://yum-yab.github.io/webid.ttl> .
         |@prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -53,27 +53,21 @@ class UniformTests {
         |""".stripMargin
 
     val webIdHandler = new WebIdHandler(shaclFile)
-    val result = webIdHandler.validateWebId(str)
+    val validation = webIdHandler.validateWebId(webIdStr)
 
-    println(result._2.result)
+    RDFDataMgr.write(System.out, validation._1, Lang.TURTLE)
 
-    val uniModel = result._1
-
-    RDFDataMgr.write(new FileOutputStream(new File("yumyab.ttl")), uniModel, Lang.TURTLE )
-    val stmts = uniModel.listStatements()
-    while(stmts.hasNext) println(stmts.nextStatement())
+    println("\nRESULT")
+    println(validation._2.result)
   }
 
   @Test
-  def validateWebWithWrongOptionalType()={
+  def validateWebWithWrongOptionalType():Unit={
     val webIdModel = RDFDataMgr.loadModel(testResourceDir.concat("jan.ttl"))
-
     val handler = new WebIdHandler(shaclFile)
-     val uniModel = handler.validateAndUniformModel(webIdModel,"https://holycrab13.github.io/webid.ttl#this")._1
-//    val uniModel = WebIdUniformer.uniform(webIdModel, "https://holycrab13.github.io/webid.ttl#this", Seq("http://xmlns.com/foaf/0.1/geekcode","http://xmlns.com/foaf/0.1/img"))
+    val uniModel = handler.validateAndUniformModel(webIdModel,"https://holycrab13.github.io/webid.ttl#this")._1
 
-    val stmts = uniModel.listStatements()
-    while(stmts.hasNext) println(stmts.nextStatement())
+    RDFDataMgr.write(System.out, uniModel, Lang.TURTLE )
   }
 
 }
