@@ -15,7 +15,7 @@ class DatabusWebIdsFetcher(config: Config){
 
   val logger: Log = LogFactory.getLog(getClass)
 
-  @Scheduled(cron = "0 0 0/2 * * ?", zone = "GMT+1:00")
+  @Scheduled(cron = "0 0 8 * * ?", zone = "GMT+1:00")
   def fetchRegisteredWebIds(): Unit = {
 
     println("DBpedia Databus Webid Fetcher:")
@@ -29,7 +29,7 @@ class DatabusWebIdsFetcher(config: Config){
     var time = 10
     while (wait) {
       try {
-        allCurrentGraphs = vos.getAllGraphURIs
+        allCurrentGraphs = vos.getAllGraphURIs()
         wait = false
       } catch {
         case e: Exception =>

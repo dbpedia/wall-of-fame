@@ -21,6 +21,11 @@ object GitHubEnricher {
 
   val logger: Log = LogFactory.getLog(getClass)
 
+  def getRequest(httpClient: CloseableHttpClient, url:String):CloseableHttpResponse={
+    val httpget:HttpGet = new HttpGet(url)
+    httpClient.execute(httpget)
+  }
+
   def countAllGithubCommitsPerUser(gitHubToken:String, owner:String="dbpedia", repo:String="extraction-framework"):collection.mutable.Map[String,Int]={
 
     println(s"""
@@ -35,10 +40,7 @@ object GitHubEnricher {
       val header = new BasicHeader(HttpHeaders.AUTHORIZATION, s"token $gitHubToken")
       val httpclient:CloseableHttpClient = HttpClients.custom().setDefaultHeaders(List(header)).build()
 
-      def getRequest(httpClient: CloseableHttpClient, url:String):CloseableHttpResponse={
-        val httpget:HttpGet = new HttpGet(url)
-        httpClient.execute(httpget)
-      }
+
 
       val httpResponse = getRequest(httpclient, url)
       val lastPage = httpResponse.getFirstHeader("Link").getElements.last.toString.split(">").head.split("=").last.toInt
