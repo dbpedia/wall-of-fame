@@ -136,10 +136,11 @@ class GithubTest {
   }
 
   def countCommitsPerUserOfAllRepos(gitHubToken:String, owner:String="dbpedia"):Seq[Repo]={
-    try{
-      val header = new BasicHeader(HttpHeaders.AUTHORIZATION, s"token $gitHubToken")
-      val httpclient:CloseableHttpClient = HttpClients.custom().setDefaultHeaders(List(header)).build()
 
+    val header = new BasicHeader(HttpHeaders.AUTHORIZATION, s"token $gitHubToken")
+    val httpclient:CloseableHttpClient = HttpClients.custom().setDefaultHeaders(List(header)).build()
+
+    try{
       val url = s"https://api.github.com/orgs/$owner/repos"
       val lastPage = getLastPage(url, httpclient, gitHubToken)
       var repos = Array.empty[Repo]
@@ -151,7 +152,6 @@ class GithubTest {
         val newRepos = new Gson().fromJson(partResult, classOf[Array[Repo]])
         repos ++= newRepos
       }
-      httpclient.close()
 
       repos.foreach(repo => println(repo.name))
       repos.foreach(repo =>{
@@ -163,6 +163,8 @@ class GithubTest {
       case e:Exception =>
         logger.error(e)
         Seq.empty[Repo]
+    } finally {
+      httpclient.close()
     }
   }
 
