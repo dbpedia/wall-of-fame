@@ -23,16 +23,16 @@ class GithubTest {
 //  val token ="b94fce080ed19ba15beab030ec660ee6640816ff"
   val token = GithubTokenHandler.getToken("4b7a8dc331564a418882")
 
-  @Test
-  def testCountAllCommits():Unit={
-
-    val repoStats = countCommitsPerUserOfAllRepos(token)
-
-    repoStats.foreach(repo => {
-      println(s"REPO :${repo.name}")
-      repo.commitsPerUser.foreach(x => println(s"${x._1} => ${x._2}"))
-    })
-  }
+//  @Test
+//  def testCountAllCommits():Unit={
+//
+//    val repoStats = countCommitsPerUserOfAllRepos(token)
+//
+//    repoStats.foreach(repo => {
+//      println(s"REPO :${repo.name}")
+//      repo.commitsPerUser.foreach(x => println(s"${x._1} => ${x._2}"))
+//    })
+//  }
 
 //  @Test
 //  def testCountMappingToolRepo():Unit={
